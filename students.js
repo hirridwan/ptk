@@ -10,11 +10,11 @@ window.CLASS_INFO={
   X11:{className:'X-11',teacher:'Ismu Kamal Muhiban'}
 };
 
-Object.keys(CLASS_ROSTERS).forEach(k=>{
-  CLASS_ROSTERS[k]=CLASS_ROSTERS[k].map((name,i)=>({
+Object.keys(window.CLASS_ROSTERS).forEach(k=>{
+  window.CLASS_ROSTERS[k]=window.CLASS_ROSTERS[k].map((name,i)=>({
     code:`${k}-${String(i+1).padStart(2,'0')}`,
     name,
-    class:CLASS_INFO[k].className,
-    teacher:CLASS_INFO[k].teacher
+    class:window.CLASS_INFO[k].className,
+    teacher:window.CLASS_INFO[k].teacher
   }));
 });
