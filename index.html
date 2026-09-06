@@ -2351,7 +2351,7 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         .trim();
     }
 
-    async function finishReflection(){
+    function finishReflection(){
       captureReflectionDraft();
 
       const r3 = normalizeReflectionText(reflectionDraft.r3);
@@ -2373,24 +2373,25 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         `${state.postCorrect??0} dari 15 soal benar`;
       qs("#fXP").textContent = state.xp;
 
+      /*
+       * Simpan data terlebih dahulu.
+       * Jangan menunggu request Google Sheets agar tombol tidak
+       * terlihat macet ketika koneksi sedang lambat.
+       */
       const finalRecord = buildRecord();
+      localSave();
 
       /*
-       * Simpan lokal terlebih dahulu agar data tidak hilang.
-       * Pengiriman ke Google Sheets dijalankan di background;
-       * jangan menunggu fetch karena pada beberapa browser/Web App
-       * request dapat tertahan dan membuat halaman terlihat stuck.
+       * Kirim ulang record final di background.
+       * Halaman tetap langsung berpindah ke Finish.
        */
-      localSave();
       syncRecordNow(finalRecord).catch(error => {
         console.error("Final sync failed:", error);
       });
 
       /*
-       * KUNCI FIX UTAMA:
-       * Tandai selesai TERLEBIH DAHULU.
-       * Setelah marker ada, pagehide/beforeunload tidak bisa
-       * membuat active session baru.
+       * Mulai sekarang quest dianggap BENAR-BENAR SELESAI.
+       * pagehide/beforeunload tidak boleh membuat session aktif baru.
        */
       markCompletionForNextLoad();
       clearActiveSession();
