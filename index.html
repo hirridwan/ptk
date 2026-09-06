@@ -939,7 +939,7 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
 
   <script>
     const SHEET_WEB_APP_URL =
-      "https://script.google.com/macros/s/AKfycbzibej2W61JPkmGZDXzev532830ttqmYbk3b9EFDPex9d-rI6y3nfLIqjdYHIxPW35LKA/exec";
+      "https://script.google.com/macros/s/AKfycbw-qULj48hWVbKztbYDHHHH5RymhFUbcEAvBLC8xLqTKlgkiGQKqc480whgQzAbbSTpnA/exec";
 
     const SESSION_KEY = "cm2_active_session_final";
     const COMPLETED_KEY = "cm2_completed_final";
@@ -1038,6 +1038,8 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       boss:0,
       answers:[],
       answerChoices:[],
+      preAnswers:[],
+      postAnswers:[],
       reflection:{r3:"",r2:"",r1:""},
       essayAnswers:{m1:"",m2:"",m3:"",boss:""},
       preCorrect:0,
@@ -1275,6 +1277,8 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         reflection_r3:state.reflection.r3 || "",
         reflection_r2:state.reflection.r2 || "",
         reflection_r1:state.reflection.r1 || "",
+        pre_answers:formatTestAnswersForSheet(state.preAnswers),
+        post_answers:formatTestAnswersForSheet(state.postAnswers),
         timestamp:new Date().toISOString()
       };
 
@@ -1594,9 +1598,10 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       return copy;
     }
 
-    function shuffledQuestion(question){
+    function shuffledQuestion(question,sourceIndex){
       return {
         ...question,
+        sourceIndex,
         opts:shuffle(
           question.opts.map((text,index) => ({
             text,
@@ -1608,7 +1613,9 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
 
     function createTestQuestions(){
       return shuffle(
-        questions.map(shuffledQuestion)
+        questions.map((question,index)=>
+          shuffledQuestion(question,index)
+        )
       );
     }
 
@@ -1811,6 +1818,42 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       if(timer) timer.textContent = `${minutes}:${seconds}`;
     }
 
+    function buildTestAnswerLog(){
+      return selectedQuestions.map((question,index)=>{
+        const choice = state.answerChoices?.[index];
+        const option =
+          choice===null || choice===undefined || choice===""
+            ? null
+            : question.opts[Number(choice)];
+
+        return {
+          displayNumber:index+1,
+          questionNumber:
+            Number.isInteger(question.sourceIndex)
+              ? question.sourceIndex+1
+              : index+1,
+          choice:
+            option ? String.fromCharCode(65+Number(choice)) : "",
+          answer:
+            option ? option.text : "",
+          correct:
+            option ? Boolean(option.ok) : null
+        };
+      });
+    }
+
+    function formatTestAnswersForSheet(log){
+      return (Array.isArray(log)?log:[]).map(item => {
+        const status =
+          item.correct===true
+            ? "Benar"
+            : item.correct===false
+              ? "Salah"
+              : "Tidak dijawab";
+        return `No ${item.displayNumber} (Soal ${item.questionNumber}): ${item.choice||"-"}. ${item.answer||"-"} — ${status}`;
+      }).join("\n");
+    }
+
     function finishTest(autoFinish=false){
       storeAnswer();
       clearInterval(timerHandle);
@@ -1824,6 +1867,7 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       if(testMode==="pre"){
         state.pre = score;
         state.preCorrect = correct;
+        state.preAnswers = buildTestAnswerLog();
         localSave();
         show("#mini");
         saveActiveSession();
@@ -1832,6 +1876,7 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
 
       state.post = score;
       state.postCorrect = correct;
+      state.postAnswers = buildTestAnswerLog();
       localSave();
 
       qs("#fPre").textContent = `${state.pre??"-"}/100`;
@@ -2378,6 +2423,16 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         state.answers =
           Array.isArray(saved.state.answers)
             ? saved.state.answers
+            : [];
+
+        state.preAnswers =
+          Array.isArray(saved.state.preAnswers)
+            ? saved.state.preAnswers
+            : [];
+
+        state.postAnswers =
+          Array.isArray(saved.state.postAnswers)
+            ? saved.state.postAnswers
             : [];
 
         state.reflection = {

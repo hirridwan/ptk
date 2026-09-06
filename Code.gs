@@ -9,7 +9,8 @@ const HEADERS = [
   "M3 Objektif", "M3 Uraian XP", "Boss Objektif", "Boss Uraian XP", "Post-Test",
   "N-Gain", "Kategori N-Gain", "Ketuntasan", "Total XP",
   "Jawaban M1", "Jawaban M2", "Jawaban M3", "Jawaban Boss",
-  "Refleksi 3 Hal", "Refleksi 2 Hal", "Refleksi 1 Hal", "Waktu Pengiriman"
+  "Refleksi 3 Hal", "Refleksi 2 Hal", "Refleksi 1 Hal", "Waktu Pengiriman",
+  "Pre-Test Jawaban", "Post-Test Jawaban"
 ];
 
 const FIELD = {
@@ -20,7 +21,8 @@ const FIELD = {
   "Boss Uraian XP":"rubric_boss", "Post-Test":"post", "Total XP":"xp",
   "Jawaban M1":"answer_m1", "Jawaban M2":"answer_m2", "Jawaban M3":"answer_m3",
   "Jawaban Boss":"answer_boss", "Refleksi 3 Hal":"reflection_r3",
-  "Refleksi 2 Hal":"reflection_r2", "Refleksi 1 Hal":"reflection_r1"
+  "Refleksi 2 Hal":"reflection_r2", "Refleksi 1 Hal":"reflection_r1",
+  "Pre-Test Jawaban":"pre_answers", "Post-Test Jawaban":"post_answers"
 };
 
 function getSheet_() {
@@ -109,6 +111,7 @@ function doGet(e) {
         m3:"", rubric_m3:"", boss:"", rubric_boss:"", post:"", xp:"",
         answer_m1:"", answer_m2:"", answer_m3:"", answer_boss:"",
         reflection_r3:"", reflection_r2:"", reflection_r1:"",
+        pre_answers:"", post_answers:"",
         timestamp:new Date().toISOString()
       };
 
