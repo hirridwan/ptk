@@ -907,7 +907,13 @@
           <div class="footer-note">Skor gamifikasi</div>
         </div>
       </div>
-    </section>
+    
+      <div class="actions" style="margin-top:22px;justify-content:center;">
+        <button class="btn primary" type="button" onclick="returnHomeAfterFinish()">
+          🏠 Kembali ke Beranda
+        </button>
+      </div>
+</section>
 
   </div>
 
@@ -2607,6 +2613,46 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
           error
         );
       }
+    }
+
+    function returnHomeAfterFinish(){
+      clearInterval(timerHandle);
+      clearInterval(missionTimerHandle);
+
+      try{
+        localStorage.removeItem(SESSION_KEY);
+        localStorage.removeItem(COMPLETED_KEY);
+      }catch(error){}
+
+      state = clone(DEFAULT_STATE);
+      testMode = "pre";
+      qIndex = 0;
+      selectedQuestions = [];
+      currentScreen = "#login";
+      testEndAt = 0;
+      missionType = "";
+      missionEndAt = 0;
+
+      missionDrafts = {
+        m1:{a:"",b:"",reason:""},
+        m2:{a:"",b:"",reason:""},
+        m3:{case:"Mengetik tugas",input:"",process:"",output:"",storage:"",reason:""},
+        boss:{input:"",process:"",output:"",cpu:"",ipo:"",reason:""}
+      };
+
+      reflectionDraft = {r3:"",r2:"",r1:""};
+
+      qs("#studentPill").textContent = "Belum mulai";
+      qs("#xpTop").textContent = "0";
+      qs("#dClass").textContent = "-";
+      qs("#dCode").textContent = "-";
+      qs("#dTeam").textContent = "-";
+      qs("#dXP").textContent = "0";
+      qs("#prog").style.width = "0%";
+
+      show("#login",false);
+      updateJourneyProgress();
+      window.scrollTo({top:0,behavior:"smooth"});
     }
 
     function escapeHtml(value){
