@@ -66,6 +66,54 @@
       font-size:13px;
     }
 
+    .global-progress {
+      position:sticky;
+      top:69px;
+      z-index:19;
+      padding:9px 20px 11px;
+      background:rgba(4,10,22,.82);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(255,255,255,.07);
+    }
+    .global-progress-inner {
+      max-width:1120px;
+      margin:0 auto;
+      display:grid;
+      gap:6px;
+    }
+    .global-progress-head {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      font-size:11px;
+    }
+    .global-progress-title {
+      color:#b8c9df;
+      font-weight:900;
+      letter-spacing:.5px;
+    }
+    .global-progress-stage {
+      color:#91a5c1;
+      text-align:right;
+    }
+    .global-progress-bar {
+      height:8px;
+      border-radius:999px;
+      overflow:hidden;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .global-progress-bar span {
+      display:block;
+      width:0%;
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--cyan),var(--blue),var(--purple),#ff61c7);
+      box-shadow:0 0 18px rgba(73,215,255,.28);
+      transition:width .45s ease;
+    }
+
     .wrap { max-width:1120px; margin:28px auto; padding:0 18px 50px; }
     .panel {
       background:linear-gradient(180deg,rgba(18,35,63,.94),rgba(10,23,43,.96));
@@ -181,6 +229,8 @@
       .hero, .grid, .grid3 { grid-template-columns:1fr; }
       .topstats { display:none; }
       .panel { padding:20px; }
+      .global-progress { padding-left:12px; padding-right:12px; }
+      .global-progress-stage { max-width:48%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     }
   </style>
 </head>
@@ -198,6 +248,18 @@
     <div class="topstats">
       <span class="pill" id="studentPill">Belum mulai</span>
       <span class="pill">⚡ XP <b id="xpTop">0</b></span>
+    </div>
+  </div>
+
+  <div class="global-progress">
+    <div class="global-progress-inner">
+      <div class="global-progress-head">
+        <span class="global-progress-title">PROGRESS PERJALANAN</span>
+        <span id="globalJourneyStage" class="global-progress-stage">Belum dimulai • 0%</span>
+      </div>
+      <div class="global-progress-bar">
+        <span id="globalJourneyBar"></span>
+      </div>
     </div>
   </div>
 
@@ -277,7 +339,7 @@
 
       <div class="section-label" style="display:flex;justify-content:space-between;align-items:center;margin-top:24px;">
         <h2 style="margin:0;">MISSION MAP</h2>
-        <span class="badge">6 STAGE QUEST</span>
+        <span class="badge">7 STAGE QUEST</span>
       </div>
 
       <div class="grid3">
@@ -287,6 +349,7 @@
         <div class="mission-card"><span class="badge">4</span><h3>Mission 2</h3><p>ALU or CU</p></div>
         <div class="mission-card"><span class="badge">5</span><h3>Mission 3</h3><p>Trace the Data</p></div>
         <div class="mission-card"><span class="badge">6</span><h3>Boss Mission</h3><p>Solve the Computer Case</p></div>
+        <div class="mission-card"><span class="badge">7</span><h3>Post-Test</h3><p>15 soal individu</p></div>
       </div>
 
       <div class="actions" style="margin-top:18px;">
@@ -656,12 +719,47 @@
 
     const qs = (selector) => document.querySelector(selector);
 
+    function getJourneyProgress() {
+      const step = 100 / 7;
+      if(currentScreen==="#login") return {percent:0,label:"Belum dimulai"};
+      if(currentScreen==="#test") {
+        return testMode==="pre"
+          ? {percent:0,label:"Sedang mengerjakan Pre-Test"}
+          : {percent:step*6,label:"Sedang mengerjakan Post-Test"};
+      }
+      if(currentScreen==="#mini") return {percent:step,label:"Mini Lesson"};
+      if(currentScreen==="#mission") {
+        if(missionType==="m1") return {percent:step*2,label:"Mission 1 — RAM or Storage"};
+        if(missionType==="m2") return {percent:step*3,label:"Mission 2 — ALU or CU"};
+        return {percent:step*4,label:"Mission 3 — Trace the Data"};
+      }
+      if(currentScreen==="#boss") return {percent:step*5,label:"Boss Mission"};
+      if(currentScreen==="#reflection") return {percent:100,label:"Post-Test selesai • Refleksi 3–2–1"};
+      if(currentScreen==="#finish") return {percent:100,label:"Quest utama selesai"};
+      if(currentScreen==="#dash") {
+        return state.pre !== null
+          ? {percent:step,label:"Pre-Test selesai • Siap masuk Mini Lesson"}
+          : {percent:0,label:"Siap memulai Pre-Test"};
+      }
+      return {percent:0,label:"Belum dimulai"};
+    }
+
+    function updateJourneyProgress(){
+      const data=getJourneyProgress();
+      const percent=Math.round(Math.max(0,Math.min(100,data.percent)));
+      const bar=qs("#globalJourneyBar");
+      const stage=qs("#globalJourneyStage");
+      if(bar) bar.style.width=percent+"%";
+      if(stage) stage.textContent=`${data.label} • ${percent}%`;
+    }
+
     function show(id) {
       document.querySelectorAll("section").forEach(section => section.classList.add("hidden"));
       const target = qs(id);
       if(target){
         target.classList.remove("hidden");
         currentScreen = id;
+        updateJourneyProgress();
         saveActiveSession();
       }
     }
@@ -741,6 +839,7 @@
       qs("#xpTop").textContent = state.xp;
       qs("#dXP").textContent = state.xp;
       qs("#prog").style.width = Math.min(100, state.xp) + "%";
+      updateJourneyProgress();
     }
 
     function shuffle(array) {
@@ -1335,6 +1434,7 @@
         qs("#dCode").textContent=`${state.name} (${state.code})`;
         qs("#dTeam").textContent=state.team;
         updateTop();
+        updateJourneyProgress();
 
         if(currentScreen==="#mission" && missionType) startMission(missionType,true);
         else if(currentScreen==="#boss") startBoss(true);
