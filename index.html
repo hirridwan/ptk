@@ -2387,7 +2387,58 @@ Object.keys(CLASS_ROSTERS).forEach(k=>{CLASS_ROSTERS[k]=CLASS_ROSTERS[k].map((na
       }
     );
 
+    /*
+     * Browser dapat memulihkan nilai <select> setelah script
+     * selesai dijalankan. Karena itu populateStudents() sekali
+     * di akhir script saja bisa membaca classSelect masih kosong,
+     * lalu browser mengembalikan X-8/X-5/X-11 setelahnya.
+     *
+     * Jalankan lagi saat halaman benar-benar tampil, sambil
+     * mempertahankan kelas dan nama siswa yang dipulihkan browser.
+     */
+    function refreshStudentRoster(){
+      const classSelect = qs("#classSelect");
+      const studentSelect = qs("#studentCode");
+
+      if(!classSelect || !studentSelect) return;
+
+      const selectedClass = classSelect.value;
+      const selectedStudent = studentSelect.value;
+
+      populateStudents();
+
+      if(selectedStudent){
+        const exists = Array.from(
+          studentSelect.options
+        ).some(
+          option => option.value === selectedStudent
+        );
+
+        if(exists){
+          studentSelect.value = selectedStudent;
+          studentSelect.dispatchEvent(
+            new Event("change",{bubbles:true})
+          );
+        }
+      }
+    }
+
     populateStudents();
+
+    window.addEventListener(
+      "pageshow",
+      () => {
+        refreshStudentRoster();
+      }
+    );
+
+    window.addEventListener(
+      "load",
+      () => {
+        refreshStudentRoster();
+      }
+    );
+
     restoreSessionOnLoad();
     updateJourneyProgress();
   </script>
