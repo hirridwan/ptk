@@ -1311,26 +1311,44 @@ Object.keys(CLASS_ROSTERS).forEach(k=>{CLASS_ROSTERS[k]=CLASS_ROSTERS[k].map((na
       }
     }
 
-    function populateStudents(){
-      const classKey = qs("#classSelect")?.value;
-      const select = qs("#studentCode");
-      if(!select) return;
+    function populateStudents(keepSelected=false){
+      const classSelect = qs("#classSelect");
+      const studentSelect = qs("#studentCode");
+      if(!classSelect || !studentSelect) return;
 
-      select.innerHTML =
+      const classKey = String(classSelect.value || "").trim();
+      const previousStudent = keepSelected ? studentSelect.value : "";
+
+      studentSelect.innerHTML =
         '<option value="">-- Pilih nama siswa --</option>';
 
       const roster =
-        typeof CLASS_ROSTERS !== "undefined"
-          ? (CLASS_ROSTERS[classKey] || [])
+        (window.CLASS_ROSTERS && Array.isArray(window.CLASS_ROSTERS[classKey]))
+          ? window.CLASS_ROSTERS[classKey]
           : [];
 
-      roster.forEach(student => {
+      for(const student of roster){
+        if(!student || !student.code || !student.name) continue;
+
         const option = document.createElement("option");
         option.value = student.code;
         option.textContent = student.name;
-        select.appendChild(option);
-      });
+        studentSelect.appendChild(option);
+      }
+
+      if(previousStudent){
+        const found = Array.from(studentSelect.options)
+          .some(option => option.value === previousStudent);
+        if(found){
+          studentSelect.value = previousStudent;
+        }
+      }
     }
+
+    qs("#classSelect").addEventListener("change",() => {
+      populateStudents(false);
+      qs("#studentPill").textContent = "Belum mulai";
+    });
 
     qs("#studentCode").addEventListener("change",() => {
       const classKey = qs("#classSelect").value;
@@ -2423,23 +2441,33 @@ Object.keys(CLASS_ROSTERS).forEach(k=>{CLASS_ROSTERS[k]=CLASS_ROSTERS[k].map((na
       }
     }
 
-    populateStudents();
+    function initializeStudentDropdown(){
+      const run = () => {
+        const classSelect = qs("#classSelect");
+        const studentSelect = qs("#studentCode");
+        if(!classSelect || !studentSelect) return;
 
-    window.addEventListener(
-      "pageshow",
-      () => {
-        refreshStudentRoster();
-      }
-    );
+        const currentStudent = studentSelect.value;
+        populateStudents(Boolean(currentStudent));
 
-    window.addEventListener(
-      "load",
-      () => {
-        refreshStudentRoster();
-      }
-    );
+        if(currentStudent){
+          studentSelect.value = currentStudent;
+        }
+      };
 
+      run();
+      requestAnimationFrame(run);
+      setTimeout(run,0);
+      setTimeout(run,50);
+      setTimeout(run,250);
+    }
+
+    window.addEventListener("pageshow", initializeStudentDropdown);
+    window.addEventListener("load", initializeStudentDropdown);
+
+    initializeStudentDropdown();
     restoreSessionOnLoad();
+    initializeStudentDropdown();
     updateJourneyProgress();
   </script>
 
