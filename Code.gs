@@ -11,7 +11,8 @@ const HEADERS = [
   "Jawaban M1", "Jawaban M2", "Jawaban M3", "Jawaban Boss",
   "M1 Pilihan 1", "M1 Pilihan 2", "M1 Kunci 1", "M1 Kunci 2",
   "M2 Pilihan 1", "M2 Pilihan 2", "M2 Kunci 1", "M2 Kunci 2",
-  "Refleksi 3 Hal", "Refleksi 2 Hal", "Refleksi 1 Hal", "Waktu Pengiriman"
+  "Refleksi 3 Hal", "Refleksi 2 Hal", "Refleksi 1 Hal", "Waktu Pengiriman",
+  "Pre-Test Jawaban", "Post-Test Jawaban"
 ];
 
 const FIELD = {
@@ -26,6 +27,8 @@ const FIELD = {
   "M1 Kunci 1":"m1_key_a", "M1 Kunci 2":"m1_key_b",
   "M2 Pilihan 1":"m2_choice_a", "M2 Pilihan 2":"m2_choice_b",
   "M2 Kunci 1":"m2_key_a", "M2 Kunci 2":"m2_key_b",
+  "Pre-Test Jawaban":"pre_answers",
+  "Post-Test Jawaban":"post_answers",
   "Refleksi 3 Hal":"reflection_r3",
   "Refleksi 2 Hal":"reflection_r2", "Refleksi 1 Hal":"reflection_r1"
 };
@@ -117,6 +120,7 @@ function doGet(e) {
         answer_m1:"", answer_m2:"", answer_m3:"", answer_boss:"",
         m1_choice_a:"", m1_choice_b:"", m1_key_a:"RAM", m1_key_b:"SSD/HDD",
         m2_choice_a:"", m2_choice_b:"", m2_key_a:"ALU", m2_key_b:"CU",
+        pre_answers:"", post_answers:"",
         reflection_r3:"", reflection_r2:"", reflection_r1:"",
         timestamp:new Date().toISOString()
       };

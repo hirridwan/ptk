@@ -2373,8 +2373,18 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         `${state.postCorrect??0} dari 15 soal benar`;
       qs("#fXP").textContent = state.xp;
 
+      const finalRecord = buildRecord();
+
+      /*
+       * Simpan lokal terlebih dahulu agar data tidak hilang.
+       * Pengiriman ke Google Sheets dijalankan di background;
+       * jangan menunggu fetch karena pada beberapa browser/Web App
+       * request dapat tertahan dan membuat halaman terlihat stuck.
+       */
       localSave();
-      await syncRecordNow(buildRecord());
+      syncRecordNow(finalRecord).catch(error => {
+        console.error("Final sync failed:", error);
+      });
 
       /*
        * KUNCI FIX UTAMA:
