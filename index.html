@@ -879,7 +879,7 @@
 
   <div id="toast" class="toast"></div>
 
-  <script src="students.js"></script>
+  <script src="students.js?v=20260906"></script>
 
   <script>
     const SHEET_WEB_APP_URL =
@@ -1304,6 +1304,70 @@
       }
     }
 
+    function getNormalizedRoster(classKey){
+      const source =
+        (window.CLASS_ROSTERS &&
+         Array.isArray(window.CLASS_ROSTERS[classKey]))
+          ? window.CLASS_ROSTERS[classKey]
+          : [];
+
+      const info =
+        (window.CLASS_INFO && window.CLASS_INFO[classKey])
+          ? window.CLASS_INFO[classKey]
+          : {
+              className:
+                classKey === "X5" ? "X-5" :
+                classKey === "X8" ? "X-8" :
+                classKey === "X11" ? "X-11" :
+                classKey,
+              teacher:""
+            };
+
+      return source
+        .map((student,index) => {
+          /*
+           * Mendukung DUA format students.js:
+           * 1) object {code,name,class,teacher}
+           * 2) string "Nama Siswa"
+           *
+           * Jadi dropdown tetap muncul walaupun browser
+           * masih membaca versi students.js lama/cached.
+           */
+          if(typeof student === "string"){
+            return {
+              code:
+                `${classKey}-${String(index+1).padStart(2,"0")}`,
+              name:student,
+              class:info.className,
+              teacher:info.teacher
+            };
+          }
+
+          if(student && student.name){
+            return {
+              code:
+                student.code ||
+                `${classKey}-${String(index+1).padStart(2,"0")}`,
+              name:String(student.name),
+              class:
+                student.class ||
+                info.className,
+              teacher:
+                student.teacher ||
+                info.teacher
+            };
+          }
+
+          return null;
+        })
+        .filter(Boolean);
+    }
+
+    function findStudentByCode(classKey,code){
+      return getNormalizedRoster(classKey)
+        .find(student => student.code === code);
+    }
+
     function populateStudents(keepSelected=false){
       const classSelect = qs("#classSelect");
       const studentSelect = qs("#studentCode");
@@ -1315,14 +1379,9 @@
       studentSelect.innerHTML =
         '<option value="">-- Pilih nama siswa --</option>';
 
-      const roster =
-        (window.CLASS_ROSTERS && Array.isArray(window.CLASS_ROSTERS[classKey]))
-          ? window.CLASS_ROSTERS[classKey]
-          : [];
+      const roster = getNormalizedRoster(classKey);
 
       for(const student of roster){
-        if(!student || !student.code || !student.name) continue;
-
         const option = document.createElement("option");
         option.value = student.code;
         option.textContent = student.name;
@@ -1332,6 +1391,7 @@
       if(previousStudent){
         const found = Array.from(studentSelect.options)
           .some(option => option.value === previousStudent);
+
         if(found){
           studentSelect.value = previousStudent;
         }
@@ -1398,12 +1458,7 @@
       const classKey = qs("#classSelect").value;
       const code = qs("#studentCode").value;
 
-      const roster =
-        window.CLASS_ROSTERS
-          ? (window.CLASS_ROSTERS[classKey] || [])
-          : [];
-
-      const student = roster.find(item => item.code===code);
+      const student = findStudentByCode(classKey,code);
 
       if(!student){
         alert("Pilih kelas dan nama siswa.");
