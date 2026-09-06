@@ -84,7 +84,15 @@ function doGet(e) {
 
     const lock = LockService.getScriptLock();
     try {
-      lock.waitLock(20000);
+      if (!lock.tryLock(5000)) {
+        return jsonResponse_({
+          ok:false,
+          exists:false,
+          created:false,
+          error:"Server sedang sibuk. Silakan coba lagi."
+        }, params.callback);
+      }
+
       const sheet = getSheet_();
       const existingRow = findRow_(sheet, className, code);
 
@@ -112,7 +120,10 @@ function doGet(e) {
 
       const rowNumber = Math.max(sheet.getLastRow()+1, 2);
       sheet.getRange(rowNumber,1,1,HEADERS.length).setValues([row]);
-      refresh_();
+
+      // Jangan refresh rekap di request reserve.
+      // Frontend menunggu JSONP; refresh_() bisa membuat response terlambat.
+      // Rekap akan diperbarui oleh upsert_() saat data berikutnya dikirim.
 
       return jsonResponse_({
         ok:true, exists:false, created:true,
