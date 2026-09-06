@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    Computer Mission 2.0 — Exploration Lab
+  </title>
+
+  <style>
+
+    :root{
+      --bg:#050d19;
+      --bg2:#0b1730;
+      --panel:rgba(14,29,53,.94);
+      --panel2:rgba(21,40,69,.96);
+      --ink:#eef5ff;
+      --muted:#9db0ca;
+      --cyan:#49d7ff;
+      --blue:#5c7cff;
+      --purple:#9b6cff;
+      --green:#46e6a2;
+      --yellow:#ffd86a;
+      --line:rgba(255,255,255,.10);
+      --shadow:0 24px 70px rgba(0,0,0,.42);
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+      background:
+        radial-gradient(
+          circle at 10% 10%,
+          rgba(73,215,255,.14),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 90% 15%,
+          rgba(155,108,255,.15),
+          transparent 28%
+        ),
+        linear-gradient(
+          160deg,
+          var(--bg),
+          var(--bg2)
+        );
+      overflow-x:hidden;
+    }
+
+    button{
+      font:inherit;
+      cursor:pointer;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+      padding:14px 20px;
+      background:rgba(4,10,22,.86);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--line);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:900;
+    }
+
+    .brand-icon{
+      width:40px;
+      height:40px;
+      border-radius:13px;
+      display:grid;
+      place-items:center;
+      background:
+        linear-gradient(
+          135deg,
+          var(--blue),
+          var(--purple)
+        );
+    }
+
+    .student-pill{
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.07);
+      border:1px solid var(--line);
+      font-size:13px;
+    }
+
+    .wrap{
+      max-width:1180px;
+      margin:30px auto;
+      padding:0 18px 70px;
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:26px;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(18,36,64,.95),
+          rgba(8,20,38,.98)
+        );
+      box-shadow:var(--shadow);
+      padding:26px;
+      overflow:hidden;
+    }
+
+    .badge{
+      display:inline-flex;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:900;
+      background:rgba(73,215,255,.10);
+      border:1px solid rgba(73,215,255,.23);
+      color:#c8f4ff;
+    }
+
+    h1,h2,h3{
+      margin-top:0;
+    }
+
+    h1{
+      font-size:clamp(30px,5vw,50px);
+      letter-spacing:-1.5px;
+      margin-bottom:10px;
+    }
+
+    h2{
+      font-size:clamp(24px,4vw,34px);
+    }
+
+    .muted{
+      color:var(--muted);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:
+        minmax(0,1.6fr)
+        minmax(280px,.8fr);
+      gap:18px;
+    }
+
+    .viewer{
+      min-height:620px;
+      border-radius:22px;
+      border:1px solid rgba(73,215,255,.20);
+      background:
+        radial-gradient(
+          circle at 50% 45%,
+          rgba(73,215,255,.06),
+          transparent 34%
+        ),
+        #020813;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      perspective:1100px;
+    }
+
+    .viewer-grid{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(
+          rgba(255,255,255,.035) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.035) 1px,
+          transparent 1px
+        );
+      background-size:35px 35px;
+      opacity:.55;
+    }
+
+    .hint{
+      position:absolute;
+      left:16px;
+      top:16px;
+      padding:8px 11px;
+      border-radius:10px;
+      background:rgba(7,15,29,.82);
+      border:1px solid var(--line);
+      font-size:12px;
+      font-weight:800;
+      z-index:4;
+    }
+
+    .model-wrap{
+      position:relative;
+      z-index:3;
+      width:430px;
+      height:390px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      transform-style:preserve-3d;
+      transform:
+        rotateX(-12deg)
+        rotateY(24deg);
+      transition:transform .15s ease-out;
+      user-select:none;
+    }
+
+    .model{
+      position:relative;
+      width:320px;
+      height:220px;
+      transform-style:preserve-3d;
+      cursor:grab;
+    }
+
+    .model:active{
+      cursor:grabbing;
+    }
+
+    .face{
+      position:absolute;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      font-weight:900;
+      letter-spacing:.4px;
+      color:#dff8ff;
+      text-shadow:0 1px 10px rgba(0,0,0,.45);
+      backface-visibility:hidden;
+    }
+
+    /*
+      MOTHERBOARD
+    */
+
+    .motherboard .face-main{
+      width:320px;
+      height:220px;
+      border-radius:14px;
+      background:
+        linear-gradient(
+          145deg,
+          #123d30,
+          #09221c
+        );
+      border:2px solid #2d866b;
+      box-shadow:
+        inset 0 0 35px rgba(73,215,255,.10),
+        0 20px 50px rgba(0,0,0,.35);
+      transform:translateZ(34px);
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .motherboard .face-back{
+      width:320px;
+      height:220px;
+      border-radius:14px;
+      background:#071912;
+      border:2px solid #185140;
+      transform:rotateY(180deg) translateZ(34px);
+    }
+
+    .motherboard .side{
+      width:68px;
+      height:220px;
+      background:#0c261e;
+      border:2px solid #1b5e4a;
+    }
+
+    .motherboard .left{
+      transform:
+        rotateY(-90deg)
+        translateZ(34px);
+    }
+
+    .motherboard .right{
+      transform:
+        rotateY(90deg)
+        translateZ(286px);
+    }
+
+    .motherboard .top{
+      width:320px;
+      height:68px;
+      background:#0d2d23;
+      border:2px solid #1b5e4a;
+      transform:
+        rotateX(90deg)
+        translateZ(34px);
+    }
+
+    .motherboard .bottom{
+      width:320px;
+      height:68px;
+      background:#06130f;
+      border:2px solid #12382e;
+      transform:
+        rotateX(-90deg)
+        translateZ(186px);
+    }
+
+    .chip{
+      width:74px;
+      height:74px;
+      border-radius:12px;
+      background:
+        linear-gradient(
+          145deg,
+          #1d2830,
+          #080f15
+        );
+      border:2px solid #7fc4d0;
+      display:grid;
+      place-items:center;
+      font-size:11px;
+    }
+
+    .ram-slot{
+      width:130px;
+      height:13px;
+      border-radius:7px;
+      background:#111923;
+      border:1px solid #72d8ef;
+    }
+
+    /*
+      CPU
+    */
+
+    .cpu .face-main{
+      width:210px;
+      height:210px;
+      border-radius:24px;
+      background:
+        linear-gradient(
+          145deg,
+          #b7c2cc,
+          #55636e
+        );
+      border:4px solid #d9e1e6;
+      color:#17212b;
+      transform:translateZ(32px);
+      flex-direction:column;
+      gap:8px;
+      box-shadow:
+        0 22px 60px rgba(0,0,0,.48);
+    }
+
+    .cpu .face-back{
+      width:210px;
+      height:210px;
+      border-radius:24px;
+      background:#36424d;
+      transform:rotateY(180deg) translateZ(32px);
+    }
+
+    .cpu .side{
+      width:64px;
+      height:210px;
+      background:#465560;
+      border:2px solid #778793;
+    }
+
+    .cpu .left{
+      transform:
+        rotateY(-90deg)
+        translateZ(32px);
+    }
+
+    .cpu .right{
+      transform:
+        rotateY(90deg)
+        translateZ(178px);
+    }
+
+    .cpu .top{
+      width:210px;
+      height:64px;
+      background:#677681;
+      transform:
+        rotateX(90deg)
+        translateZ(32px);
+    }
+
+    .cpu .bottom{
+      width:210px;
+      height:64px;
+      background:#26323b;
+      transform:
+        rotateX(-90deg)
+        translateZ(178px);
+    }
+
+    .cpu-center{
+      width:105px;
+      height:105px;
+      border-radius:18px;
+      background:#161d23;
+      color:#dce8f0;
+      display:grid;
+      place-items:center;
+      border:2px solid #91a7b7;
+      box-shadow:
+        inset 0 0 30px rgba(73,215,255,.11);
+    }
+
+    /*
+      RAM
+    */
+
+    .ram .face-main{
+      width:330px;
+      height:74px;
+      border-radius:10px;
+      background:
+        linear-gradient(
+          180deg,
+          #1b4050,
+          #0a202b
+        );
+      border:2px solid #5fc7e4;
+      transform:translateZ(24px);
+      flex-direction:row;
+      gap:13px;
+    }
+
+    .ram .face-back{
+      width:330px;
+      height:74px;
+      border-radius:10px;
+      background:#07151c;
+      transform:rotateY(180deg) translateZ(24px);
+    }
+
+    .ram .side{
+      width:48px;
+      height:74px;
+      background:#0b1d26;
+      border:2px solid #27586c;
+    }
+
+    .ram .left{
+      transform:
+        rotateY(-90deg)
+        translateZ(24px);
+    }
+
+    .ram .right{
+      transform:
+        rotateY(90deg)
+        translateZ(306px);
+    }
+
+    .ram .top{
+      width:330px;
+      height:48px;
+      background:#10303b;
+      transform:
+        rotateX(90deg)
+        translateZ(24px);
+    }
+
+    .ram .bottom{
+      width:330px;
+      height:48px;
+      background:#061219;
+      transform:
+        rotateX(-90deg)
+        translateZ(50px);
+    }
+
+    .ram-chip{
+      width:28px;
+      height:46px;
+      border-radius:4px;
+      background:
+        linear-gradient(
+          145deg,
+          #26343d,
+          #080c10
+        );
+      border:1px solid #7fd9ed;
+    }
+
+    /*
+      SSD
+    */
+
+    .ssd .face-main{
+      width:140px;
+      height:260px;
+      border-radius:18px;
+      background:
+        linear-gradient(
+          145deg,
+          #171b20,
+          #05070a
+        );
+      border:2px solid #7f8d9a;
+      transform:translateZ(30px);
+      flex-direction:column;
+      gap:12px;
+      box-shadow:
+        0 20px 50px rgba(0,0,0,.46);
+    }
+
+    .ssd .face-back{
+      width:140px;
+      height:260px;
+      border-radius:18px;
+      background:#090d11;
+      transform:rotateY(180deg) translateZ(30px);
+    }
+
+    .ssd .side{
+      width:60px;
+      height:260px;
+      background:#0d1116;
+      border:2px solid #313b44;
+    }
+
+    .ssd .left{
+      transform:
+        rotateY(-90deg)
+        translateZ(30px);
+    }
+
+    .ssd .right{
+      transform:
+        rotateY(90deg)
+        translateZ(80px);
+    }
+
+    .ssd .top{
+      width:140px;
+      height:60px;
+      background:#0d1116;
+      transform:
+        rotateX(90deg)
+        translateZ(30px);
+    }
+
+    .ssd .bottom{
+      width:140px;
+      height:60px;
+      background:#05070a;
+      transform:
+        rotateX(-90deg)
+        translateZ(230px);
+    }
+
+    .ssd-icon{
+      width:76px;
+      height:76px;
+      border-radius:16px;
+      border:2px solid #9eadb7;
+      display:grid;
+      place-items:center;
+      color:#bcefff;
+      background:#0b1116;
+    }
+
+    /*
+      KEYBOARD
+    */
+
+    .keyboard .face-main{
+      width:360px;
+      height:150px;
+      border-radius:18px;
+      background:
+        linear-gradient(
+          145deg,
+          #29303a,
+          #0e141b
+        );
+      border:2px solid #718090;
+      transform:translateZ(30px);
+      flex-direction:column;
+      gap:13px;
+    }
+
+    .keyboard .face-back{
+      width:360px;
+      height:150px;
+      border-radius:18px;
+      background:#080d12;
+      transform:rotateY(180deg) translateZ(30px);
+    }
+
+    .keyboard .side{
+      width:60px;
+      height:150px;
+      background:#131a21;
+      border:2px solid #3b4652;
+    }
+
+    .keyboard .left{
+      transform:
+        rotateY(-90deg)
+        translateZ(30px);
+    }
+
+    .keyboard .right{
+      transform:
+        rotateY(90deg)
+        translateZ(330px);
+    }
+
+    .keyboard .top{
+      width:360px;
+      height:60px;
+      background:#202833;
+      transform:
+        rotateX(90deg)
+        translateZ(30px);
+    }
+
+    .keyboard .bottom{
+      width:360px;
+      height:60px;
+      background:#0a0f14;
+      transform:
+        rotateX(-90deg)
+        translateZ(120px);
+    }
+
+    .keyboard-row{
+      display:flex;
+      gap:5px;
+    }
+
+    .key{
+      width:22px;
+      height:18px;
+      border-radius:4px;
+      background:#596572;
+      border:1px solid #7d8994;
+      box-shadow:
+        inset 0 -2px 0 rgba(0,0,0,.35);
+    }
+
+    .key.wide{
+      width:55px;
+    }
+
+    .key.space{
+      width:125px;
+    }
+
+    /*
+      MONITOR
+    */
+
+    .monitor .face-main{
+      width:330px;
+      height:210px;
+      border-radius:18px;
+      background:#101820;
+      border:7px solid #566574;
+      transform:translateZ(28px);
+      flex-direction:column;
+    }
+
+    .monitor .face-back{
+      width:330px;
+      height:210px;
+      border-radius:18px;
+      background:#1a222b;
+      transform:rotateY(180deg) translateZ(28px);
+    }
+
+    .monitor .side{
+      width:56px;
+      height:210px;
+      background:#151d25;
+      border:2px solid #394651;
+    }
+
+    .monitor .left{
+      transform:
+        rotateY(-90deg)
+        translateZ(28px);
+    }
+
+    .monitor .right{
+      transform:
+        rotateY(90deg)
+        translateZ(302px);
+    }
+
+    .monitor .top{
+      width:330px;
+      height:56px;
+      background:#18212a;
+      transform:
+        rotateX(90deg)
+        translateZ(28px);
+    }
+
+    .monitor .bottom{
+      width:330px;
+      height:56px;
+      background:#0b1015;
+      transform:
+        rotateX(-90deg)
+        translateZ(182px);
+    }
+
+    .screen{
+      width:272px;
+      height:150px;
+      border-radius:8px;
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(73,215,255,.24),
+          rgba(10,19,29,.96)
+        );
+      border:2px solid #6b8494;
+      display:grid;
+      place-items:center;
+      color:#8ee9ff;
+      font-size:20px;
+    }
+
+    .stand{
+      position:absolute;
+      width:52px;
+      height:100px;
+      left:139px;
+      top:200px;
+      background:#3b4651;
+      border:2px solid #667584;
+      transform:translateZ(4px);
+      border-radius:8px;
+    }
+
+    .base{
+      position:absolute;
+      width:140px;
+      height:18px;
+      left:95px;
+      top:292px;
+      background:#27313a;
+      border:2px solid #53616e;
+      border-radius:999px;
+      transform:translateZ(2px);
+    }
+
+    /*
+      CONTROLS
+    */
+
+    .side-panel{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .info-card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .device-buttons{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .device-btn{
+      padding:14px 12px;
+      border-radius:12px;
+      color:#dce8f7;
+      background:rgba(255,255,255,.055);
+      border:1px solid var(--line);
+      font-weight:900;
+      transition:.18s;
+    }
+
+    .device-btn:hover{
+      transform:translateY(-2px);
+      border-color:rgba(73,215,255,.30);
+    }
+
+    .device-btn.active{
+      background:
+        linear-gradient(
+          135deg,
+          rgba(73,215,255,.17),
+          rgba(92,124,255,.18)
+        );
+      border-color:rgba(73,215,255,.48);
+      color:#fff;
+    }
+
+    .btn{
+      padding:12px 15px;
+      border-radius:12px;
+      font-weight:900;
+    }
+
+    .primary{
+      color:#fff;
+      background:
+        linear-gradient(
+          135deg,
+          var(--blue),
+          var(--purple)
+        );
+      border:0;
+    }
+
+    .secondary{
+      color:#eff5ff;
+      background:rgba(255,255,255,.07);
+      border:1px solid var(--line);
+    }
+
+    .good{
+      color:#062416;
+      background:
+        linear-gradient(
+          135deg,
+          #1dbb82,
+          var(--green)
+        );
+      border:0;
+    }
+
+    .ghost{
+      color:#dce7f7;
+      background:transparent;
+      border:1px solid var(--line);
+    }
+
+    .info-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .info-row{
+      display:flex;
+      justify-content:space-between;
+      gap:15px;
+      padding:10px 0;
+      border-bottom:1px solid var(--line);
+    }
+
+    .info-row:last-child{
+      border-bottom:0;
+    }
+
+    .complete-box{
+      border:1px solid rgba(70,230,162,.25);
+      background:rgba(70,230,162,.07);
+      border-radius:18px;
+      padding:16px;
+    }
+
+    .hidden{
+      display:none!important;
+    }
+
+    .toast{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      z-index:50;
+      max-width:380px;
+      padding:13px 15px;
+      border-radius:13px;
+      background:#08101f;
+      border:1px solid var(--line);
+      box-shadow:0 18px 40px rgba(0,0,0,.35);
+      opacity:0;
+      transform:translateY(12px);
+      transition:.25s;
+      font-weight:800;
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:none;
+    }
+
+    @media(max-width:900px){
+
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      .viewer{
+        min-height:520px;
+      }
+
+    }
+
+    @media(max-width:600px){
+
+      .device-buttons{
+        grid-template-columns:1fr;
+      }
+
+      .viewer{
+        min-height:420px;
+      }
+
+      .model-wrap{
+        transform:
+          scale(.72)
+          rotateX(-12deg)
+          rotateY(24deg);
+      }
+
+      .panel{
+        padding:18px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+
+  <div class="topbar">
+
+    <div class="brand">
+
+      <div class="brand-icon">
+        🖥️
+      </div>
+
+      <div>
+
+        <div>
+          COMPUTER MISSION
+          <span style="opacity:.55">
+            2.0
+          </span>
+        </div>
+
+        <div style="
+          font-size:10px;
+          color:#91a5c1;
+          letter-spacing:1px;
+        ">
+          EXPLORATION LAB // DEVICE SIMULATION
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="studentPill"
+      class="student-pill"
+    >
+      Siswa
+    </div>
+
+  </div>
+
+
+  <div class="wrap">
+
+    <section class="panel">
+
+      <div style="margin-bottom:20px">
+
+        <span class="badge">
+          EXPLORATION LAB
+        </span>
+
+        <h1>
+          Kenali Perangkat Komputer
+        </h1>
+
+        <p
+          class="muted"
+          style="
+            max-width:800px;
+            line-height:1.7;
+            margin-bottom:0;
+          "
+        >
+          Putar simulasi dengan drag mouse
+          atau sentuhan.
+          Scroll untuk memperbesar.
+          Pilih perangkat di sebelah kanan
+          untuk melihat bentuk dan fungsi
+          dasarnya.
+        </p>
+
+      </div>
+
+
+      <div class="layout">
+
+
+        <!-- VIEWER -->
+
+        <div class="viewer">
+
+          <div class="viewer-grid"></div>
+
+          <div class="hint">
+            🖱️ Drag = Putar &nbsp;•&nbsp;
+            Scroll = Zoom
+          </div>
+
+
+          <div
+            id="modelWrap"
+            class="model-wrap"
+          >
+
+            <div
+              id="model"
+              class="model motherboard"
+            >
+
+              <!-- FACES -->
+
+              <div class="face face-main">
+
+                <div
+                  id="modelTitle"
+                  style="font-size:20px"
+                >
+                  Motherboard
+                </div>
+
+                <div class="chip">
+                  CPU
+                </div>
+
+                <div class="ram-slot"></div>
+
+                <div class="ram-slot"></div>
+
+              </div>
+
+
+              <div class="face face-back">
+                Motherboard
+              </div>
+
+
+              <div class="face side left"></div>
+
+              <div class="face side right"></div>
+
+              <div class="face top"></div>
+
+              <div class="face bottom"></div>
+
+              <!-- CPU -->
+
+              <div
+                id="cpuCenter"
+                class="cpu-center hidden"
+              >
+                CPU
+              </div>
+
+              <!-- SSD -->
+
+              <div
+                id="ssdIcon"
+                class="ssd-icon hidden"
+              >
+                SSD
+              </div>
+
+              <!-- RAM -->
+
+              <div
+                id="ramChips"
+                class="hidden"
+                style="
+                  display:flex;
+                  gap:7px;
+                "
+              >
+
+                <div class="ram-chip"></div>
+                <div class="ram-chip"></div>
+                <div class="ram-chip"></div>
+                <div class="ram-chip"></div>
+
+              </div>
+
+              <!-- MONITOR -->
+
+              <div
+                id="monitorScreen"
+                class="screen hidden"
+              >
+                SYSTEM
+              </div>
+
+              <div
+                id="monitorStand"
+                class="stand hidden"
+              ></div>
+
+              <div
+                id="monitorBase"
+                class="base hidden"
+              ></div>
+
+              <!-- KEYBOARD -->
+
+              <div
+                id="keyboardKeys"
+                class="hidden"
+                style="
+                  display:flex;
+                  flex-direction:column;
+                  gap:5px;
+                "
+              >
+
+                <div class="keyboard-row">
+
+                  <div class="key"></div>
+                  <div class="key"></div>
+                  <div class="key"></div>
+                  <div class="key"></div>
+                  <div class="key"></div>
+                  <div class="key"></div>
+                  <div class="key"></div>
+                  <div class="key"></div>
+
+                </div>
+
+
+                <div class="keyboard-row">
+
+                  <div class="key"></div>
+                  <div class="key"></div>
+                  <div class="key"></div>
+                  <div class="key"></div>
+                  <div class="key"></div>
+                  <div class="key"></div>
+                  <div class="key"></div>
+                  <div class="key"></div>
+
+                </div>
+
+
+                <div class="keyboard-row">
+
+                  <div class="key"></div>
+                  <div class="key"></div>
+                  <div class="key wide"></div>
+                  <div class="key"></div>
+                  <div class="key"></div>
+
+                </div>
+
+
+                <div class="keyboard-row">
+
+                  <div class="key"></div>
+                  <div class="key space"></div>
+                  <div class="key"></div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- SIDE -->
+
+        <div class="side-panel">
+
+
+          <div class="info-card">
+
+            <h2
+              id="deviceName"
+              style="margin-bottom:8px"
+            >
+              Motherboard
+            </h2>
+
+            <p
+              id="deviceDescription"
+              class="muted"
+              style="
+                line-height:1.65;
+                margin-bottom:0;
+              "
+            >
+              Papan utama tempat berbagai
+              komponen komputer terhubung.
+            </p>
+
+          </div>
+
+
+          <div class="info-card">
+
+            <label>
+              Pilih perangkat
+            </label>
+
+
+            <div class="device-buttons">
+
+
+              <button
+                class="device-btn active"
+                data-device="motherboard"
+              >
+                Motherboard
+              </button>
+
+
+              <button
+                class="device-btn"
+                data-device="cpu"
+              >
+                CPU
+              </button>
+
+
+              <button
+                class="device-btn"
+                data-device="ram"
+              >
+                RAM
+              </button>
+
+
+              <button
+                class="device-btn"
+                data-device="ssd"
+              >
+                SSD
+              </button>
+
+
+              <button
+                class="device-btn"
+                data-device="keyboard"
+              >
+                Keyboard
+              </button>
+
+
+              <button
+                class="device-btn"
+                data-device="monitor"
+              >
+                Monitor
+              </button>
+
+
+            </div>
+
+          </div>
+
+
+          <div class="info-card">
+
+            <h3>
+              Cara menggunakan
+            </h3>
+
+            <div
+              class="muted"
+              style="line-height:1.7"
+            >
+              Putar model dengan drag mouse
+              atau geser dengan jari.
+
+              <br><br>
+
+              Gunakan scroll/pinch
+              untuk memperbesar.
+
+            </div>
+
+
+            <div
+              class="actions"
+              style="margin-top:14px"
+            >
+
+              <button
+                class="btn secondary"
+                onclick="resetView()"
+              >
+                ↻ Reset Tampilan
+              </button>
+
+
+              <button
+                class="btn secondary"
+                id="autoRotateBtn"
+                onclick="toggleAutoRotate()"
+              >
+                ⟳ Auto Rotate: OFF
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <div class="info-card">
+
+            <h3>
+              Fungsi utama
+            </h3>
+
+
+            <div
+              id="deviceFunction"
+              class="muted"
+              style="line-height:1.7"
+            >
+              Menghubungkan CPU,
+              RAM, storage,
+              dan berbagai perangkat
+              lainnya agar dapat bekerja
+              sebagai satu sistem.
+            </div>
+
+          </div>
+
+
+          <div
+            id="completeBox"
+            class="complete-box"
+          >
+
+            <b>
+              Eksplorasi selesai?
+            </b>
+
+            <p
+              class="muted"
+              style="line-height:1.6"
+            >
+              Setelah memahami perangkat,
+              lanjutkan ke Mission 1.
+            </p>
+
+
+            <button
+              class="btn good"
+              style="width:100%"
+              onclick="finishExploration()"
+            >
+              ✅ Selesai Eksplorasi
+            </button>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <div
+    id="toast"
+    class="toast"
+  ></div>
+
+
+  <script>
+
+    const devices = {
+
+      motherboard:{
+
+        name:
+          "Motherboard",
+
+        description:
+          "Papan utama tempat berbagai komponen komputer terhubung.",
+
+        function:
+          "Menghubungkan CPU, RAM, storage, dan berbagai perangkat lainnya agar dapat bekerja sebagai satu sistem."
+
+      },
+
+
+      cpu:{
+
+        name:
+          "CPU",
+
+        description:
+          "Komponen yang menjalankan dan mengolah instruksi komputer.",
+
+        function:
+          "CPU memproses instruksi dan data. Di dalam konsep dasar CPU terdapat bagian seperti ALU untuk operasi aritmetika/logika dan CU untuk pengendalian instruksi."
+
+      },
+
+
+      ram:{
+
+        name:
+          "RAM",
+
+        description:
+          "Memori kerja sementara yang digunakan saat program berjalan.",
+
+        function:
+          "RAM menyimpan data dan instruksi yang sedang digunakan agar dapat diakses dengan cepat oleh CPU. Data di RAM bersifat sementara."
+
+      },
+
+
+      ssd:{
+
+        name:
+          "SSD",
+
+        description:
+          "Media penyimpanan untuk menyimpan data dan file.",
+
+        function:
+          "SSD menyimpan sistem operasi, aplikasi, dan file secara lebih permanen sehingga data dapat digunakan kembali."
+
+      },
+
+
+      keyboard:{
+
+        name:
+          "Keyboard",
+
+        description:
+          "Perangkat input untuk memasukkan karakter dan perintah.",
+
+        function:
+          "Keyboard mengubah tindakan pengguna seperti menekan tombol menjadi input yang dapat diproses oleh komputer."
+
+      },
+
+
+      monitor:{
+
+        name:
+          "Monitor",
+
+        description:
+          "Perangkat output yang menampilkan informasi visual.",
+
+        function:
+          "Monitor menampilkan hasil pemrosesan komputer dalam bentuk visual sehingga pengguna dapat melihat informasi atau hasil kerja."
+
+      }
+
+    };
+
+
+    const model =
+      document.querySelector(
+        "#model"
+      );
+
+    const modelWrap =
+      document.querySelector(
+        "#modelWrap"
+      );
+
+
+    let rotateX =
+      -12;
+
+    let rotateY =
+      24;
+
+    let zoom =
+      1;
+
+
+    let dragging =
+      false;
+
+    let startX=0;
+    let startY=0;
+
+    let autoRotate=false;
+    let autoRotateFrame=null;
+
+
+    function applyTransform(){
+
+      modelWrap.style.transform =
+        `
+          scale(${zoom})
+          rotateX(${rotateX}deg)
+          rotateY(${rotateY}deg)
+        `;
+
+    }
+
+
+    function resetView(){
+
+      rotateX =
+        -12;
+
+      rotateY =
+        24;
+
+      zoom =
+        1;
+
+      applyTransform();
+
+    }
+
+
+    function setDevice(device){
+
+      const data =
+        devices[device];
+
+
+      if(!data){
+        return;
+      }
+
+
+      document
+        .querySelectorAll(
+          ".device-btn"
+        )
+        .forEach(
+          button => {
+
+            button.classList.toggle(
+              "active",
+              button.dataset.device ===
+                device
+            );
+
+          }
+        );
+
+
+      document
+        .querySelector(
+          "#deviceName"
+        )
+        .textContent =
+          data.name;
+
+
+      document
+        .querySelector(
+          "#deviceDescription"
+        )
+        .textContent =
+          data.description;
+
+
+      document
+        .querySelector(
+          "#deviceFunction"
+        )
+        .textContent =
+          data.function;
+
+
+      model.className =
+        `model ${device}`;
+
+
+      /*
+       * Hide semua elemen
+       */
+
+      document
+        .querySelectorAll(
+          "#cpuCenter,#ssdIcon,#ramChips,#monitorScreen,#monitorStand,#monitorBase,#keyboardKeys"
+        )
+        .forEach(
+          element =>
+            element.classList.add(
+              "hidden"
+            )
+        );
+
+
+      /*
+       * Tampilkan elemen
+       */
+
+      if(device === "cpu"){
+
+        document
+          .querySelector(
+            "#cpuCenter"
+          )
+          .classList.remove(
+            "hidden"
+          );
+
+      }
+
+
+      if(device === "ssd"){
+
+        document
+          .querySelector(
+            "#ssdIcon"
+          )
+          .classList.remove(
+            "hidden"
+          );
+
+      }
+
+
+      if(device === "ram"){
+
+        document
+          .querySelector(
+            "#ramChips"
+          )
+          .classList.remove(
+            "hidden"
+          );
+
+      }
+
+
+      if(device === "monitor"){
+
+        document
+          .querySelector(
+            "#monitorScreen"
+          )
+          .classList.remove(
+            "hidden"
+          );
+
+        document
+          .querySelector(
+            "#monitorStand"
+          )
+          .classList.remove(
+            "hidden"
+          );
+
+        document
+          .querySelector(
+            "#monitorBase"
+          )
+          .classList.remove(
+            "hidden"
+          );
+
+      }
+
+
+      if(device === "keyboard"){
+
+        document
+          .querySelector(
+            "#keyboardKeys"
+          )
+          .classList.remove(
+            "hidden"
+          );
+
+      }
+
+
+      resetView();
+
+    }
+
+
+    document
+      .querySelectorAll(
+        ".device-btn"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () =>
+              setDevice(
+                button.dataset.device
+              )
+          );
+
+        }
+      );
+
+
+    /*
+     * DRAG ROTATE
+     */
+
+    modelWrap.addEventListener(
+      "pointerdown",
+      event => {
+
+        dragging=true;
+
+        startX =
+          event.clientX;
+
+        startY =
+          event.clientY;
+
+        modelWrap.setPointerCapture(
+          event.pointerId
+        );
+
+      }
+    );
+
+
+    modelWrap.addEventListener(
+      "pointermove",
+      event => {
+
+        if(!dragging){
+          return;
+        }
+
+        const dx =
+          event.clientX -
+          startX;
+
+        const dy =
+          event.clientY -
+          startY;
+
+        rotateY +=
+          dx * .55;
+
+        rotateX -=
+          dy * .45;
+
+        rotateX =
+          Math.max(
+            -70,
+            Math.min(
+              70,
+              rotateX
+            )
+          );
+
+        startX =
+          event.clientX;
+
+        startY =
+          event.clientY;
+
+        applyTransform();
+
+      }
+    );
+
+
+    modelWrap.addEventListener(
+      "pointerup",
+      event => {
+
+        dragging=false;
+
+        try{
+
+          modelWrap.releasePointerCapture(
+            event.pointerId
+          );
+
+        }catch(_){}
+
+      }
+    );
+
+
+    modelWrap.addEventListener(
+      "pointercancel",
+      () => {
+
+        dragging=false;
+
+      }
+    );
+
+
+    /*
+     * ZOOM
+     */
+
+    modelWrap.addEventListener(
+      "wheel",
+      event => {
+
+        event.preventDefault();
+
+        zoom +=
+          event.deltaY < 0
+            ? .08
+            : -.08;
+
+        zoom =
+          Math.max(
+            .55,
+            Math.min(
+              1.65,
+              zoom
+            )
+          );
+
+        applyTransform();
+
+      },
+      {
+        passive:false
+      }
+    );
+
+
+    /*
+     * AUTO ROTATE
+     */
+
+    function toggleAutoRotate(){
+
+      autoRotate =
+        !autoRotate;
+
+
+      document
+        .querySelector(
+          "#autoRotateBtn"
+        )
+        .textContent =
+          autoRotate
+            ? "⟳ Auto Rotate: ON"
+            : "⟳ Auto Rotate: OFF";
+
+
+      if(autoRotate){
+
+        runAutoRotate();
+
+      }else{
+
+        cancelAnimationFrame(
+          autoRotateFrame
+        );
+
+      }
+
+    }
+
+
+    function runAutoRotate(){
+
+      if(!autoRotate){
+        return;
+      }
+
+
+      rotateY +=
+        .35;
+
+      applyTransform();
+
+
+      autoRotateFrame =
+        requestAnimationFrame(
+          runAutoRotate
+        );
+
+    }
+
+
+    /*
+     * STUDENT INFO
+     */
+
+    function loadStudent(){
+
+      const raw =
+        localStorage.getItem(
+          "cm2_active_student"
+        );
+
+
+      if(!raw){
+
+        document
+          .querySelector(
+            "#studentPill"
+          )
+          .textContent =
+            "Mode Eksplorasi";
+
+        return;
+
+      }
+
+
+      try{
+
+        const student =
+          JSON.parse(raw);
+
+
+        document
+          .querySelector(
+            "#studentPill"
+          )
+          .textContent =
+            `${student.name} • ${student.code} • ${student.className}`;
+
+      }catch(error){
+
+        console.warn(
+          error
+        );
+
+      }
+
+    }
+
+
+    /*
+     * SELESAI
+     */
+
+    function finishExploration(){
+
+      const raw =
+        localStorage.getItem(
+          "cm2_active_student"
+        );
+
+
+      if(!raw){
+
+        showToast(
+          "Sesi siswa belum ditemukan."
+        );
+
+        return;
+
+      }
+
+
+      try{
+
+        const student =
+          JSON.parse(raw);
+
+
+        const key =
+          "cm2_exploration_done_" +
+          student.className +
+          "_" +
+          student.code;
+
+
+        localStorage.setItem(
+          key,
+          "1"
+        );
+
+
+        showToast(
+          "Eksplorasi selesai. Kembali ke mission."
+        );
+
+
+        setTimeout(
+          () => {
+
+            window.location.href =
+              "index.html";
+
+          },
+          800
+        );
+
+      }catch(error){
+
+        console.error(
+          error
+        );
+
+        showToast(
+          "Gagal menyimpan progres."
+        );
+
+      }
+
+    }
+
+
+    loadStudent();
+
+    setDevice(
+      "motherboard"
+    );
+
+  </script>
+
+</body>
+</html>

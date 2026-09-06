@@ -10,13 +10,11 @@
       --bg:#07111f;
       --bg2:#0c1830;
       --panel:rgba(15,28,52,.92);
-      --panel2:rgba(18,35,63,.96);
       --ink:#eef5ff;
       --muted:#a9b8cf;
       --cyan:#49d7ff;
       --blue:#5c7cff;
       --purple:#9b6cff;
-      --pink:#ff61c7;
       --green:#46e6a2;
       --yellow:#ffd86a;
       --red:#ff6b7a;
@@ -24,13 +22,9 @@
       --shadow:0 22px 60px rgba(0,0,0,.35);
     }
 
-    *{
-      box-sizing:border-box;
-    }
+    *{box-sizing:border-box}
 
-    html{
-      scroll-behavior:smooth;
-    }
+    html{scroll-behavior:smooth}
 
     body{
       margin:0;
@@ -40,7 +34,6 @@
       background:
         radial-gradient(circle at 10% 10%,rgba(92,124,255,.20),transparent 28%),
         radial-gradient(circle at 90% 15%,rgba(255,97,199,.14),transparent 25%),
-        radial-gradient(circle at 50% 100%,rgba(73,215,255,.10),transparent 30%),
         linear-gradient(160deg,var(--bg),var(--bg2));
       overflow-x:hidden;
     }
@@ -93,12 +86,8 @@
     }
 
     @keyframes titleShift{
-      0%,100%{
-        background-position:0% 50%;
-      }
-      50%{
-        background-position:100% 50%;
-      }
+      0%,100%{background-position:0% 50%}
+      50%{background-position:100% 50%}
     }
 
     @keyframes pulseGlow{
@@ -112,37 +101,34 @@
       }
     }
 
-    @keyframes borderPulse{
+    @keyframes floatIcon{
       0%,100%{
-        border-color:var(--line);
+        transform:translateY(0) rotate(0deg);
       }
       50%{
-        border-color:rgba(73,215,255,.34);
+        transform:translateY(-7px) rotate(2deg);
       }
     }
 
     @keyframes progressGlow{
-      0%,100%{
-        filter:brightness(1);
+      0%,100%{filter:brightness(1)}
+      50%{filter:brightness(1.22)}
+    }
+
+    @keyframes scanline{
+      0%{
+        top:-8%;
+        opacity:0;
       }
-      50%{
-        filter:brightness(1.2);
+      12%{opacity:1}
+      88%{opacity:1}
+      100%{
+        top:108%;
+        opacity:0;
       }
     }
 
-    @keyframes deviceFloat{
-      0%,100%{
-        transform:translateY(0);
-      }
-      50%{
-        transform:translateY(-8px);
-      }
-    }
-
-    button,
-    input,
-    select,
-    textarea{
+    button,input,select,textarea{
       font:inherit;
     }
 
@@ -158,13 +144,13 @@
     .topbar{
       position:sticky;
       top:0;
-      z-index:50;
+      z-index:20;
       display:flex;
       justify-content:space-between;
       align-items:center;
       gap:16px;
       padding:14px 20px;
-      background:rgba(4,10,22,.84);
+      background:rgba(4,10,22,.82);
       backdrop-filter:blur(16px);
       border-bottom:1px solid var(--line);
     }
@@ -174,7 +160,6 @@
       align-items:center;
       gap:10px;
       font-weight:900;
-      letter-spacing:.4px;
     }
 
     .brand-icon{
@@ -199,22 +184,12 @@
       background:rgba(255,255,255,.07);
       border:1px solid var(--line);
       font-size:13px;
-      color:#dce7f8;
-    }
-
-    .pill.xp{
-      background:linear-gradient(
-        135deg,
-        rgba(92,124,255,.25),
-        rgba(155,108,255,.22)
-      );
-      border-color:rgba(155,108,255,.35);
     }
 
     .wrap{
       max-width:1120px;
       margin:28px auto;
-      padding:0 18px 60px;
+      padding:0 18px 50px;
     }
 
     .panel{
@@ -222,7 +197,7 @@
         linear-gradient(
           180deg,
           rgba(18,35,63,.94),
-          rgba(10,23,43,.97)
+          rgba(10,23,43,.96)
         );
       border:1px solid var(--line);
       border-radius:24px;
@@ -237,25 +212,17 @@
       content:"";
       position:absolute;
       inset:0;
-      pointer-events:none;
       background:
         linear-gradient(
           120deg,
-          rgba(255,255,255,.04),
-          transparent 30%,
-          rgba(92,124,255,.03)
+          rgba(255,255,255,.05),
+          transparent 35%,
+          rgba(92,124,255,.04)
         );
+      pointer-events:none;
     }
 
-    .center{
-      text-align:center;
-    }
-
-    h1,
-    h2,
-    h3{
-      margin-top:0;
-    }
+    h1,h2,h3{margin-top:0}
 
     h1{
       font-size:clamp(34px,6vw,58px);
@@ -265,11 +232,6 @@
 
     h2{
       font-size:clamp(24px,4vw,34px);
-      letter-spacing:-.7px;
-    }
-
-    h3{
-      font-size:18px;
     }
 
     .muted{
@@ -280,11 +242,6 @@
       display:grid;
       grid-template-columns:1.25fr .75fr;
       gap:22px;
-      align-items:stretch;
-    }
-
-    .hero-copy{
-      padding:8px 4px 8px 2px;
     }
 
     .hero-kicker{
@@ -295,10 +252,8 @@
       border-radius:999px;
       background:rgba(73,215,255,.10);
       border:1px solid rgba(73,215,255,.25);
-      color:#c2f4ff;
       font-size:11px;
-      font-weight:950;
-      letter-spacing:.5px;
+      font-weight:900;
     }
 
     .game-title{
@@ -319,8 +274,7 @@
     }
 
     .scan-card{
-      position:relative;
-      min-height:290px;
+      min-height:250px;
       display:grid;
       place-items:center;
       border-radius:24px;
@@ -328,11 +282,9 @@
         linear-gradient(
           145deg,
           rgba(73,215,255,.10),
-          rgba(155,108,255,.11)
-        ),
-        rgba(255,255,255,.03);
+          rgba(155,108,255,.10)
+        );
       border:1px solid rgba(73,215,255,.18);
-      animation:borderPulse 4s ease-in-out infinite;
     }
 
     .scan-grid{
@@ -342,8 +294,6 @@
       display:grid;
       place-items:center;
       font-size:52px;
-      position:relative;
-      overflow:hidden;
       background:
         linear-gradient(
           rgba(255,255,255,.05) 1px,
@@ -355,6 +305,8 @@
           transparent 1px
         );
       background-size:22px 22px;
+      position:relative;
+      overflow:hidden;
       box-shadow:inset 0 0 50px rgba(73,215,255,.08);
     }
 
@@ -365,12 +317,13 @@
       right:10%;
       height:3px;
       top:-8%;
-      background:linear-gradient(
-        90deg,
-        transparent,
-        var(--cyan),
-        transparent
-      );
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          var(--cyan),
+          transparent
+        );
       box-shadow:0 0 20px var(--cyan);
       animation:scanline 2.8s linear infinite;
     }
@@ -385,27 +338,10 @@
       animation:pulseGlow 3s ease-in-out infinite;
     }
 
-    .scan-grid > span{
+    .scan-icon{
       position:relative;
       z-index:2;
-      animation:deviceFloat 3s ease-in-out infinite;
-    }
-
-    @keyframes scanline{
-      0%{
-        top:-8%;
-        opacity:0;
-      }
-      12%{
-        opacity:1;
-      }
-      88%{
-        opacity:1;
-      }
-      100%{
-        top:108%;
-        opacity:0;
-      }
+      animation:floatIcon 3s ease-in-out infinite;
     }
 
     .grid{
@@ -422,15 +358,13 @@
 
     label{
       display:block;
-      font-weight:850;
+      font-weight:800;
       font-size:13px;
       margin-bottom:8px;
       color:#d8e4f5;
     }
 
-    input,
-    select,
-    textarea{
+    input,select,textarea{
       width:100%;
       padding:13px 14px;
       color:var(--ink);
@@ -438,12 +372,10 @@
       border:1px solid var(--line);
       border-radius:12px;
       outline:none;
-      transition:.2s;
     }
 
-    input::placeholder,
-    textarea::placeholder{
-      color:#7f90a8;
+    select option{
+      color:#111;
     }
 
     input:focus,
@@ -451,10 +383,6 @@
     textarea:focus{
       border-color:rgba(73,215,255,.55);
       box-shadow:0 0 0 4px rgba(73,215,255,.08);
-    }
-
-    select option{
-      color:#111;
     }
 
     .actions{
@@ -475,7 +403,7 @@
 
     .btn:hover{
       transform:translateY(-2px);
-      filter:brightness(1.06);
+      filter:brightness(1.07);
     }
 
     .primary{
@@ -507,7 +435,6 @@
           #1dbb82,
           var(--green)
         );
-      box-shadow:0 12px 28px rgba(70,230,162,.18);
     }
 
     .ghost{
@@ -516,23 +443,12 @@
       border:1px solid var(--line);
     }
 
-    .danger{
-      color:#ffadb7;
-      background:rgba(255,107,122,.12);
-      border:1px solid rgba(255,107,122,.24);
-    }
-
     .mission-card,
     .kpi{
       border:1px solid var(--line);
       border-radius:18px;
       padding:18px;
-      background:
-        linear-gradient(
-          180deg,
-          rgba(255,255,255,.045),
-          rgba(255,255,255,.02)
-        );
+      background:rgba(255,255,255,.035);
       transition:
         transform .2s ease,
         border-color .2s ease,
@@ -545,57 +461,14 @@
       box-shadow:0 14px 34px rgba(0,0,0,.22);
     }
 
-    .kpi{
-      background:rgba(255,255,255,.035);
-    }
-
-    .kpi small{
-      display:block;
-      color:var(--muted);
-      margin-bottom:5px;
-    }
-
     .badge{
       display:inline-flex;
-      align-items:center;
-      gap:5px;
       padding:6px 9px;
       border-radius:999px;
       background:rgba(92,124,255,.13);
       border:1px solid rgba(92,124,255,.25);
       font-size:11px;
-      font-weight:950;
-    }
-
-    .timer{
-      padding:8px 12px;
-      border-radius:12px;
-      border:1px solid var(--line);
-      font-weight:950;
-      background:rgba(255,255,255,.05);
-    }
-
-    .progress{
-      height:10px;
-      border:1px solid var(--line);
-      border-radius:99px;
-      overflow:hidden;
-      background:rgba(255,255,255,.05);
-    }
-
-    .progress span{
-      display:block;
-      height:100%;
-      width:0%;
-      background:
-        linear-gradient(
-          90deg,
-          var(--cyan),
-          var(--blue),
-          var(--purple)
-        );
-      animation:progressGlow 2.4s ease-in-out infinite;
-      transition:width .45s ease;
+      font-weight:900;
     }
 
     .option{
@@ -607,18 +480,48 @@
       border:1px solid var(--line);
       border-radius:12px;
       background:rgba(255,255,255,.03);
-      transition:.18s;
+      transition:.18s ease;
     }
 
     .option:hover{
       transform:translateX(3px);
-      border-color:rgba(73,215,255,.28);
+      border-color:rgba(73,215,255,.30);
       background:rgba(73,215,255,.05);
     }
 
     .option input{
       width:auto;
       margin-top:4px;
+    }
+
+    .timer{
+      padding:8px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      font-weight:900;
+      background:rgba(255,255,255,.05);
+    }
+
+    .progress{
+      height:10px;
+      border:1px solid var(--line);
+      border-radius:99px;
+      overflow:hidden;
+      background:rgba(255,255,255,.04);
+    }
+
+    .progress span{
+      display:block;
+      height:100%;
+      background:
+        linear-gradient(
+          90deg,
+          var(--cyan),
+          var(--blue),
+          var(--purple)
+        );
+      animation:progressGlow 2.4s ease-in-out infinite;
+      transition:width .4s ease;
     }
 
     .big{
@@ -638,29 +541,53 @@
       line-height:1.6;
     }
 
-    .section-title{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
+    .explore-card{
+      border:1px solid rgba(73,215,255,.22);
+      border-radius:20px;
+      padding:20px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(73,215,255,.08),
+          rgba(155,108,255,.06)
+        );
+    }
+
+    .explore-icon{
+      font-size:42px;
+      margin-bottom:10px;
+      animation:floatIcon 3s ease-in-out infinite;
+      display:inline-block;
+    }
+
+    .stage-number{
+      width:36px;
+      height:36px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      font-weight:950;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(73,215,255,.16),
+          rgba(92,124,255,.18)
+        );
+      border:1px solid rgba(73,215,255,.20);
     }
 
     .toast{
       position:fixed;
       right:18px;
       bottom:18px;
-      z-index:100;
+      z-index:50;
       max-width:380px;
       padding:13px 15px;
       border-radius:13px;
       background:#08101f;
       border:1px solid var(--line);
-      box-shadow:var(--shadow);
       opacity:0;
       transform:translateY(12px);
-      pointer-events:none;
       transition:.25s;
       font-weight:800;
     }
@@ -670,223 +597,13 @@
       transform:none;
     }
 
-
-    /* ======================================================
-       GUIDE
-    ====================================================== */
-
-    .guide-step{
-      position:relative;
-      padding:20px;
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.035);
-    }
-
-    .guide-number{
-      width:42px;
-      height:42px;
-      display:grid;
-      place-items:center;
-      border-radius:14px;
-      background:
-        linear-gradient(
-          135deg,
-          rgba(73,215,255,.16),
-          rgba(92,124,255,.18)
-        );
-      border:1px solid rgba(73,215,255,.20);
-      color:#dffaff;
-      font-weight:950;
-      margin-bottom:12px;
-    }
-
-    .highlight-box{
-      margin-top:18px;
-      padding:16px;
-      border-radius:16px;
-      border:1px solid rgba(73,215,255,.20);
-      background:rgba(73,215,255,.055);
-    }
-
-
-    /* ======================================================
-       3D LAB
-    ====================================================== */
-
-    .lab-status{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:7px 10px;
-      border-radius:999px;
-      background:rgba(70,230,162,.10);
-      border:1px solid rgba(70,230,162,.24);
-      color:#9dffda;
-      font-size:11px;
-      font-weight:950;
-    }
-
-    .explore-layout{
-      display:grid;
-      grid-template-columns:minmax(0,1.7fr) minmax(280px,.7fr);
-      gap:16px;
-    }
-
-    .canvas-shell{
-      position:relative;
-      height:500px;
-      min-height:400px;
-      border-radius:22px;
-      overflow:hidden;
-      border:1px solid rgba(73,215,255,.22);
-      background:
-        radial-gradient(
-          circle at 50% 40%,
-          rgba(73,215,255,.055),
-          transparent 45%
-        ),
-        #020916;
-      box-shadow:
-        inset 0 0 80px rgba(73,215,255,.04);
-    }
-
-    #threeStage{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-    }
-
-    #threeStage canvas{
-      display:block;
-      width:100%;
-      height:100%;
-      touch-action:none;
-    }
-
-    .three-help{
-      position:absolute;
-      left:14px;
-      top:14px;
-      z-index:5;
-      padding:8px 10px;
-      border-radius:10px;
-      background:rgba(5,13,27,.82);
-      border:1px solid var(--line);
-      font-size:11px;
-      font-weight:900;
-      color:#d9edff;
-      pointer-events:none;
-      backdrop-filter:blur(8px);
-    }
-
-    .device-panel{
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-
-    .device-title-box{
-      padding:18px;
-      border:1px solid var(--line);
-      border-radius:18px;
-      background:rgba(255,255,255,.035);
-    }
-
-    .device-title-box h3{
-      margin-bottom:7px;
-      font-size:21px;
-    }
-
-    .device-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:8px;
-    }
-
-    .device-btn{
-      padding:12px 10px;
-      border-radius:12px;
-      color:#e8f2ff;
-      background:rgba(255,255,255,.055);
-      border:1px solid var(--line);
-      font-weight:900;
-      transition:.18s;
-    }
-
-    .device-btn:hover{
-      transform:translateY(-2px);
-      border-color:rgba(73,215,255,.30);
-      background:rgba(73,215,255,.06);
-    }
-
-    .device-btn.active{
-      background:
-        linear-gradient(
-          135deg,
-          rgba(73,215,255,.12),
-          rgba(92,124,255,.18)
-        );
-      border-color:rgba(73,215,255,.46);
-      box-shadow:0 0 22px rgba(73,215,255,.10);
-    }
-
-    .lab-controls{
-      display:grid;
-      gap:8px;
-    }
-
-    .device-tip{
-      padding:15px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      font-size:13px;
-      line-height:1.65;
-    }
-
-
-    /* ======================================================
-       MISSION STATUS
-    ====================================================== */
-
-    .mission-progress{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:18px;
-    }
-
-    .stage-pill{
-      padding:8px 11px;
-      border-radius:999px;
-      background:rgba(255,255,255,.045);
-      border:1px solid var(--line);
-      color:#aabbd2;
-      font-size:11px;
-      font-weight:900;
-    }
-
-    .stage-pill.active{
-      color:#dffaff;
-      background:rgba(73,215,255,.10);
-      border-color:rgba(73,215,255,.30);
-    }
-
-    .stage-pill.done{
-      color:#a2ffd9;
-      background:rgba(70,230,162,.08);
-      border-color:rgba(70,230,162,.25);
-    }
-
-    @media(max-width:900px){
-      .explore-layout{
-        grid-template-columns:1fr;
-      }
-
-      .canvas-shell{
-        height:430px;
+    @media(prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        animation-duration:.001ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.001ms!important;
       }
     }
 
@@ -905,30 +622,14 @@
         padding:20px;
       }
 
-      .canvas-shell{
-        height:380px;
-        min-height:320px;
-      }
-    }
-
-    @media(prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
-        animation-duration:.001ms!important;
-        animation-iteration-count:1!important;
-        scroll-behavior:auto!important;
-        transition-duration:.001ms!important;
+      .wrap{
+        margin:18px auto;
       }
     }
   </style>
 </head>
 
 <body>
-
-  <!-- =====================================================
-       TOPBAR
-  ====================================================== -->
 
   <div class="topbar">
 
@@ -942,9 +643,7 @@
 
         <div>
           COMPUTER MISSION
-          <span style="opacity:.55">
-            2.0
-          </span>
+          <span style="opacity:.55">2.0</span>
         </div>
 
         <div style="
@@ -968,7 +667,7 @@
         Belum mulai
       </span>
 
-      <span class="pill xp">
+      <span class="pill">
         ⚡ XP
         <b id="xpTop">0</b>
       </span>
@@ -981,9 +680,7 @@
   <div class="wrap">
 
 
-    <!-- ===================================================
-         LOGIN
-    ==================================================== -->
+    <!-- LOGIN -->
 
     <section
       id="login"
@@ -992,7 +689,7 @@
 
       <div class="hero">
 
-        <div class="hero-copy">
+        <div>
 
           <span class="hero-kicker">
             ⚡ DIGITAL QUEST • PTK SIKLUS II
@@ -1003,21 +700,21 @@
             My Data Go?
           </h1>
 
-          <p style="
-            line-height:1.7;
-            font-size:16px;
-          ">
+          <p style="line-height:1.7;">
+
             Selamat datang,
             <b>Data Detective</b>.
-            Pecahkan misi tentang
-            <b>Input → Process → Output</b>,
-            CPU, RAM, Storage, dan selesaikan
-            Boss Mission bersama timmu.
+
+            Pelajari sistem komputer,
+            eksplorasi perangkat,
+            lalu selesaikan
+            rangkaian mission bersama timmu.
+
           </p>
 
           <div
             class="grid"
-            style="margin-top:22px;"
+            style="margin-top:22px"
           >
 
             <div>
@@ -1077,29 +774,12 @@
 
               <select id="team">
 
-                <option>
-                  Tim 1
-                </option>
-
-                <option>
-                  Tim 2
-                </option>
-
-                <option>
-                  Tim 3
-                </option>
-
-                <option>
-                  Tim 4
-                </option>
-
-                <option>
-                  Tim 5
-                </option>
-
-                <option>
-                  Tim 6
-                </option>
+                <option>Tim 1</option>
+                <option>Tim 2</option>
+                <option>Tim 3</option>
+                <option>Tim 4</option>
+                <option>Tim 5</option>
+                <option>Tim 6</option>
 
               </select>
 
@@ -1151,7 +831,7 @@
 
           <div
             class="actions"
-            style="margin-top:20px;"
+            style="margin-top:20px"
           >
 
             <button
@@ -1170,9 +850,9 @@
 
           <div class="scan-grid">
 
-            <span>
+            <div class="scan-icon">
               🖥️
-            </span>
+            </div>
 
           </div>
 
@@ -1183,9 +863,7 @@
     </section>
 
 
-    <!-- ===================================================
-         DASHBOARD
-    ==================================================== -->
+    <!-- DASHBOARD SISWA -->
 
     <section
       id="dash"
@@ -1260,24 +938,31 @@
       </div>
 
 
-      <div
-        class="progress"
-        style="margin-top:18px;"
-      >
-        <span id="prog"></span>
+      <div style="margin-top:18px">
+
+        <div class="progress">
+          <span id="prog"></span>
+        </div>
+
       </div>
 
 
-      <div class="section-title" style="
-        margin-top:24px;
-      ">
+      <div
+        class="section-label"
+        style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          margin-top:24px;
+        "
+      >
 
-        <h2 style="margin:0;">
+        <h2 style="margin:0">
           MISSION MAP
         </h2>
 
         <span class="badge">
-          6 STAGE QUEST
+          7 STAGE QUEST
         </span>
 
       </div>
@@ -1285,11 +970,12 @@
 
       <div class="grid3">
 
+
         <div class="mission-card">
 
-          <span class="badge">
+          <div class="stage-number">
             1
-          </span>
+          </div>
 
           <h3>
             Pre-test
@@ -1304,9 +990,9 @@
 
         <div class="mission-card">
 
-          <span class="badge">
+          <div class="stage-number">
             2
-          </span>
+          </div>
 
           <h3>
             Mini Lesson
@@ -1321,9 +1007,27 @@
 
         <div class="mission-card">
 
-          <span class="badge">
+          <div class="stage-number">
             3
-          </span>
+          </div>
+
+          <h3>
+            Eksplorasi Perangkat
+          </h3>
+
+          <p>
+            Kenali perangkat komputer
+            secara interaktif
+          </p>
+
+        </div>
+
+
+        <div class="mission-card">
+
+          <div class="stage-number">
+            4
+          </div>
 
           <h3>
             Mission 1
@@ -1338,9 +1042,9 @@
 
         <div class="mission-card">
 
-          <span class="badge">
-            4
-          </span>
+          <div class="stage-number">
+            5
+          </div>
 
           <h3>
             Mission 2
@@ -1355,9 +1059,9 @@
 
         <div class="mission-card">
 
-          <span class="badge">
-            5
-          </span>
+          <div class="stage-number">
+            6
+          </div>
 
           <h3>
             Mission 3
@@ -1372,9 +1076,9 @@
 
         <div class="mission-card">
 
-          <span class="badge">
-            6
-          </span>
+          <div class="stage-number">
+            7
+          </div>
 
           <h3>
             Boss Mission
@@ -1389,442 +1093,111 @@
       </div>
 
 
-      <div class="actions" style="
-        margin-top:18px;
-      ">
+      <div
+        class="explore-card"
+        style="margin-top:20px"
+      >
 
-        <button
-          class="btn secondary"
-          onclick="showGuide()"
-        >
-          📘 Cara Bermain
-        </button>
-
-        <button
-          class="btn primary"
-          onclick="startPretest()"
-        >
-          Mulai Pre-test
-        </button>
-
-      </div>
-
-    </section>
-
-
-    <!-- ===================================================
-         GUIDE
-    ==================================================== -->
-
-    <section
-      id="guide"
-      class="panel hidden"
-    >
-
-      <div class="section-title">
-
-        <div>
-
-          <span class="hero-kicker">
-            PLAYER GUIDE
-          </span>
-
-          <h2 style="
-            margin:12px 0 5px;
-          ">
-            Cara Bermain
-          </h2>
-
-          <p class="muted">
-            Ikuti urutan permainan berikut agar tidak bingung
-            saat mengerjakan misi.
-          </p>
-
+        <div class="explore-icon">
+          🖥️
         </div>
 
-        <span class="badge">
-          DATA DETECTIVE
-        </span>
+        <h3>
+          Eksplorasi Perangkat Komputer
+        </h3>
 
-      </div>
+        <p class="muted">
+          Sebelum masuk ke mission,
+          kamu akan mengenali beberapa
+          perangkat komputer seperti
+          motherboard, CPU, RAM, SSD,
+          keyboard, dan monitor.
+        </p>
 
-
-      <div class="grid3">
-
-        <div class="guide-step">
-
-          <div class="guide-number">
-            01
-          </div>
-
-          <h3>
-            Pre-Test
-          </h3>
-
-          <p class="muted">
-            Kerjakan 15 soal secara individu.
-            Jawab sesuai kemampuan awalmu.
-          </p>
-
-        </div>
-
-
-        <div class="guide-step">
-
-          <div class="guide-number">
-            02
-          </div>
-
-          <h3>
-            Eksplorasi
-          </h3>
-
-          <p class="muted">
-            Kenali bentuk dan fungsi perangkat komputer
-            menggunakan laboratorium interaktif.
-          </p>
-
-        </div>
-
-
-        <div class="guide-step">
-
-          <div class="guide-number">
-            03
-          </div>
-
-          <h3>
-            Mini Lesson
-          </h3>
-
-          <p class="muted">
-            Pelajari konsep IPO, CPU, RAM, Storage,
-            dan alur kerja komputer.
-          </p>
-
-        </div>
-
-
-        <div class="guide-step">
-
-          <div class="guide-number">
-            04
-          </div>
-
-          <h3>
-            Mission Run
-          </h3>
-
-          <p class="muted">
-            Selesaikan Mission 1, Mission 2,
-            dan Mission 3 bersama tim.
-          </p>
-
-        </div>
-
-
-        <div class="guide-step">
-
-          <div class="guide-number">
-            05
-          </div>
-
-          <h3>
-            Boss Mission
-          </h3>
-
-          <p class="muted">
-            Pecahkan kasus komputer menggunakan
-            konsep Input → Process → Output.
-          </p>
-
-        </div>
-
-
-        <div class="guide-step">
-
-          <div class="guide-number">
-            06
-          </div>
-
-          <h3>
-            Post-Test
-          </h3>
-
-          <p class="muted">
-            Kerjakan kembali 15 soal untuk melihat
-            perkembangan belajar.
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <div class="highlight-box">
-
-        <b>Aturan penting:</b>
+        <p class="footer-note">
+          Kamu dapat memutar dan memperbesar
+          simulasi perangkat.
+        </p>
 
         <div
-          class="muted"
-          style="
-            line-height:1.7;
-            margin-top:7px;
-          "
+          class="actions"
+          style="margin-top:14px"
         >
-          Pre-Test dan Post-Test dikerjakan
-          <b>secara individu</b>.
-          Mission dikerjakan sesuai instruksi.
-          Jawaban uraian akan dibaca dan dinilai guru.
-          XP digunakan sebagai bagian dari gamifikasi.
+
+          <button
+            class="btn secondary"
+            onclick="openExploration()"
+          >
+            🧩 Buka Eksplorasi
+          </button>
+
+          <button
+            id="mission1Button"
+            class="btn primary"
+            onclick="continueToMission1()"
+          >
+            Mulai Mission 1
+          </button>
+
         </div>
 
       </div>
 
 
-      <div class="actions" style="
-        margin-top:18px;
-      ">
+      <div
+        class="mission-card"
+        style="
+          margin-top:18px;
+          border-color:rgba(73,215,255,.18);
+        "
+      >
 
-        <button
-          class="btn secondary"
-          onclick="showExploration()"
-        >
-          🧩 Eksplorasi Perangkat 3D
-        </button>
+        <h3>
+          Alur belajar
+        </h3>
 
-        <button
-          class="btn ghost"
-          onclick="show('#dash')"
-        >
-          ← Kembali
-        </button>
+        <p class="muted" style="line-height:1.8">
+
+          <b>Pre-Test</b>
+          →
+          <b>Mini Lesson</b>
+          →
+          <b>Eksplorasi Perangkat</b>
+          →
+          <b>Mission 1</b>
+          →
+          <b>Mission 2</b>
+          →
+          <b>Mission 3</b>
+          →
+          <b>Boss</b>
+          →
+          <b>Post-Test</b>
+          →
+          <b>Refleksi</b>
+
+        </p>
 
       </div>
 
     </section>
 
 
-    <!-- ===================================================
-         EXPLORATION LAB 3D
-    ==================================================== -->
-
-    <section
-      id="exploration"
-      class="panel hidden"
-    >
-
-      <div class="section-title">
-
-        <div>
-
-          <span class="hero-kicker">
-            EXPLORATION LAB
-          </span>
-
-          <h2 style="
-            margin:12px 0 5px;
-          ">
-            Kenali Perangkat Komputer
-          </h2>
-
-          <p class="muted">
-            Putar model dengan drag mouse atau geser dengan jari.
-            Gunakan scroll atau pinch untuk zoom.
-          </p>
-
-        </div>
-
-        <span class="lab-status">
-          ● 3D ONLINE
-        </span>
-
-      </div>
-
-
-      <div class="explore-layout">
-
-
-        <div class="canvas-shell">
-
-          <div id="threeStage"></div>
-
-        </div>
-
-
-        <div class="device-panel">
-
-
-          <div class="device-title-box">
-
-            <span class="badge">
-              SELECTED DEVICE
-            </span>
-
-            <h3
-              id="deviceTitle"
-              style="margin-top:12px;"
-            >
-              Motherboard
-            </h3>
-
-            <div
-              id="deviceDescription"
-              class="muted"
-              style="line-height:1.65;"
-            >
-              Papan utama tempat berbagai komponen
-              komputer saling terhubung.
-            </div>
-
-          </div>
-
-
-          <div class="device-title-box">
-
-            <label>
-              Pilih perangkat
-            </label>
-
-            <div class="device-grid">
-
-              <button
-                class="device-btn active"
-                data-device="motherboard"
-              >
-                Motherboard
-              </button>
-
-              <button
-                class="device-btn"
-                data-device="cpu"
-              >
-                CPU
-              </button>
-
-              <button
-                class="device-btn"
-                data-device="ram"
-              >
-                RAM
-              </button>
-
-              <button
-                class="device-btn"
-                data-device="ssd"
-              >
-                SSD
-              </button>
-
-              <button
-                class="device-btn"
-                data-device="keyboard"
-              >
-                Keyboard
-              </button>
-
-              <button
-                class="device-btn"
-                data-device="monitor"
-              >
-                Monitor
-              </button>
-
-            </div>
-
-          </div>
-
-
-          <div class="device-title-box">
-
-            <label>
-              Kontrol tampilan
-            </label>
-
-            <div class="lab-controls">
-
-              <button
-                id="reset3DBtn"
-                class="btn secondary"
-                onclick="reset3D()"
-              >
-                ↻ Reset Tampilan
-              </button>
-
-              <button
-                id="autoRotateBtn"
-                class="btn secondary"
-                onclick="toggleAutoRotate()"
-              >
-                ⟳ Auto Rotate: ON
-              </button>
-
-            </div>
-
-          </div>
-
-
-          <div class="device-tip">
-
-            <b>💡 Cara menggunakan</b>
-
-            <div
-              class="muted"
-              style="
-                margin-top:6px;
-              "
-            >
-              Drag / geser model untuk memutarnya.
-              Scroll untuk memperbesar atau memperkecil.
-              Pilih perangkat di atas untuk mengganti model.
-            </div>
-
-          </div>
-
-
-        </div>
-
-      </div>
-
-
-      <div class="actions" style="
-        margin-top:18px;
-      ">
-
-        <button
-          class="btn secondary"
-          onclick="show('#guide')"
-        >
-          ← Kembali ke Panduan
-        </button>
-
-        <button
-          class="btn primary"
-          onclick="show('#mini')"
-        >
-          Lanjut Mini Lesson →
-        </button>
-
-      </div>
-
-    </section>
-
-
-    <!-- ===================================================
-         TEST
-    ==================================================== -->
+    <!-- TEST -->
 
     <section
       id="test"
       class="panel hidden"
     >
 
-      <div style="
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        gap:10px;
-      ">
+      <div
+        style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:10px;
+        "
+      >
 
         <div>
 
@@ -1854,20 +1227,15 @@
 
 
       <div
-        class="mission-progress"
-        id="testProgress"
+        id="questionBox"
+        style="margin-top:16px"
       ></div>
 
 
       <div
-        id="questionBox"
-        style="margin-top:16px;"
-      ></div>
-
-
-      <div class="actions" style="
-        margin-top:16px;
-      ">
+        class="actions"
+        style="margin-top:16px"
+      >
 
         <button
           class="btn secondary"
@@ -1896,38 +1264,21 @@
     </section>
 
 
-    <!-- ===================================================
-         MINI LESSON
-    ==================================================== -->
+    <!-- MINI LESSON -->
 
     <section
       id="mini"
       class="panel hidden"
     >
 
-      <div class="section-title">
+      <h2>
+        Mini Lesson
+      </h2>
 
-        <div>
-
-          <span class="hero-kicker">
-            MINI LESSON
-          </span>
-
-          <h2 style="margin:12px 0 5px;">
-            Bekal Sebelum Bertempur
-          </h2>
-
-          <p class="muted">
-            Pahami konsep berikut sebelum memulai Mission 1.
-          </p>
-
-        </div>
-
-        <span class="badge">
-          LEARNING MODE
-        </span>
-
-      </div>
+      <p class="muted">
+        Pahami konsep dasarnya sebelum
+        melakukan eksplorasi perangkat.
+      </p>
 
 
       <div class="grid">
@@ -1941,16 +1292,18 @@
 
           <p>
             <b>Input</b> =
-            data masuk ke komputer.
+            data masuk.
+
             <br><br>
 
             <b>Process</b> =
-            data diolah oleh sistem.
+            data diolah.
+
             <br><br>
 
             <b>Output</b> =
-            hasil pemrosesan keluar
-            kepada pengguna.
+            hasil keluar.
+
           </p>
 
         </div>
@@ -1963,12 +1316,14 @@
           </h3>
 
           <p>
-            <b>ALU</b> digunakan untuk
-            operasi aritmetika dan logika.
+            <b>ALU</b>
+            digunakan untuk operasi
+            aritmetika dan logika.
+
             <br><br>
 
-            <b>CU</b> mengatur dan mengendalikan
-            jalannya instruksi.
+            <b>CU</b>
+            mengatur jalannya instruksi.
           </p>
 
         </div>
@@ -1981,12 +1336,16 @@
           </h3>
 
           <p>
-            <b>RAM</b> merupakan memori kerja
-            sementara.
+
+            <b>RAM</b>
+            adalah memori kerja sementara.
+
             <br><br>
 
-            <b>SSD/HDD</b> digunakan untuk
-            menyimpan data agar dapat digunakan kembali.
+            <b>SSD/HDD</b>
+            menyimpan file untuk digunakan
+            kembali.
+
           </p>
 
         </div>
@@ -1995,17 +1354,14 @@
         <div class="mission-card">
 
           <h3>
-            Alur Komputer
+            Hubungan Komponen
           </h3>
 
           <p>
-            Secara sederhana:
-            <b>Input → Process → Output</b>.
-            <br><br>
-
-            Memory membantu menyimpan data
-            yang sedang digunakan dan storage
-            menyimpan data lebih permanen.
+            Komputer menerima input,
+            menggunakan memory dalam proses,
+            memproses data dengan CPU,
+            lalu menghasilkan output.
           </p>
 
         </div>
@@ -2013,77 +1369,81 @@
       </div>
 
 
-      <div class="highlight-box">
-
-        <b>Sebelum lanjut:</b>
+      <div
+        class="explore-card"
+        style="margin-top:20px"
+      >
 
         <div
-          class="muted"
           style="
-            margin-top:7px;
-            line-height:1.7;
+            display:flex;
+            align-items:center;
+            gap:12px;
           "
         >
-          Pastikan kamu sudah memahami perbedaan
-          RAM dan storage, fungsi ALU dan CU,
-          serta konsep dasar Input → Process → Output.
+
+          <div class="stage-number">
+            1
+          </div>
+
+          <div>
+
+            <h3 style="margin:0">
+              Berikutnya: Eksplorasi
+            </h3>
+
+            <div class="muted">
+              Kenali perangkat sebelum
+              menghadapi Mission 1.
+            </div>
+
+          </div>
+
         </div>
 
-      </div>
 
-
-      <div class="actions" style="
-        margin-top:18px;
-      ">
-
-        <button
-          class="btn secondary"
-          onclick="showExploration()"
+        <div
+          class="actions"
+          style="margin-top:16px"
         >
-          🧩 Lihat Perangkat Lagi
-        </button>
 
-        <button
-          class="btn primary"
-          onclick="startMission1()"
-        >
-          Mulai Mission 1 →
-        </button>
+          <button
+            class="btn primary"
+            onclick="openExploration()"
+          >
+            🖥️ Eksplorasi Perangkat
+          </button>
+
+        </div>
 
       </div>
 
     </section>
 
 
-    <!-- ===================================================
-         MISSION
-    ==================================================== -->
+    <!-- MISSION -->
 
     <section
       id="mission"
       class="panel hidden"
     >
 
-      <div style="
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        gap:12px;
-      ">
+      <div
+        style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:12px;
+        "
+      >
 
         <div>
 
-          <span
-            class="hero-kicker"
-            style="font-size:10px;"
-          >
+          <span class="badge">
             MISSION RUN
           </span>
 
-          <h2
-            id="missionTitle"
-            style="margin:10px 0 5px;"
-          >
+          <h2 id="missionTitle">
             Mission
           </h2>
 
@@ -2105,20 +1465,39 @@
 
 
       <div
-        class="mission-progress"
-        id="missionStage"
-      ></div>
+        class="mission-card"
+        style="
+          margin-top:16px;
+          border-color:rgba(73,215,255,.18)
+        "
+      >
+
+        <b>
+          Petunjuk
+        </b>
+
+        <div
+          id="missionHint"
+          class="muted"
+          style="
+            margin-top:6px;
+            line-height:1.6;
+          "
+        ></div>
+
+      </div>
 
 
       <div
         id="missionContent"
-        style="margin-top:18px;"
+        style="margin-top:18px"
       ></div>
 
 
-      <div class="actions" style="
-        margin-top:16px;
-      ">
+      <div
+        class="actions"
+        style="margin-top:16px"
+      >
 
         <button
           id="missionSubmit"
@@ -2141,31 +1520,29 @@
     </section>
 
 
-    <!-- ===================================================
-         BOSS
-    ==================================================== -->
+    <!-- BOSS -->
 
     <section
       id="boss"
       class="panel hidden"
     >
 
-      <div style="
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        gap:12px;
-      ">
+      <div
+        style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:12px;
+        "
+      >
 
         <div>
 
-          <span class="hero-kicker">
-            FINAL CHALLENGE
+          <span class="badge">
+            FINAL STAGE
           </span>
 
-          <h2 style="
-            margin:10px 0 5px;
-          ">
+          <h2>
             👑 Boss Mission
           </h2>
 
@@ -2186,16 +1563,24 @@
       </div>
 
 
-      <div class="mission-card" style="
-        margin-top:18px;
-      ">
+      <div
+        class="mission-card"
+        style="margin-top:16px"
+      >
 
         <p>
+
           <b>Kasus:</b>
-          Dina melakukan video call menggunakan laptop.
-          Ia berbicara melalui microphone dan wajahnya
-          ditangkap webcam. Komputer memproses data tersebut,
-          kemudian suara dan gambar diterima oleh lawan bicara.
+
+          Dina melakukan video call
+          menggunakan laptop.
+          Ia berbicara melalui microphone
+          dan wajahnya ditangkap webcam.
+
+          Komputer memproses data tersebut,
+          kemudian suara dan gambar diterima
+          oleh lawan bicara.
+
         </p>
 
 
@@ -2261,22 +1646,18 @@
         </div>
 
 
-        <label style="
-          margin-top:14px;
-        ">
-          Gambarkan / uraikan alur IPO
+        <label style="margin-top:14px">
+          Gambarkan/uraikan alur IPO
         </label>
 
         <textarea
           id="bossIpo"
           rows="3"
-          placeholder="Input → Process → Output → Storage (jika ada)"
+          placeholder="Input → Process → Output"
         ></textarea>
 
 
-        <label style="
-          margin-top:14px;
-        ">
+        <label style="margin-top:14px">
           Mengapa komponen tersebut
           ditempatkan pada tahap itu?
         </label>
@@ -2286,13 +1667,13 @@
           rows="3"
         ></textarea>
 
-
       </div>
 
 
-      <div class="actions" style="
-        margin-top:16px;
-      ">
+      <div
+        class="actions"
+        style="margin-top:16px"
+      >
 
         <button
           class="btn primary"
@@ -2306,38 +1687,28 @@
     </section>
 
 
-    <!-- ===================================================
-         REFLECTION
-    ==================================================== -->
+    <!-- REFLECTION -->
 
     <section
       id="reflection"
       class="panel hidden"
     >
 
-      <div class="section-title">
+      <span class="badge">
+        REFLECTION
+      </span>
 
-        <div>
+      <h2>
+        Refleksi 3–2–1
+      </h2>
 
-          <span class="hero-kicker">
-            REFLECTION
-          </span>
-
-          <h2 style="margin:12px 0 5px;">
-            Refleksi 3–2–1
-          </h2>
-
-          <p class="muted">
-            Tuliskan pengalaman belajarmu setelah menyelesaikan misi.
-          </p>
-
-        </div>
-
-      </div>
+      <p class="muted">
+        Refleksikan apa yang kamu pelajari
+        setelah seluruh rangkaian mission.
+      </p>
 
 
       <div class="grid">
-
 
         <div>
 
@@ -2347,8 +1718,8 @@
 
           <textarea
             id="r3"
-            rows="5"
-            placeholder="Tuliskan tiga hal yang kamu pahami..."
+            rows="4"
+            placeholder="Tuliskan tiga hal..."
           ></textarea>
 
         </div>
@@ -2362,8 +1733,8 @@
 
           <textarea
             id="r2"
-            rows="5"
-            placeholder="Tuliskan dua hal yang paling membantu..."
+            rows="4"
+            placeholder="Tuliskan dua hal..."
           ></textarea>
 
         </div>
@@ -2371,22 +1742,21 @@
       </div>
 
 
-      <label style="
-        margin-top:14px;
-      ">
+      <label style="margin-top:14px">
         1 hal yang masih membingungkan
       </label>
 
       <textarea
         id="r1"
-        rows="4"
-        placeholder="Tuliskan satu hal yang masih membingungkan..."
+        rows="3"
+        placeholder="Tuliskan satu hal..."
       ></textarea>
 
 
-      <div class="actions" style="
-        margin-top:16px;
-      ">
+      <div
+        class="actions"
+        style="margin-top:16px"
+      >
 
         <button
           class="btn primary"
@@ -2400,9 +1770,7 @@
     </section>
 
 
-    <!-- ===================================================
-         FINISH
-    ==================================================== -->
+    <!-- FINISH -->
 
     <section
       id="finish"
@@ -2413,22 +1781,20 @@
         🎉 Misi Selesai!
       </div>
 
-
       <p
         class="muted"
-        style="text-align:center;"
+        style="text-align:center"
       >
-        Data tersimpan ke Google Sheets.
-        Guru dapat melihat jawaban uraian
-        dan refleksi pada dashboard guru.
+        Data telah dikirim ke Google Sheets.
+        Guru dapat melihat hasil tes,
+        jawaban uraian, dan refleksi.
       </p>
 
 
       <div
         class="grid3"
-        style="margin-top:18px;"
+        style="margin-top:18px"
       >
-
 
         <div class="kpi">
 
@@ -2446,7 +1812,6 @@
           <div
             id="fPreDetail"
             class="footer-note"
-            style="margin-top:6px;"
           ></div>
 
         </div>
@@ -2468,7 +1833,6 @@
           <div
             id="fPostDetail"
             class="footer-note"
-            style="margin-top:6px;"
           ></div>
 
         </div>
@@ -2493,26 +1857,25 @@
 
         </div>
 
-
       </div>
 
 
       <div
         class="mission-card"
-        style="
-          margin-top:18px;
-          text-align:left;
-        "
+        style="margin-top:18px"
       >
 
-        <b>Catatan:</b>
+        <b>
+          Terima kasih, Data Detective.
+        </b>
 
-        <span class="muted">
-          Pre-Test dan Post-Test adalah
-          asesmen individu.
-          XP berasal dari aktivitas misi.
-          Jawaban uraian dinilai guru menggunakan rubrik.
-        </span>
+        <p
+          class="muted"
+          style="line-height:1.7"
+        >
+          Kamu sudah menyelesaikan
+          seluruh rangkaian Computer Mission 2.0.
+        </p>
 
       </div>
 
@@ -2527,18 +1890,13 @@
   ></div>
 
 
-  <!-- =====================================================
-       STUDENTS DATABASE
-  ====================================================== -->
-
   <script src="students.js"></script>
-
 
   <script>
 
     /* =====================================================
        GOOGLE SHEETS
-    ====================================================== */
+    ===================================================== */
 
     const SHEET_WEB_APP_URL =
       "https://script.google.com/macros/s/AKfycbx_H6HUvj4CZYRBTakW3qEBdeX1KzxaCOzxb_4RYCd5t2EAOQy8Ubcvuk-rCvVDNhTX/exec";
@@ -2546,14 +1904,13 @@
 
     /* =====================================================
        QUESTIONS
-    ====================================================== */
+    ===================================================== */
 
     const questions = [
 
       {
         stem:
           "Ketika seseorang mengetik pesan pada laptop, tulisan yang diketik kemudian muncul di layar. Urutan proses IPO yang paling tepat adalah ...",
-
         opts:[
           "Keyboard → CPU → Monitor",
           "Monitor → CPU → Keyboard",
@@ -2561,15 +1918,12 @@
           "Keyboard → Monitor → CPU",
           "Monitor → Keyboard → CPU"
         ],
-
         a:0
       },
-
 
       {
         stem:
           "Pada mesin presensi wajah, kamera menangkap wajah siswa. Sistem kemudian mencocokkannya dengan data yang telah tersimpan. Bagian komputer yang terutama melakukan pengolahan dan pencocokan tersebut adalah ...",
-
         opts:[
           "Monitor",
           "CPU",
@@ -2577,15 +1931,12 @@
           "Speaker",
           "Printer"
         ],
-
         a:1
       },
-
 
       {
         stem:
           "Sebuah file tugas disimpan agar dapat dibuka kembali minggu depan. Perangkat yang berfungsi menyimpan file secara jangka panjang adalah ...",
-
         opts:[
           "RAM",
           "CPU",
@@ -2593,15 +1944,12 @@
           "Monitor",
           "Keyboard"
         ],
-
         a:2
       },
-
 
       {
         stem:
           "Saat kalkulator komputer menghitung 125 × 8, bagian CPU yang melakukan operasi hitung tersebut adalah ...",
-
         opts:[
           "CU",
           "ALU",
@@ -2609,15 +1957,12 @@
           "SSD",
           "Motherboard"
         ],
-
         a:1
       },
-
 
       {
         stem:
           "Sebuah program sedang menjalankan beberapa instruksi. Bagian CPU yang mengatur dan mengendalikan jalannya instruksi tersebut adalah ...",
-
         opts:[
           "ALU",
           "CU",
@@ -2625,15 +1970,12 @@
           "SSD",
           "Monitor"
         ],
-
         a:1
       },
-
 
       {
         stem:
           "Sebuah program memeriksa kondisi “jika nilai lebih besar dari 75, tampilkan LULUS”. Operasi logika pada kondisi tersebut terutama dilakukan oleh ...",
-
         opts:[
           "ALU",
           "Monitor",
@@ -2641,15 +1983,12 @@
           "Storage",
           "Speaker"
         ],
-
         a:0
       },
-
 
       {
         stem:
           "Sinta sedang mengedit dokumen yang belum disimpan. Ketika listrik mati, perubahan terakhir pada dokumen hilang. Hal ini menunjukkan bahwa data tersebut sebelumnya berada pada ...",
-
         opts:[
           "SSD yang permanen",
           "RAM yang bersifat sementara",
@@ -2657,15 +1996,12 @@
           "Keyboard",
           "Printer"
         ],
-
         a:1
       },
-
 
       {
         stem:
           "Ketika aplikasi dibuka, data program yang tersimpan di SSD perlu dimuat ke RAM sebelum digunakan oleh CPU. Proses tersebut merupakan ...",
-
         opts:[
           "Monitor → RAM",
           "SSD → RAM",
@@ -2673,15 +2009,12 @@
           "Keyboard → SSD",
           "CPU → Monitor"
         ],
-
         a:1
       },
-
 
       {
         stem:
           "Sebuah komputer menjadi lambat saat banyak aplikasi dibuka. Task Manager menunjukkan CPU 25%, RAM 98%, dan Disk 5%. Komponen yang paling mungkin menjadi kendala adalah ...",
-
         opts:[
           "CPU",
           "RAM",
@@ -2689,15 +2022,12 @@
           "Monitor",
           "Keyboard"
         ],
-
         a:1
       },
-
 
       {
         stem:
           "Sebuah server membutuhkan waktu lama ketika harus membaca banyak file soal dari media penyimpanan. Komponen yang paling tepat diperiksa terlebih dahulu adalah ...",
-
         opts:[
           "Monitor",
           "Keyboard",
@@ -2705,15 +2035,12 @@
           "Speaker",
           "Mouse"
         ],
-
         a:2
       },
-
 
       {
         stem:
           "Komputer menyala, kipas berputar, tetapi tidak muncul tampilan dan lampu Caps Lock tidak merespons. Kesimpulan yang paling masuk akal adalah ...",
-
         opts:[
           "Monitor pasti rusak",
           "Komputer sudah masuk Windows",
@@ -2721,15 +2048,12 @@
           "Keyboard hanya kehabisan baterai",
           "Harddisk pasti penuh"
         ],
-
         a:2
       },
-
 
       {
         stem:
           "Komputer kantor memiliki Core i5, RAM 8 GB, dan HDD 1 TB. Booting Windows sangat lama. Upgrade yang paling langsung terasa untuk masalah tersebut adalah ...",
-
         opts:[
           "Tambah RAM menjadi 16 GB",
           "Ganti HDD dengan SSD",
@@ -2737,15 +2061,12 @@
           "Ganti keyboard",
           "Tambah speaker"
         ],
-
         a:1
       },
-
 
       {
         stem:
           "Aplikasi pengolah video sering tertutup sendiri ketika banyak layer dan efek dibuka bersamaan. SSD dan CPU sudah memadai. Komponen yang paling perlu diperhatikan adalah ...",
-
         opts:[
           "RAM",
           "Monitor",
@@ -2753,15 +2074,12 @@
           "Speaker",
           "Mouse"
         ],
-
         a:0
       },
-
 
       {
         stem:
           "Sekolah ingin membuat kios informasi yang dikendalikan dengan sentuhan pada layar. Rancangan yang paling sesuai adalah ...",
-
         opts:[
           "Layar sentuh + CPU hemat daya + storage secukupnya + RAM standar",
           "Monitor biasa + keyboard + mouse + CPU paling mahal",
@@ -2769,15 +2087,12 @@
           "Layar sentuh tanpa CPU",
           "Printer + scanner tanpa monitor"
         ],
-
         a:0
       },
-
 
       {
         stem:
           "Perpustakaan membutuhkan PC hanya untuk mengetik dokumen dan membuka katalog buku di internet. Rancangan yang paling efisien adalah ...",
-
         opts:[
           "CPU kelas tinggi untuk grafis 3D",
           "VR agar pencarian lebih menarik",
@@ -2785,7 +2100,6 @@
           "Storage 10 TB",
           "RAM 64 GB"
         ],
-
         a:2
       }
 
@@ -2794,7 +2108,7 @@
 
     /* =====================================================
        STATE
-    ====================================================== */
+    ===================================================== */
 
     let state = {
 
@@ -2836,24 +2150,24 @@
     };
 
 
-    let testMode = "pre";
-    let qIndex = 0;
-    let selectedQuestions = [];
+    let testMode="pre";
+    let qIndex=0;
+    let selectedQuestions=[];
 
-    let timerHandle = null;
-    let timerSeconds = 0;
+    let timerHandle=null;
+    let timerSeconds=0;
 
-    let missionType = "";
-    let missionTimerHandle = null;
-    let missionSeconds = 0;
+    let missionType="";
+    let missionTimerHandle=null;
+    let missionSeconds=0;
 
-    let syncQueue = [];
-    let syncRunning = false;
+    let syncQueue=[];
+    let syncRunning=false;
 
 
     /* =====================================================
-       HELPERS
-    ====================================================== */
+       BASIC HELPERS
+    ===================================================== */
 
     const qs =
       selector =>
@@ -2864,20 +2178,17 @@
 
       document
         .querySelectorAll("section")
-        .forEach(section =>
-          section.classList.add("hidden")
+        .forEach(
+          section =>
+            section.classList.add("hidden")
         );
 
-      const target =
-        qs(id);
+      qs(id).classList.remove("hidden");
 
-      if(target){
-        target.classList.remove("hidden");
-        window.scrollTo({
-          top:0,
-          behavior:"smooth"
-        });
-      }
+      window.scrollTo({
+        top:0,
+        behavior:"smooth"
+      });
 
     }
 
@@ -2906,27 +2217,9 @@
     }
 
 
-    function escapeHtml(value){
-
-      return String(
-        value ?? ""
-      ).replace(
-        /[&<>"']/g,
-        character => ({
-          "&":"&amp;",
-          "<":"&lt;",
-          ">":"&gt;",
-          '"':"&quot;",
-          "'":"&#39;"
-        })[character]
-      );
-
-    }
-
-
     /* =====================================================
-       STUDENT LOGIN
-    ====================================================== */
+       STUDENT
+    ===================================================== */
 
     function populateStudents(){
 
@@ -2939,15 +2232,9 @@
       select.innerHTML =
         '<option value="">-- Pilih nama siswa --</option>';
 
-      const roster =
-        typeof CLASS_ROSTERS !== "undefined"
-          ? (
-              CLASS_ROSTERS[classKey] ||
-              []
-            )
-          : [];
-
-      roster.forEach(
+      (
+        CLASS_ROSTERS[classKey] || []
+      ).forEach(
         student => {
 
           const option =
@@ -2980,24 +2267,19 @@
           const code =
             qs("#studentCode").value;
 
-          const roster =
-            typeof CLASS_ROSTERS !== "undefined"
-              ? (
-                  CLASS_ROSTERS[classKey] ||
-                  []
-                )
-              : [];
-
           const student =
-            roster.find(
+            (
+              CLASS_ROSTERS[classKey] || []
+            ).find(
               item =>
                 item.code === code
             );
 
           if(student){
 
-            qs("#studentPill").textContent =
-              `${student.name} • ${student.code} • ${student.class}`;
+            qs("#studentPill")
+              .textContent =
+                `${student.name} • ${student.code} • ${student.class}`;
 
           }
 
@@ -3013,16 +2295,10 @@
       const code =
         qs("#studentCode").value;
 
-      const roster =
-        typeof CLASS_ROSTERS !== "undefined"
-          ? (
-              CLASS_ROSTERS[classKey] ||
-              []
-            )
-          : [];
-
       const student =
-        roster.find(
+        (
+          CLASS_ROSTERS[classKey] || []
+        ).find(
           item =>
             item.code === code
         );
@@ -3034,29 +2310,22 @@
         );
 
         return;
-
       }
 
 
       state = {
 
-        code:
-          student.code,
+        code:student.code,
 
-        name:
-          student.name,
+        name:student.name,
 
-        className:
-          student.class,
+        className:student.class,
 
-        teacher:
-          student.teacher,
+        teacher:student.teacher,
 
-        team:
-          qs("#team").value,
+        team:qs("#team").value,
 
-        role:
-          qs("#role").value,
+        role:qs("#role").value,
 
         xp:0,
 
@@ -3065,8 +2334,11 @@
         post:null,
 
         m1:0,
+
         m2:0,
+
         m3:0,
+
         boss:0,
 
         answers:[],
@@ -3085,26 +2357,49 @@
         },
 
         preCorrect:0,
+
         postCorrect:0
 
       };
 
 
-      qs("#studentPill").textContent =
-        `${state.name} • ${state.code} • ${state.className}`;
+      localStorage.setItem(
+        "cm2_active_student",
+        JSON.stringify({
+          code:state.code,
+          name:state.name,
+          className:state.className,
+          teacher:state.teacher,
+          team:state.team,
+          role:state.role
+        })
+      );
 
-      qs("#dClass").textContent =
-        `${state.className} • ${state.teacher}`;
 
-      qs("#dCode").textContent =
-        `${state.name} (${state.code})`;
+      setExplorationDone(false);
 
-      qs("#dTeam").textContent =
-        state.team;
+
+      qs("#studentPill")
+        .textContent =
+          `${state.name} • ${state.code} • ${state.className}`;
+
+
+      qs("#dClass")
+        .textContent =
+          `${state.className} • ${state.teacher}`;
+
+
+      qs("#dCode")
+        .textContent =
+          `${state.name} (${state.code})`;
+
+
+      qs("#dTeam")
+        .textContent =
+          state.team;
 
 
       updateTop();
-
 
       show("#dash");
 
@@ -3113,31 +2408,169 @@
 
     function updateTop(){
 
-      qs("#xpTop").textContent =
-        state.xp;
+      qs("#xpTop")
+        .textContent =
+          state.xp;
 
-      qs("#dXP").textContent =
-        state.xp;
+      qs("#dXP")
+        .textContent =
+          state.xp;
 
-      qs("#prog").style.width =
-        Math.min(
-          100,
-          state.xp
-        ) + "%";
-
-    }
-
-
-    function showGuide(){
-
-      show("#guide");
+      qs("#prog")
+        .style.width =
+          Math.min(
+            100,
+            state.xp
+          ) + "%";
 
     }
 
 
     /* =====================================================
-       SHUFFLE
-    ====================================================== */
+       EXPLORATION PAGE
+    ===================================================== */
+
+    function explorationKey(){
+
+      return (
+        "cm2_exploration_done_" +
+        state.className +
+        "_" +
+        state.code
+      );
+
+    }
+
+
+    function setExplorationDone(value){
+
+      if(
+        !state.className ||
+        !state.code
+      ){
+        return;
+      }
+
+      localStorage.setItem(
+        explorationKey(),
+        value ? "1" : "0"
+      );
+
+      updateExplorationButton();
+
+    }
+
+
+    function isExplorationDone(){
+
+      if(
+        !state.className ||
+        !state.code
+      ){
+        return false;
+      }
+
+      return (
+        localStorage.getItem(
+          explorationKey()
+        ) === "1"
+      );
+
+    }
+
+
+    function updateExplorationButton(){
+
+      const button =
+        qs("#mission1Button");
+
+      if(!button){
+        return;
+      }
+
+      if(isExplorationDone()){
+
+        button.textContent =
+          "🚀 Mulai Mission 1";
+
+        button.classList.remove(
+          "secondary"
+        );
+
+        button.classList.add(
+          "primary"
+        );
+
+      }else{
+
+        button.textContent =
+          "🔒 Selesaikan Eksplorasi Dulu";
+
+        button.classList.remove(
+          "primary"
+        );
+
+        button.classList.add(
+          "secondary"
+        );
+
+      }
+
+    }
+
+
+    function openExploration(){
+
+      if(
+        !state.code ||
+        !state.className
+      ){
+
+        alert(
+          "Silakan mulai sesi siswa terlebih dahulu."
+        );
+
+        return;
+      }
+
+
+      localStorage.setItem(
+        "cm2_return_page",
+        "index.html"
+      );
+
+
+      window.location.href =
+        "exploration.html";
+
+    }
+
+
+    function continueToMission1(){
+
+      if(!isExplorationDone()){
+
+        showToast(
+          "Selesaikan Eksplorasi Perangkat terlebih dahulu."
+        );
+
+        setTimeout(
+          () =>
+            openExploration(),
+          500
+        );
+
+        return;
+      }
+
+      startMission1();
+
+    }
+
+
+    /* =====================================================
+       TEST
+    ===================================================== */
 
     function shuffle(array){
 
@@ -3159,7 +2592,8 @@
         [
           copy[i],
           copy[j]
-        ] = [
+        ] =
+        [
           copy[j],
           copy[i]
         ];
@@ -3181,7 +2615,7 @@
           shuffle(
             question.opts.map(
               (text,index) => ({
-                text,
+                text:text,
                 ok:
                   index ===
                   question.a
@@ -3194,20 +2628,13 @@
     }
 
 
-    /* =====================================================
-       TEST
-    ====================================================== */
-
     function startPretest(){
 
-      testMode =
-        "pre";
+      testMode="pre";
 
-      qIndex =
-        0;
+      qIndex=0;
 
-      state.answers =
-        [];
+      state.answers=[];
 
       selectedQuestions =
         shuffle(
@@ -3223,14 +2650,11 @@
 
     function startPosttest(){
 
-      testMode =
-        "post";
+      testMode="post";
 
-      qIndex =
-        0;
+      qIndex=0;
 
-      state.answers =
-        [];
+      state.answers=[];
 
       selectedQuestions =
         shuffle(
@@ -3246,10 +2670,11 @@
 
     function startTest(){
 
-      qs("#testTitle").textContent =
-        testMode === "pre"
-          ? "Pre-test — 15 Soal"
-          : "Post-test — 15 Soal";
+      qs("#testTitle")
+        .textContent =
+          testMode === "pre"
+            ? "Pre-test — 15 Soal"
+            : "Post-test — 15 Soal";
 
 
       qs("#finishTestBtn")
@@ -3260,11 +2685,9 @@
 
       show("#test");
 
-
       startTestTimer(
         600
       );
-
 
       renderQuestion();
 
@@ -3274,17 +2697,11 @@
     function renderQuestion(){
 
       const question =
-        selectedQuestions[
-          qIndex
-        ];
+        selectedQuestions[qIndex];
 
-      if(!question){
-        return;
-      }
-
-
-      qs("#qCount").textContent =
-        `Soal ${qIndex+1} dari ${selectedQuestions.length}`;
+      qs("#qCount")
+        .textContent =
+          `Soal ${qIndex+1} dari ${selectedQuestions.length}`;
 
 
       qs("#finishTestBtn")
@@ -3295,80 +2712,49 @@
         );
 
 
-      const progress =
-        qs("#testProgress");
+      qs("#questionBox")
+        .innerHTML = `
 
+          <div class="mission-card">
 
-      if(progress){
+            <div
+              style="
+                font-weight:800;
+                margin-bottom:12px;
+                line-height:1.7;
+              "
+            >
+              ${escapeHtml(question.stem)}
+            </div>
 
-        progress.innerHTML =
-          selectedQuestions
-            .map(
-              (_,i) => `
-                <span
-                  class="stage-pill ${
-                    i < qIndex
-                      ? "done"
-                      : i === qIndex
-                        ? "active"
-                        : ""
-                  }"
-                >
-                  ${i+1}
-                </span>
-              `
-            )
-            .join("");
+            ${
+              question.opts
+                .map(
+                  (option,index) => `
 
-      }
+                    <label class="option">
 
+                      <input
+                        type="radio"
+                        name="q"
+                        value="${index}"
+                      >
 
-      qs("#questionBox").innerHTML = `
+                      <span>
+                        ${String.fromCharCode(65+index)}.
+                        ${escapeHtml(option.text)}
+                      </span>
 
-        <div class="mission-card">
+                    </label>
 
-          <div
-            style="
-              font-weight:850;
-              line-height:1.65;
-              margin-bottom:14px;
-            "
-          >
-            ${escapeHtml(
-              question.stem
-            )}
+                  `
+                )
+                .join("")
+            }
+
           </div>
 
-          ${
-            question.opts
-              .map(
-                (option,index) => `
-
-                  <label class="option">
-
-                    <input
-                      type="radio"
-                      name="q"
-                      value="${index}"
-                    >
-
-                    <span>
-                      ${String.fromCharCode(65+index)}.
-                      ${escapeHtml(
-                        option.text
-                      )}
-                    </span>
-
-                  </label>
-
-                `
-              )
-              .join("")
-          }
-
-        </div>
-
-      `;
+        `;
 
     }
 
@@ -3380,19 +2766,15 @@
           'input[name="q"]:checked'
         );
 
-      state.answers[
-        qIndex
-      ] =
+
+      state.answers[qIndex] =
         element
-          ? selectedQuestions[
-              qIndex
-            ]
+          ? selectedQuestions[qIndex]
               .opts[
                 Number(
                   element.value
                 )
-              ]
-              .ok
+              ].ok
           : null;
 
     }
@@ -3402,9 +2784,7 @@
 
       storeAnswer();
 
-      if(
-        qIndex > 0
-      ){
+      if(qIndex>0){
 
         qIndex--;
 
@@ -3444,7 +2824,6 @@
 
       updateTimer();
 
-
       timerHandle =
         setInterval(
           () => {
@@ -3452,7 +2831,6 @@
             timerSeconds--;
 
             updateTimer();
-
 
             if(
               timerSeconds <= 0
@@ -3478,25 +2856,20 @@
       const minutes =
         String(
           Math.floor(
-            timerSeconds / 60
+            timerSeconds/60
           )
-        ).padStart(
-          2,
-          "0"
-        );
+        ).padStart(2,"0");
 
 
       const seconds =
         String(
-          timerSeconds % 60
-        ).padStart(
-          2,
-          "0"
-        );
+          timerSeconds%60
+        ).padStart(2,"0");
 
 
-      qs("#testTimer").textContent =
-        `${minutes}:${seconds}`;
+      qs("#testTimer")
+        .textContent =
+          `${minutes}:${seconds}`;
 
     }
 
@@ -3511,10 +2884,12 @@
 
 
       const correct =
-        state.answers.filter(
-          value =>
-            value === true
-        ).length;
+        state.answers
+          .filter(
+            value =>
+              value === true
+          )
+          .length;
 
 
       const score =
@@ -3538,11 +2913,7 @@
 
         localSave();
 
-        show("#guide");
-
-        showToast(
-          "Pre-Test selesai. Ikuti panduan sebelum misi."
-        );
+        show("#mini");
 
         return;
 
@@ -3558,20 +2929,29 @@
       localSave();
 
 
-      qs("#fPre").textContent =
-        `${state.pre ?? "-"}/100`;
+      qs("#fPre")
+        .textContent =
+          `${state.pre ?? "-"}/100`;
 
-      qs("#fPost").textContent =
-        `${state.post ?? "-"}/100`;
 
-      qs("#fPreDetail").textContent =
-        `${state.preCorrect ?? 0} dari 15 soal benar`;
+      qs("#fPost")
+        .textContent =
+          `${state.post ?? "-"}/100`;
 
-      qs("#fPostDetail").textContent =
-        `${state.postCorrect ?? 0} dari 15 soal benar`;
 
-      qs("#fXP").textContent =
-        state.xp;
+      qs("#fPreDetail")
+        .textContent =
+          `${state.preCorrect} dari 15 soal benar`;
+
+
+      qs("#fPostDetail")
+        .textContent =
+          `${state.postCorrect} dari 15 soal benar`;
+
+
+      qs("#fXP")
+        .textContent =
+          state.xp;
 
 
       show("#reflection");
@@ -3580,21 +2960,36 @@
 
 
     /* =====================================================
-       MISSION
-    ====================================================== */
+       MISSIONS
+    ===================================================== */
 
     function startMission1(){
+
+      if(!isExplorationDone()){
+
+        showToast(
+          "Eksplorasi Perangkat belum selesai."
+        );
+
+        return;
+      }
+
       startMission("m1");
+
     }
 
 
     function startMission2(){
+
       startMission("m2");
+
     }
 
 
     function startMission3(){
+
       startMission("m3");
+
     }
 
 
@@ -3608,6 +3003,7 @@
 
       const configs = {
 
+
         m1:{
 
           title:
@@ -3616,6 +3012,9 @@
           desc:
             "16 XP objektif + 9 XP uraian rubrik",
 
+          hint:
+            "Ingat: RAM adalah memori kerja sementara, sedangkan SSD/HDD digunakan untuk penyimpanan data jangka panjang.",
+
           seconds:
             600,
 
@@ -3623,89 +3022,119 @@
 
             <div class="mission-card">
 
-              <div class="highlight-box">
-
-                <b>Tujuan Misi:</b>
-
-                <div class="muted">
-                  Bedakan memori kerja sementara
-                  dengan media penyimpanan jangka panjang.
-                </div>
-
-              </div>
-
-              <p style="margin-top:20px;">
+              <p>
                 <b>1.</b>
-                Komputer sedang membuka banyak tab browser.
-                Komponen memori kerja sementara adalah ...
+                Komputer sedang membuka
+                banyak tab browser.
+                Komponen memori kerja
+                sementara adalah ...
               </p>
 
+
               <label class="option">
+
                 <input
                   type="radio"
                   name="m1a"
                   value="0"
                 >
-                <span>RAM</span>
+
+                <span>
+                  RAM
+                </span>
+
               </label>
 
+
               <label class="option">
+
                 <input
                   type="radio"
                   name="m1a"
                   value="1"
                 >
-                <span>SSD</span>
+
+                <span>
+                  SSD
+                </span>
+
               </label>
 
+
               <label class="option">
+
                 <input
                   type="radio"
                   name="m1a"
                   value="2"
                 >
-                <span>Monitor</span>
+
+                <span>
+                  Monitor
+                </span>
+
               </label>
 
 
               <p>
                 <b>2.</b>
-                Roni menyimpan dokumen agar dapat dibuka
-                minggu depan. Pilihan yang tepat adalah ...
+                Roni menyimpan dokumen
+                agar dapat dibuka minggu depan.
+                Pilihan yang tepat adalah ...
               </p>
 
+
               <label class="option">
+
                 <input
                   type="radio"
                   name="m1b"
                   value="0"
                 >
-                <span>RAM</span>
+
+                <span>
+                  RAM
+                </span>
+
               </label>
 
+
               <label class="option">
+
                 <input
                   type="radio"
                   name="m1b"
                   value="1"
                 >
-                <span>SSD/HDD</span>
+
+                <span>
+                  SSD/HDD
+                </span>
+
               </label>
 
+
               <label class="option">
+
                 <input
                   type="radio"
                   name="m1b"
                   value="2"
                 >
-                <span>CPU</span>
+
+                <span>
+                  CPU
+                </span>
+
               </label>
 
 
               <p>
                 <b>3.</b>
-                Mengapa RAM dan storage tidak sama?
+                Mengapa RAM dan storage
+                tidak sama?
               </p>
+
 
               <textarea
                 id="m1reason"
@@ -3728,6 +3157,9 @@
           desc:
             "16 XP objektif + 9 XP uraian rubrik",
 
+          hint:
+            "ALU berkaitan dengan operasi hitung dan logika. CU mengatur dan mengendalikan jalannya instruksi.",
+
           seconds:
             600,
 
@@ -3735,72 +3167,88 @@
 
             <div class="mission-card">
 
-              <div class="highlight-box">
-
-                <b>Tujuan Misi:</b>
-
-                <div class="muted">
-                  Kenali perbedaan tugas ALU dan CU
-                  di dalam CPU.
-                </div>
-
-              </div>
-
-
-              <p style="margin-top:20px;">
+              <p>
                 <b>1.</b>
                 CPU menghitung 125 × 8.
-                Bagian yang melakukan operasi hitung adalah ...
+                Bagian yang melakukan
+                operasi hitung adalah ...
               </p>
 
+
               <label class="option">
+
                 <input
                   type="radio"
                   name="m2a"
                   value="0"
                 >
-                <span>ALU</span>
+
+                <span>
+                  ALU
+                </span>
+
               </label>
 
+
               <label class="option">
+
                 <input
                   type="radio"
                   name="m2a"
                   value="1"
                 >
-                <span>CU</span>
+
+                <span>
+                  CU
+                </span>
+
               </label>
 
 
               <p>
                 <b>2.</b>
-                Bagian CPU yang mengatur jalannya
-                instruksi program adalah ...
+                Bagian CPU yang mengatur
+                jalannya instruksi program
+                adalah ...
               </p>
 
+
               <label class="option">
+
                 <input
                   type="radio"
                   name="m2b"
                   value="0"
                 >
-                <span>ALU</span>
+
+                <span>
+                  ALU
+                </span>
+
               </label>
 
+
               <label class="option">
+
                 <input
                   type="radio"
                   name="m2b"
                   value="1"
                 >
-                <span>CU</span>
+
+                <span>
+                  CU
+                </span>
+
               </label>
 
 
               <p>
                 <b>3.</b>
-                Jelaskan perbedaan tugas ALU dan CU.
+                Jelaskan perbedaan tugas
+                ALU dan CU.
               </p>
+
 
               <textarea
                 id="m2reason"
@@ -3823,6 +3271,9 @@
           desc:
             "15 XP struktur + 5 XP uraian rubrik",
 
+          hint:
+            "Gunakan konsep Input → Process → Output. Storage hanya dicantumkan jika memang digunakan.",
+
           seconds:
             900,
 
@@ -3830,20 +3281,9 @@
 
             <div class="mission-card">
 
-              <div class="highlight-box">
-
-                <b>Tujuan Misi:</b>
-
-                <div class="muted">
-                  Latih kemampuan menelusuri alur data
-                  dari Input → Process → Output.
-                </div>
-
-              </div>
-
-
-              <p style="margin-top:20px;">
-                Pilih kasus lalu tuliskan alurnya.
+              <p>
+                Pilih satu kasus,
+                lalu tuliskan alurnya.
               </p>
 
 
@@ -3870,7 +3310,7 @@
 
               <div
                 class="grid"
-                style="margin-top:12px;"
+                style="margin-top:12px"
               >
 
                 <div>
@@ -3895,7 +3335,7 @@
 
                   <input
                     id="m3process"
-                    placeholder="Contoh: CPU memproses data"
+                    placeholder="Contoh: CPU"
                   >
 
                 </div>
@@ -3923,7 +3363,7 @@
 
                   <input
                     id="m3storage"
-                    placeholder="Contoh: SSD"
+                    placeholder="SSD/HDD bila diperlukan"
                   >
 
                 </div>
@@ -3931,16 +3371,17 @@
               </div>
 
 
-              <label style="
-                margin-top:14px;
-              ">
-                Mengapa urutan tersebut sesuai IPO?
+              <label
+                style="margin-top:14px"
+              >
+                Mengapa urutan tersebut
+                sesuai IPO?
               </label>
+
 
               <textarea
                 id="m3reason"
                 rows="4"
-                placeholder="Jelaskan alasanmu..."
               ></textarea>
 
             </div>
@@ -3949,21 +3390,27 @@
 
         }
 
-      };
+      }[type];
 
 
-      const config =
-        configs[type];
+      qs("#missionTitle")
+        .textContent =
+          config.title;
 
 
-      qs("#missionTitle").textContent =
-        config.title;
+      qs("#missionDesc")
+        .textContent =
+          config.desc;
 
-      qs("#missionDesc").textContent =
-        config.desc;
 
-      qs("#missionContent").innerHTML =
-        config.html;
+      qs("#missionHint")
+        .textContent =
+          config.hint;
+
+
+      qs("#missionContent")
+        .innerHTML =
+          config.html;
 
 
       qs("#missionSubmit")
@@ -3971,61 +3418,11 @@
           "hidden"
         );
 
+
       qs("#missionNext")
         .classList.add(
           "hidden"
         );
-
-
-      const stage =
-        qs("#missionStage");
-
-
-      if(stage){
-
-        const stages = [
-          "Mission 1",
-          "Mission 2",
-          "Mission 3",
-          "Boss"
-        ];
-
-        stage.innerHTML =
-          stages
-            .map(
-              (label,index) => {
-
-                const active =
-                  (
-                    type === "m1" &&
-                    index === 0
-                  ) ||
-                  (
-                    type === "m2" &&
-                    index === 1
-                  ) ||
-                  (
-                    type === "m3" &&
-                    index === 2
-                  );
-
-                return `
-                  <span
-                    class="stage-pill ${
-                      active
-                        ? "active"
-                        : ""
-                    }"
-                  >
-                    ${label}
-                  </span>
-                `;
-
-              }
-            )
-            .join("");
-
-      }
 
 
       startMissionTimer(
@@ -4055,7 +3452,6 @@
 
             updateMissionTimer();
 
-
             if(
               missionSeconds <= 0
             ){
@@ -4080,25 +3476,20 @@
       const minutes =
         String(
           Math.floor(
-            missionSeconds / 60
+            missionSeconds/60
           )
-        ).padStart(
-          2,
-          "0"
-        );
+        ).padStart(2,"0");
 
 
       const seconds =
         String(
-          missionSeconds % 60
-        ).padStart(
-          2,
-          "0"
-        );
+          missionSeconds%60
+        ).padStart(2,"0");
 
 
-      qs("#missionTimer").textContent =
-        `${minutes}:${seconds}`;
+      qs("#missionTimer")
+        .textContent =
+          `${minutes}:${seconds}`;
 
     }
 
@@ -4110,8 +3501,7 @@
       );
 
 
-      let score =
-        0;
+      let score=0;
 
 
       if(
@@ -4197,20 +3587,24 @@
             .value
             .trim();
 
+
         const process =
           qs("#m3process")
             .value
             .trim();
+
 
         const output =
           qs("#m3output")
             .value
             .trim();
 
+
         const storage =
           qs("#m3storage")
             .value
             .trim();
+
 
         const reason =
           qs("#m3reason")
@@ -4219,15 +3613,23 @@
 
 
         if(input){
+
           score += 5;
+
         }
+
 
         if(process){
+
           score += 5;
+
         }
 
+
         if(output){
+
           score += 5;
+
         }
 
 
@@ -4237,9 +3639,7 @@
 
         state.essayAnswers.m3 = [
 
-          `Kasus: ${
-            qs("#m3case").value
-          }`,
+          `Kasus: ${qs("#m3case").value}`,
 
           `Input: ${input}`,
 
@@ -4270,15 +3670,11 @@
           "hidden"
         );
 
+
       qs("#missionNext")
         .classList.remove(
           "hidden"
         );
-
-
-      showToast(
-        `Mission selesai. +${score} XP`
-      );
 
     }
 
@@ -4312,7 +3708,7 @@
 
     /* =====================================================
        BOSS
-    ====================================================== */
+    ===================================================== */
 
     function startBoss(){
 
@@ -4345,7 +3741,6 @@
 
             updateBossTimer();
 
-
             if(
               missionSeconds <= 0
             ){
@@ -4370,25 +3765,20 @@
       const minutes =
         String(
           Math.floor(
-            missionSeconds / 60
+            missionSeconds/60
           )
-        ).padStart(
-          2,
-          "0"
-        );
+        ).padStart(2,"0");
 
 
       const seconds =
         String(
-          missionSeconds % 60
-        ).padStart(
-          2,
-          "0"
-        );
+          missionSeconds%60
+        ).padStart(2,"0");
 
 
-      qs("#bossTimer").textContent =
-        `${minutes}:${seconds}`;
+      qs("#bossTimer")
+        .textContent =
+          `${minutes}:${seconds}`;
 
     }
 
@@ -4405,25 +3795,30 @@
           .value
           .trim();
 
+
       const process =
         qs("#bossProcess")
           .value
           .trim();
+
 
       const output =
         qs("#bossOutput")
           .value
           .trim();
 
+
       const cpu =
         qs("#bossCpu")
           .value
           .trim();
 
+
       const ipo =
         qs("#bossIpo")
           .value
           .trim();
+
 
       const reason =
         qs("#bossReason")
@@ -4431,8 +3826,7 @@
           .trim();
 
 
-      let score =
-        0;
+      let score=0;
 
 
       if(input){
@@ -4457,11 +3851,14 @@
 
 
       state.boss =
-        score;
+        Math.min(
+          13,
+          score
+        );
 
 
       state.xp +=
-        score;
+        state.boss;
 
 
       state.essayAnswers.boss = [
@@ -4485,12 +3882,6 @@
 
       localSave();
 
-
-      showToast(
-        `Boss Mission selesai. +${score} XP`
-      );
-
-
       startPosttest();
 
     }
@@ -4498,7 +3889,7 @@
 
     /* =====================================================
        REFLECTION
-    ====================================================== */
+    ===================================================== */
 
     function finishReflection(){
 
@@ -4525,20 +3916,29 @@
       localSave();
 
 
-      qs("#fPre").textContent =
-        `${state.pre ?? "-"}/100`;
+      qs("#fPre")
+        .textContent =
+          `${state.pre ?? "-"}/100`;
 
-      qs("#fPost").textContent =
-        `${state.post ?? "-"}/100`;
 
-      qs("#fPreDetail").textContent =
-        `${state.preCorrect ?? 0} dari 15 soal benar`;
+      qs("#fPost")
+        .textContent =
+          `${state.post ?? "-"}/100`;
 
-      qs("#fPostDetail").textContent =
-        `${state.postCorrect ?? 0} dari 15 soal benar`;
 
-      qs("#fXP").textContent =
-        state.xp;
+      qs("#fPreDetail")
+        .textContent =
+          `${state.preCorrect ?? 0} dari 15 soal benar`;
+
+
+      qs("#fPostDetail")
+        .textContent =
+          `${state.postCorrect ?? 0} dari 15 soal benar`;
+
+
+      qs("#fXP")
+        .textContent =
+          state.xp;
 
 
       show("#finish");
@@ -4552,8 +3952,8 @@
 
 
     /* =====================================================
-       RECORD
-    ====================================================== */
+       DATABASE
+    ===================================================== */
 
     function buildRecord(){
 
@@ -4598,17 +3998,10 @@
         xp:
           state.xp,
 
-        rubric_m1:
-          "",
-
-        rubric_m2:
-          "",
-
-        rubric_m3:
-          "",
-
-        rubric_boss:
-          "",
+        rubric_m1:"",
+        rubric_m2:"",
+        rubric_m3:"",
+        rubric_boss:"",
 
         answer_m1:
           state.essayAnswers.m1 || "",
@@ -4639,10 +4032,6 @@
     }
 
 
-    /* =====================================================
-       LOCAL SAVE
-    ====================================================== */
-
     function localSave(){
 
       if(
@@ -4659,32 +4048,21 @@
         buildRecord();
 
 
-      let records;
-
-      try{
-
-        records =
-          JSON.parse(
-            localStorage.getItem(
-              "cm2_records"
-            ) || "[]"
-          );
-
-      }catch{
-
-        records =
-          [];
-
-      }
+      const records =
+        JSON.parse(
+          localStorage.getItem(
+            "cm2_records"
+          ) || "[]"
+        );
 
 
       const index =
         records.findIndex(
           item =>
             item.className ===
-            record.className &&
+              record.className &&
             item.code ===
-            record.code
+              record.code
         );
 
 
@@ -4717,10 +4095,6 @@
     }
 
 
-    /* =====================================================
-       GOOGLE SHEETS SYNC
-    ====================================================== */
-
     function queueSync(record){
 
       syncQueue =
@@ -4728,9 +4102,9 @@
           item =>
             !(
               item.className ===
-              record.className &&
+                record.className &&
               item.code ===
-              record.code
+                record.code
             )
         );
 
@@ -4748,7 +4122,7 @@
       window.__syncTimer =
         setTimeout(
           flushSyncQueue,
-          700
+          450
         );
 
     }
@@ -4784,24 +4158,20 @@
             SHEET_WEB_APP_URL,
             {
               method:"POST",
-
               mode:"no-cors",
-
               headers:{
                 "Content-Type":
                   "text/plain;charset=utf-8"
               },
-
               body:
                 JSON.stringify({
                   action:"upsert",
-                  record
+                  record:record
                 })
             }
           );
 
         }
-
 
       }catch(error){
 
@@ -4811,20 +4181,8 @@
         );
 
 
-        if(
-          !syncQueue.length
-        ){
-
-          showToast(
-            "Data tersimpan lokal. Sinkronisasi akan dicoba lagi."
-          );
-
-        }
-
-
         setTimeout(
-          () =>
-            flushSyncQueue(),
+          flushSyncQueue,
           2500
         );
 
@@ -4839,1974 +4197,117 @@
 
 
     /* =====================================================
-       3D CANVAS LAB
-    ====================================================== */
-
-    let canvas3D =
-      null;
-
-    let ctx3D =
-      null;
-
-    let rotX =
-      -0.48;
-
-    let rotY =
-      0.72;
-
-    let zoom3D =
-      1;
-
-    let dragging3D =
-      false;
-
-    let lastMouseX =
-      0;
-
-    let lastMouseY =
-      0;
-
-    let autoRotate3D =
-      true;
-
-    let currentDevice =
-      "motherboard";
-
-    let animationFrame3D =
-      null;
-
-
-    const deviceInfo3D = {
-
-      motherboard:{
-
-        name:
-          "Motherboard",
-
-        description:
-          "Papan utama tempat CPU, RAM, storage, dan berbagai komponen komputer saling terhubung."
-
-      },
-
-
-      cpu:{
-
-        name:
-          "CPU",
-
-        description:
-          "Komponen utama yang memproses instruksi dan menjalankan operasi komputer."
-
-      },
-
-
-      ram:{
-
-        name:
-          "RAM",
-
-        description:
-          "Memori kerja sementara yang digunakan saat program sedang berjalan."
-
-      },
-
-
-      ssd:{
-
-        name:
-          "SSD",
-
-        description:
-          "Media penyimpanan untuk menyimpan sistem, aplikasi, dan file dalam jangka panjang."
-
-      },
-
-
-      keyboard:{
-
-        name:
-          "Keyboard",
-
-        description:
-          "Perangkat input yang digunakan untuk memasukkan teks, angka, dan perintah."
-
-      },
-
-
-      monitor:{
-
-        name:
-          "Monitor",
-
-        description:
-          "Perangkat output yang menampilkan informasi visual dari komputer."
-
-      }
-
-    };
-
-
-    function rotatePoint(point){
-
-      let x =
-        point.x;
-
-      let y =
-        point.y;
-
-      let z =
-        point.z;
-
-
-      const cosX =
-        Math.cos(rotX);
-
-      const sinX =
-        Math.sin(rotX);
-
-
-      const y1 =
-        y * cosX -
-        z * sinX;
-
-      const z1 =
-        y * sinX +
-        z * cosX;
-
-
-      y =
-        y1;
-
-      z =
-        z1;
-
-
-      const cosY =
-        Math.cos(rotY);
-
-      const sinY =
-        Math.sin(rotY);
-
-
-      const x1 =
-        x * cosY +
-        z * sinY;
-
-      const z2 =
-        -x * sinY +
-        z * cosY;
-
-
-      return {
-
-        x:x1,
-        y,
-        z:z2
-
-      };
-
-    }
-
-
-    function projectPoint(point){
-
-      const transformed =
-        rotatePoint(
-          point
-        );
-
-
-      const camera =
-        12 / zoom3D;
-
-
-      const scale =
-        540 /
-        (
-          camera +
-          transformed.z
-        );
-
-
-      return {
-
-        x:
-          canvas3D.width/2 +
-          transformed.x *
-          scale,
-
-        y:
-          canvas3D.height/2 +
-          transformed.y *
-          scale,
-
-        z:
-          transformed.z
-
-      };
-
-    }
-
-
-    function cube(
-      width,
-      height,
-      depth,
-      color,
-      x=0,
-      y=0,
-      z=0
-    ){
-
-      const x1 =
-        x - width/2;
-
-      const x2 =
-        x + width/2;
-
-      const y1 =
-        y - height/2;
-
-      const y2 =
-        y + height/2;
-
-      const z1 =
-        z - depth/2;
-
-      const z2 =
-        z + depth/2;
-
-
-      return {
-
-        vertices:[
-
-          {
-            x:x1,
-            y:y1,
-            z:z1
-          },
-
-          {
-            x:x2,
-            y:y1,
-            z:z1
-          },
-
-          {
-            x:x2,
-            y:y2,
-            z:z1
-          },
-
-          {
-            x:x1,
-            y:y2,
-            z:z1
-          },
-
-          {
-            x:x1,
-            y:y1,
-            z:z2
-          },
-
-          {
-            x:x2,
-            y:y1,
-            z:z2
-          },
-
-          {
-            x:x2,
-            y:y2,
-            z:z2
-          },
-
-          {
-            x:x1,
-            y:y2,
-            z:z2
-          }
-
-        ],
-
-        faces:[
-
-          [0,1,2,3],
-
-          [4,7,6,5],
-
-          [0,4,5,1],
-
-          [3,2,6,7],
-
-          [1,5,6,2],
-
-          [0,3,7,4]
-
-        ],
-
-        color
-
-      };
-
-    }
-
-
-    function cylinder(
-      radius,
-      height,
-      color,
-      x=0,
-      y=0,
-      z=0,
-      segments=24
-    ){
-
-      const vertices =
-        [];
-
-
-      for(
-        let i=0;
-        i<segments;
-        i++
-      ){
-
-        const angle =
-          i /
-          segments *
-          Math.PI *
-          2;
-
-
-        vertices.push({
-
-          x:
-            x +
-            Math.cos(angle) *
-            radius,
-
-          y:
-            y -
-            height/2,
-
-          z:
-            z +
-            Math.sin(angle) *
-            radius
-
-        });
-
-      }
-
-
-      for(
-        let i=0;
-        i<segments;
-        i++
-      ){
-
-        const angle =
-          i /
-          segments *
-          Math.PI *
-          2;
-
-
-        vertices.push({
-
-          x:
-            x +
-            Math.cos(angle) *
-            radius,
-
-          y:
-            y +
-            height/2,
-
-          z:
-            z +
-            Math.sin(angle) *
-            radius
-
-        });
-
-      }
-
-
-      const faces =
-        [];
-
-
-      for(
-        let i=0;
-        i<segments;
-        i++
-      ){
-
-        const next =
-          (
-            i+1
-          ) %
-          segments;
-
-
-        faces.push([
-
-          i,
-          next,
-          segments+next,
-          segments+i
-
-        ]);
-
-      }
-
-
-      faces.push(
-        [
-          ...Array(
-            segments
-          ).keys()
-        ]
-      );
-
-
-      faces.push(
-        [
-          ...Array(
-            segments
-          ).keys()
-        ]
-        .reverse()
-        .map(
-          index =>
-            segments +
-            index
-        )
-      );
-
-
-      return {
-
-        vertices,
-        faces,
-        color
-
-      };
-
-    }
-
-
-    function buildModel(type){
-
-      const shapes =
-        [];
-
-
-      /* MOTHERBOARD */
-
-      if(
-        type ===
-        "motherboard"
-      ){
-
-        shapes.push(
-          cube(
-            7,
-            .35,
-            4.8,
-            "#174868",
-            0,
-            0,
-            0
-          )
-        );
-
-
-        shapes.push(
-          cube(
-            2.2,
-            .28,
-            1.8,
-            "#0b1725",
-            -.8,
-            .30,
-            0
-          )
-        );
-
-
-        shapes.push(
-          cylinder(
-            .78,
-            .22,
-            "#49d7ff",
-            -.8,
-            .52,
-            0
-          )
-        );
-
-
-        for(
-          let i=0;
-          i<4;
-          i++
-        ){
-
-          shapes.push(
-            cube(
-              .28,
-              .14,
-              1.4,
-              "#75899e",
-              1.35,
-              .30,
-              -1.55 +
-              i*.48
-            )
-          );
-
-        }
-
-
-        for(
-          let i=0;
-          i<8;
-          i++
-        ){
-
-          shapes.push(
-            cube(
-              .36,
-              .14,
-              .40,
-              "#2d5973",
-
-              -2.30 +
-              (
-                i%4
-              ) *
-              1.10,
-
-              .30,
-
-              -.95 +
-              Math.floor(
-                i/4
-              ) *
-              1.75
-            )
-          );
-
-        }
-
-
-        shapes.push(
-          cube(
-            1.5,
-            .16,
-            .24,
-            "#46e6a2",
-            2.1,
-            .36,
-            1.25
-          )
-        );
-
-
-        return shapes;
-
-      }
-
-
-      /* CPU */
-
-      if(
-        type ===
-        "cpu"
-      ){
-
-        shapes.push(
-          cube(
-            3.5,
-            .45,
-            3.5,
-            "#17273b"
-          )
-        );
-
-
-        shapes.push(
-          cube(
-            2.8,
-            .55,
-            2.8,
-            "#304d69",
-            0,
-            .45,
-            0
-          )
-        );
-
-
-        shapes.push(
-          cube(
-            2.2,
-            .20,
-            2.2,
-            "#071521",
-            0,
-            .82,
-            0
-          )
-        );
-
-
-        shapes.push(
-          cylinder(
-            .92,
-            .18,
-            "#49d7ff",
-            0,
-            .94,
-            0
-          )
-        );
-
-
-        return shapes;
-
-      }
-
-
-      /* RAM */
-
-      if(
-        type ===
-        "ram"
-      ){
-
-        shapes.push(
-          cube(
-            1.25,
-            .14,
-            4.8,
-            "#183f5d"
-          )
-        );
-
-
-        for(
-          let i=0;
-          i<8;
-          i++
-        ){
-
-          shapes.push(
-            cube(
-              .84,
-              .34,
-              .34,
-
-              i % 2
-                ? "#667dff"
-                : "#49d7ff",
-
-              -.16,
-              .25,
-              -1.56 +
-              i*.44
-            )
-          );
-
-        }
-
-
-        for(
-          let i=0;
-          i<9;
-          i++
-        ){
-
-          shapes.push(
-            cube(
-              .12,
-              .06,
-              .24,
-              "#d7b859",
-              -.27,
-              -.06,
-              -1.88 +
-              i*.44
-            )
-          );
-
-        }
-
-
-        return shapes;
-
-      }
-
-
-      /* SSD */
-
-      if(
-        type ===
-        "ssd"
-      ){
-
-        shapes.push(
-          cube(
-            2.4,
-            .36,
-            3.6,
-            "#202d40"
-          )
-        );
-
-
-        shapes.push(
-          cube(
-            1.8,
-            .12,
-            2.7,
-            "#101923",
-            0,
-            .26,
-            0
-          )
-        );
-
-
-        shapes.push(
-          cube(
-            .68,
-            .10,
-            .52,
-            "#49d7ff",
-            -.48,
-            .36,
-            -.55
-          )
-        );
-
-
-        shapes.push(
-          cube(
-            .68,
-            .10,
-            .52,
-            "#46e6a2",
-            .48,
-            .36,
-            .45
-          )
-        );
-
-
-        return shapes;
-
-      }
-
-
-      /* KEYBOARD */
-
-      if(
-        type ===
-        "keyboard"
-      ){
-
-        shapes.push(
-          cube(
-            6,
-            .30,
-            2.7,
-            "#192a3d"
-          )
-        );
-
-
-        const rows =
-          5;
-
-        const cols =
-          12;
-
-
-        for(
-          let r=0;
-          r<rows;
-          r++
-        ){
-
-          for(
-            let c=0;
-            c<cols;
-            c++
-          ){
-
-            shapes.push(
-              cube(
-                .32,
-                .12,
-                .25,
-                c % 3 === 0
-                  ? "#6d89ff"
-                  : "#b4c1ce",
-
-                -1.84 +
-                c*.34,
-
-                .23,
-
-                -.82 +
-                r*.40
-              )
-            );
-
-          }
-
-        }
-
-
-        shapes.push(
-          cube(
-            2.0,
-            .12,
-            .30,
-            "#9caebe",
-            .20,
-            .24,
-            1.02
-          )
-        );
-
-
-        return shapes;
-
-      }
-
-
-      /* MONITOR */
-
-      if(
-        type ===
-        "monitor"
-      ){
-
-        shapes.push(
-          cube(
-            5.7,
-            3.35,
-            .34,
-            "#141e2b",
-            0,
-            .90,
-            0
-          )
-        );
-
-
-        shapes.push(
-          cube(
-            4.95,
-            2.70,
-            .10,
-            "#071621",
-            0,
-            .93,
-            .20
-          )
-        );
-
-
-        shapes.push(
-          cube(
-            4.25,
-            2.05,
-            .06,
-            "#113651",
-            0,
-            .93,
-            .26
-          )
-        );
-
-
-        shapes.push(
-          cube(
-            .46,
-            1.08,
-            .46,
-            "#334b65",
-            0,
-            -1.12,
-            0
-          )
-        );
-
-
-        shapes.push(
-          cube(
-            2.5,
-            .18,
-            1.20,
-            "#405873",
-            0,
-            -1.68,
-            0
-          )
-        );
-
-
-        return shapes;
-
-      }
-
-
-      return shapes;
-
-    }
-
-
-    function hexToRgb(hex){
-
-      const value =
-        String(hex)
-          .replace("#","");
-
-
-      return {
-
-        r:
-          parseInt(
-            value.substring(
-              0,
-              2
-            ),
-            16
-          ),
-
-        g:
-          parseInt(
-            value.substring(
-              2,
-              4
-            ),
-            16
-          ),
-
-        b:
-          parseInt(
-            value.substring(
-              4,
-              6
-            ),
-            16
-          )
-
-      };
-
-    }
-
-
-    function shadeColor(
-      color,
-      shade
-    ){
-
-      const rgb =
-        hexToRgb(color);
-
-
-      return `
-        rgb(
-          ${Math.max(
-            0,
-            Math.min(
-              255,
-              Math.round(
-                rgb.r *
-                shade
-              )
-            )
-          )},
-          ${Math.max(
-            0,
-            Math.min(
-              255,
-              Math.round(
-                rgb.g *
-                shade
-              )
-            )
-          )},
-          ${Math.max(
-            0,
-            Math.min(
-              255,
-              Math.round(
-                rgb.b *
-                shade
-              )
-            )
-          )}
-        )
-      `;
-
-    }
-
-
-    function drawGrid3D(){
-
-      if(
-        !ctx3D
-      ){
-        return;
-      }
-
-
-      ctx3D.save();
-
-      ctx3D.globalAlpha =
-        .18;
-
-      ctx3D.strokeStyle =
-        "#3b82a7";
-
-      ctx3D.lineWidth =
-        1;
-
-
-      for(
-        let i=-10;
-        i<=10;
-        i++
-      ){
-
-        const a =
-          projectPoint({
-            x:i,
-            y:2.4,
-            z:-8
-          });
-
-
-        const b =
-          projectPoint({
-            x:i,
-            y:2.4,
-            z:8
-          });
-
-
-        ctx3D.beginPath();
-
-        ctx3D.moveTo(
-          a.x,
-          a.y
-        );
-
-        ctx3D.lineTo(
-          b.x,
-          b.y
-        );
-
-        ctx3D.stroke();
-
-
-        const c =
-          projectPoint({
-            x:-8,
-            y:2.4,
-            z:i
-          });
-
-
-        const d =
-          projectPoint({
-            x:8,
-            y:2.4,
-            z:i
-          });
-
-
-        ctx3D.beginPath();
-
-        ctx3D.moveTo(
-          c.x,
-          c.y
-        );
-
-        ctx3D.lineTo(
-          d.x,
-          d.y
-        );
-
-        ctx3D.stroke();
-
-      }
-
-
-      ctx3D.restore();
-
-    }
-
-
-    function drawModel(){
-
-      if(
-        !canvas3D ||
-        !ctx3D
-      ){
-
-        return;
-
-      }
-
-
-      const width =
-        canvas3D.width;
-
-      const height =
-        canvas3D.height;
-
-
-      ctx3D.clearRect(
-        0,
-        0,
-        width,
-        height
-      );
-
-
-      const gradient =
-        ctx3D.createRadialGradient(
-          width*.50,
-          height*.40,
-          10,
-          width*.50,
-          height*.52,
-          width*.72
-        );
-
-
-      gradient.addColorStop(
-        0,
-        "#0c2b46"
-      );
-
-
-      gradient.addColorStop(
-        .55,
-        "#061527"
-      );
-
-
-      gradient.addColorStop(
-        1,
-        "#010713"
-      );
-
-
-      ctx3D.fillStyle =
-        gradient;
-
-
-      ctx3D.fillRect(
-        0,
-        0,
-        width,
-        height
-      );
-
-
-      drawGrid3D();
-
-
-      const model =
-        buildModel(
-          currentDevice
-        );
-
-
-      const polygons =
-        [];
-
-
-      model.forEach(
-        shape => {
-
-          const projected =
-            shape.vertices.map(
-              projectPoint
-            );
-
-
-          shape.faces.forEach(
-            face => {
-
-              const points =
-                face.map(
-                  index =>
-                    projected[index]
-                );
-
-
-              const depth =
-                points.reduce(
-                  (
-                    total,
-                    point
-                  ) =>
-                    total +
-                    point.z,
-                  0
-                ) /
-                points.length;
-
-
-              polygons.push({
-
-                points,
-
-                depth,
-
-                color:
-                  shape.color
-
-              });
-
-            }
-          );
-
-        }
-      );
-
-
-      polygons.sort(
-        (a,b) =>
-          a.depth -
-          b.depth
-      );
-
-
-      polygons.forEach(
-        polygon => {
-
-          ctx3D.beginPath();
-
-
-          polygon.points.forEach(
-            (point,index) => {
-
-              if(
-                index === 0
-              ){
-
-                ctx3D.moveTo(
-                  point.x,
-                  point.y
-                );
-
-              }else{
-
-                ctx3D.lineTo(
-                  point.x,
-                  point.y
-                );
-
-              }
-
-            }
-          );
-
-
-          ctx3D.closePath();
-
-
-          const shade =
-            .70 +
-            (
-              .25 *
-              Math.max(
-                -.8,
-                Math.min(
-                  .8,
-                  polygon.depth/6
-                )
-              )
-            );
-
-
-          ctx3D.fillStyle =
-            shadeColor(
-              polygon.color,
-              shade + .25
-            );
-
-
-          ctx3D.fill();
-
-
-          ctx3D.strokeStyle =
-            "rgba(255,255,255,.14)";
-
-          ctx3D.lineWidth =
-            1.15;
-
-          ctx3D.stroke();
-
-        }
+       ESCAPE
+    ===================================================== */
+
+    function escapeHtml(value){
+
+      return String(
+        value ?? ""
+      ).replace(
+        /[&<>"']/g,
+        character =>
+          ({
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#39;"
+          })[character]
       );
 
     }
-
-
-    function resize3D(){
-
-      const stage =
-        qs("#threeStage");
-
-
-      if(
-        !stage ||
-        !canvas3D ||
-        !ctx3D
-      ){
-
-        return;
-
-      }
-
-
-      const rect =
-        stage.getBoundingClientRect();
-
-
-      const dpr =
-        Math.min(
-          window.devicePixelRatio ||
-          1,
-          2
-        );
-
-
-      canvas3D.width =
-        Math.max(
-          300,
-          Math.floor(
-            rect.width *
-            dpr
-          )
-        );
-
-
-      canvas3D.height =
-        Math.max(
-          300,
-          Math.floor(
-            rect.height *
-            dpr
-          )
-        );
-
-
-      canvas3D.style.width =
-        rect.width +
-        "px";
-
-
-      canvas3D.style.height =
-        rect.height +
-        "px";
-
-
-      ctx3D.setTransform(
-        1,
-        0,
-        0,
-        1,
-        0,
-        0
-      );
-
-
-      drawModel();
-
-    }
-
-
-    function init3D(){
-
-      const stage =
-        qs("#threeStage");
-
-
-      if(
-        !stage
-      ){
-
-        return;
-
-      }
-
-
-      if(
-        canvas3D
-      ){
-
-        resize3D();
-
-        return;
-
-      }
-
-
-      canvas3D =
-        document.createElement(
-          "canvas"
-        );
-
-
-      canvas3D.setAttribute(
-        "aria-label",
-        "Model 3D perangkat komputer"
-      );
-
-
-      canvas3D.style.cursor =
-        "grab";
-
-
-      stage.innerHTML = `
-
-        <div class="three-help">
-          🖱 Drag = Putar
-          &nbsp; • &nbsp;
-          Scroll = Zoom
-        </div>
-
-      `;
-
-
-      stage.appendChild(
-        canvas3D
-      );
-
-
-      ctx3D =
-        canvas3D.getContext(
-          "2d"
-        );
-
-
-      if(
-        !ctx3D
-      ){
-
-        stage.innerHTML =
-          `
-            <div
-              style="
-                height:100%;
-                display:grid;
-                place-items:center;
-                color:#a9b8cf;
-                padding:30px;
-                text-align:center;
-              "
-            >
-              Browser tidak mendukung Canvas.
-            </div>
-          `;
-
-        return;
-
-      }
-
-
-      canvas3D.addEventListener(
-        "mousedown",
-        event => {
-
-          dragging3D =
-            true;
-
-          lastMouseX =
-            event.clientX;
-
-          lastMouseY =
-            event.clientY;
-
-          canvas3D.style.cursor =
-            "grabbing";
-
-        }
-      );
-
-
-      window.addEventListener(
-        "mouseup",
-        () => {
-
-          dragging3D =
-            false;
-
-          if(
-            canvas3D
-          ){
-
-            canvas3D.style.cursor =
-              "grab";
-
-          }
-
-        }
-      );
-
-
-      window.addEventListener(
-        "mousemove",
-        event => {
-
-          if(
-            !dragging3D
-          ){
-
-            return;
-
-          }
-
-
-          const dx =
-            event.clientX -
-            lastMouseX;
-
-
-          const dy =
-            event.clientY -
-            lastMouseY;
-
-
-          rotY +=
-            dx *
-            .012;
-
-
-          rotX +=
-            dy *
-            .012;
-
-
-          rotX =
-            Math.max(
-              -1.35,
-              Math.min(
-                1.35,
-                rotX
-              )
-            );
-
-
-          lastMouseX =
-            event.clientX;
-
-          lastMouseY =
-            event.clientY;
-
-        }
-      );
-
-
-      let lastTouchX =
-        0;
-
-      let lastTouchY =
-        0;
-
-
-      let touchDistance =
-        null;
-
-
-      canvas3D.addEventListener(
-        "touchstart",
-        event => {
-
-          if(
-            event.touches.length ===
-            1
-          ){
-
-            const touch =
-              event.touches[0];
-
-            lastTouchX =
-              touch.clientX;
-
-            lastTouchY =
-              touch.clientY;
-
-            touchDistance =
-              null;
-
-          }
-
-          else if(
-            event.touches.length ===
-            2
-          ){
-
-            touchDistance =
-              getTouchDistance(
-                event.touches[0],
-                event.touches[1]
-              );
-
-          }
-
-        },
-        {
-          passive:true
-        }
-      );
-
-
-      canvas3D.addEventListener(
-        "touchmove",
-        event => {
-
-          event.preventDefault();
-
-
-          if(
-            event.touches.length ===
-            1
-          ){
-
-            const touch =
-              event.touches[0];
-
-
-            const dx =
-              touch.clientX -
-              lastTouchX;
-
-
-            const dy =
-              touch.clientY -
-              lastTouchY;
-
-
-            rotY +=
-              dx *
-              .012;
-
-
-            rotX +=
-              dy *
-              .012;
-
-
-            rotX =
-              Math.max(
-                -1.35,
-                Math.min(
-                  1.35,
-                  rotX
-                )
-              );
-
-
-            lastTouchX =
-              touch.clientX;
-
-            lastTouchY =
-              touch.clientY;
-
-          }
-
-
-          else if(
-            event.touches.length ===
-            2
-          ){
-
-            const distance =
-              getTouchDistance(
-                event.touches[0],
-                event.touches[1]
-              );
-
-
-            if(
-              touchDistance !==
-              null
-            ){
-
-              const delta =
-                distance -
-                touchDistance;
-
-
-              zoom3D +=
-                delta *
-                .003;
-
-
-              zoom3D =
-                Math.max(
-                  .62,
-                  Math.min(
-                    2.30,
-                    zoom3D
-                  )
-                );
-
-            }
-
-
-            touchDistance =
-              distance;
-
-          }
-
-        },
-        {
-          passive:false
-        }
-      );
-
-
-      canvas3D.addEventListener(
-        "wheel",
-        event => {
-
-          event.preventDefault();
-
-
-          zoom3D +=
-            event.deltaY > 0
-              ? -.08
-              : .08;
-
-
-          zoom3D =
-            Math.max(
-              .62,
-              Math.min(
-                2.30,
-                zoom3D
-              )
-            );
-
-        },
-        {
-          passive:false
-        }
-      );
-
-
-      resize3D();
-
-      animate3D();
-
-    }
-
-
-    function getTouchDistance(
-      a,
-      b
-    ){
-
-      const dx =
-        a.clientX -
-        b.clientX;
-
-      const dy =
-        a.clientY -
-        b.clientY;
-
-
-      return Math.sqrt(
-        dx*dx +
-        dy*dy
-      );
-
-    }
-
-
-    function animate3D(){
-
-      if(
-        autoRotate3D
-      ){
-
-        rotY +=
-          .005;
-
-      }
-
-
-      drawModel();
-
-
-      animationFrame3D =
-        requestAnimationFrame(
-          animate3D
-        );
-
-    }
-
-
-    function loadDevice3D(
-      type
-    ){
-
-      currentDevice =
-        type;
-
-
-      const info =
-        deviceInfo3D[type];
-
-
-      if(
-        qs("#deviceTitle")
-      ){
-
-        qs("#deviceTitle").textContent =
-          info.name;
-
-      }
-
-
-      if(
-        qs("#deviceDescription")
-      ){
-
-        qs("#deviceDescription").textContent =
-          info.description;
-
-      }
-
-
-      document
-        .querySelectorAll(
-          ".device-btn"
-        )
-        .forEach(
-          button => {
-
-            button.classList.toggle(
-              "active",
-              button.dataset.device ===
-              type
-            );
-
-          }
-        );
-
-
-      reset3D();
-
-    }
-
-
-    function reset3D(){
-
-      rotX =
-        -0.48;
-
-      rotY =
-        0.72;
-
-      zoom3D =
-        1;
-
-    }
-
-
-    function toggleAutoRotate(){
-
-      autoRotate3D =
-        !autoRotate3D;
-
-
-      const button =
-        qs("#autoRotateBtn");
-
-
-      button.textContent =
-        autoRotate3D
-          ? "⟳ Auto Rotate: ON"
-          : "⟳ Auto Rotate: OFF";
-
-    }
-
-
-    document
-      .querySelectorAll(
-        ".device-btn"
-      )
-      .forEach(
-        button => {
-
-          button.addEventListener(
-            "click",
-            () => {
-
-              loadDevice3D(
-                button.dataset.device
-              );
-
-            }
-          );
-
-        }
-      );
-
-
-    function showExploration(){
-
-      show("#exploration");
-
-
-      setTimeout(
-        () => {
-
-          init3D();
-
-          resize3D();
-
-        },
-        120
-      );
-
-    }
-
-
-    window.addEventListener(
-      "resize",
-      () => {
-
-        resize3D();
-
-      }
-    );
 
 
     /* =====================================================
        INITIALIZE
-    ====================================================== */
+    ===================================================== */
 
-    populateStudents();
+    function restoreActiveStudent(){
+
+      const raw =
+        localStorage.getItem(
+          "cm2_active_student"
+        );
+
+
+      if(!raw){
+
+        populateStudents();
+
+        updateExplorationButton();
+
+        return;
+
+      }
+
+
+      try{
+
+        const student =
+          JSON.parse(raw);
+
+
+        state.code =
+          student.code || "";
+
+        state.name =
+          student.name || "";
+
+        state.className =
+          student.className || "";
+
+        state.teacher =
+          student.teacher || "";
+
+        state.team =
+          student.team || "";
+
+        state.role =
+          student.role || "";
+
+
+        if(state.code){
+
+          qs("#studentPill")
+            .textContent =
+              `${state.name} • ${state.code} • ${state.className}`;
+
+
+          qs("#dClass")
+            .textContent =
+              `${state.className} • ${state.teacher}`;
+
+
+          qs("#dCode")
+            .textContent =
+              `${state.name} (${state.code})`;
+
+
+          qs("#dTeam")
+            .textContent =
+              state.team;
+
+        }
+
+      }catch(error){
+
+        console.warn(
+          "Gagal memulihkan sesi:",
+          error
+        );
+
+      }
+
+
+      populateStudents();
+
+      updateExplorationButton();
+
+    }
+
+
+    restoreActiveStudent();
 
   </script>
 
