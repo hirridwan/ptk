@@ -1273,6 +1273,20 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       return keys[type]?.[part]||"";
     }
 
+    function saveRecordLocalOnly(record){
+      try{
+        const raw=localStorage.getItem("cm2_records")||"[]";
+        const parsed=JSON.parse(raw);
+        const list=Array.isArray(parsed)?parsed:[];
+        const index=list.findIndex(item=>item.className===record.className&&item.code===record.code);
+        if(index>=0) list[index]=record;
+        else list.push(record);
+        localStorage.setItem("cm2_records",JSON.stringify(list));
+      }catch(error){
+        console.error("Record local save failed:",error);
+      }
+    }
+
     function localSave(){
       if(!state.className || !state.code) return;
 
@@ -1933,22 +1947,21 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       storeAnswer();
       clearInterval(timerHandle);
 
-      const correct =
-        state.answers.filter(value=>value===true).length;
-
-      const score =
-        Math.round(correct/questions.length*100);
-
+      const correct = state.answers.filter(value=>value===true).length;
+      const score = Math.round(correct/questions.length*100);
       const answerLog = buildTestAnswerLog();
 
-      if(testMode==="pre"){
+      if(testMode === "pre"){
         state.pre = score;
         state.preCorrect = correct;
-        state.preAnswers = answerLog;
+        state.preAnswers = clone(answerLog);
 
-        localSave();
+        // Simpan snapshot Pre-Test lengkap sebelum masuk Mini Lesson.
+        const preRecord = buildRecord();
+        saveRecordLocalOnly(preRecord);
+        queueSync(preRecord);
 
-        currentScreen = "#mini";
+        currentScreen="#mini";
         show("#mini",false);
         saveActiveSession();
         return;
@@ -1956,19 +1969,20 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
 
       state.post = score;
       state.postCorrect = correct;
-      state.postAnswers = answerLog;
+      state.postAnswers = clone(answerLog);
 
-      localSave();
+      // Simpan snapshot Post-Test lengkap sebelum masuk Refleksi.
+      const postRecord = buildRecord();
+      saveRecordLocalOnly(postRecord);
+      queueSync(postRecord);
 
-      qs("#fPre").textContent = `${state.pre??"-"}/100`;
-      qs("#fPost").textContent = `${state.post??"-"}/100`;
-      qs("#fPreDetail").textContent =
-        `${state.preCorrect??0} dari 15 soal benar`;
-      qs("#fPostDetail").textContent =
-        `${state.postCorrect??0} dari 15 soal benar`;
-      qs("#fXP").textContent = state.xp;
+      qs("#fPre").textContent=`${state.pre??"-"}/100`;
+      qs("#fPost").textContent=`${state.post??"-"}/100`;
+      qs("#fPreDetail").textContent=`${state.preCorrect??0} dari 15 soal benar`;
+      qs("#fPostDetail").textContent=`${state.postCorrect??0} dari 15 soal benar`;
+      qs("#fXP").textContent=state.xp;
 
-      currentScreen = "#reflection";
+      currentScreen="#reflection";
       show("#reflection",false);
       restoreReflectionDraft();
       saveActiveSession();
@@ -2204,6 +2218,9 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
 
     function submitMission(autoFinish=false){
       captureMissionDraft();
+      state.missionChoices=state.missionChoices||{m1:{a:"",b:""},m2:{a:"",b:""}};
+      if(missionType==="m1") state.missionChoices.m1={a:qs('input[name="m1a"]:checked')?.value||"",b:qs('input[name="m1b"]:checked')?.value||""};
+      if(missionType==="m2") state.missionChoices.m2={a:qs('input[name="m2a"]:checked')?.value||"",b:qs('input[name="m2b"]:checked')?.value||""};
       clearInterval(missionTimerHandle);
 
       let score = 0;
@@ -2412,6 +2429,21 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         .trim();
     }
 
+    function getTestAnswerLogForRecord(mode){
+      try{
+        const stored = mode === "pre" ? state.preAnswers : state.postAnswers;
+        if(Array.isArray(stored) && stored.length){
+          return formatTestAnswersForSheet(stored);
+        }
+        if(testMode===mode && Array.isArray(selectedQuestions) && selectedQuestions.length){
+          return formatTestAnswersForSheet(buildTestAnswerLog());
+        }
+      }catch(error){
+        console.error("Test answer export failed:",error);
+      }
+      return "";
+    }
+
     function buildRecord(){
       return {
         className:state.className,
@@ -2431,10 +2463,10 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         rubric_m2:"",
         rubric_m3:"",
         rubric_boss:"",
-        answer_m1:state.essayAnswers?.m1 || "",
-        answer_m2:state.essayAnswers?.m2 || "",
-        answer_m3:state.essayAnswers?.m3 || "",
-        answer_boss:state.essayAnswers?.boss || "",
+        answer_m1:state.essayAnswers?.m1||"",
+        answer_m2:state.essayAnswers?.m2||"",
+        answer_m3:state.essayAnswers?.m3||"",
+        answer_boss:state.essayAnswers?.boss||"",
         m1_choice_a:missionChoiceText("m1","a",state.missionChoices?.m1?.a),
         m1_choice_b:missionChoiceText("m1","b",state.missionChoices?.m1?.b),
         m1_key_a:missionKeyText("m1","a"),
@@ -2443,21 +2475,21 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         m2_choice_b:missionChoiceText("m2","b",state.missionChoices?.m2?.b),
         m2_key_a:missionKeyText("m2","a"),
         m2_key_b:missionKeyText("m2","b"),
-        reflection_r3:state.reflection?.r3 || "",
-        reflection_r2:state.reflection?.r2 || "",
-        reflection_r1:state.reflection?.r1 || "",
-        pre_answers:formatTestAnswersForSheet(state.preAnswers),
-        post_answers:formatTestAnswersForSheet(state.postAnswers),
+        reflection_r3:state.reflection?.r3||"",
+        reflection_r2:state.reflection?.r2||"",
+        reflection_r1:state.reflection?.r1||"",
+        pre_answers:getTestAnswerLogForRecord("pre"),
+        post_answers:getTestAnswerLogForRecord("post"),
         timestamp:new Date().toISOString()
       };
     }
 
     function finishReflection(){
-      const r3 = normalizeReflectionText(qs("#r3")?.value);
-      const r2 = normalizeReflectionText(qs("#r2")?.value);
-      const r1 = normalizeReflectionText(qs("#r1")?.value);
+      const r3=normalizeReflectionText(qs("#r3")?.value);
+      const r2=normalizeReflectionText(qs("#r2")?.value);
+      const r1=normalizeReflectionText(qs("#r1")?.value);
 
-      if(!r3 || !r2 || !r1){
+      if(!r3||!r2||!r1){
         showToast("Semua bagian refleksi 3–2–1 wajib diisi.");
         return;
       }
@@ -2465,78 +2497,29 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       clearInterval(timerHandle);
       clearInterval(missionTimerHandle);
 
-      reflectionDraft = {r3,r2,r1};
-      state.reflection = {r3,r2,r1};
+      reflectionDraft={r3,r2,r1};
+      state.reflection={r3,r2,r1};
 
-      /*
-       * Bangun SATU record final setelah semua data terisi.
-       * Record ini memuat:
-       * - Pre-Test + pilihan/jawaban siswa
-       * - seluruh pilihan misi + kunci
-       * - Mission/Boss
-       * - Post-Test + pilihan/jawaban siswa
-       * - Refleksi 3–2–1
-       */
-      const finalRecord = buildRecord();
+      // Record final sudah memuat Pre-Test + Post-Test + Misi + Refleksi.
+      const finalRecord=buildRecord();
 
-      /* Simpan record final ke local cache + queue terlebih dahulu. */
-      localSave();
+      saveRecordLocalOnly(finalRecord);
+      queueSync(finalRecord);
 
-      /*
-       * Simpan snapshot lokal terlebih dahulu.
-       */
-      try{
-        const records = JSON.parse(
-          localStorage.getItem("cm2_records") || "[]"
-        );
-        const list = Array.isArray(records) ? records : [];
-        const index = list.findIndex(
-          item =>
-            item.className===finalRecord.className &&
-            item.code===finalRecord.code
-        );
+      // Kirim langsung juga agar tidak menunggu timer queue.
+      syncRecordNow(finalRecord);
 
-        if(index>=0) list[index] = finalRecord;
-        else list.push(finalRecord);
-
-        localStorage.setItem(
-          "cm2_records",
-          JSON.stringify(list)
-        );
-      }catch(error){
-        console.error("Final local record save failed:",error);
-      }
-
-      /*
-       * Tandai selesai SEBELUM pindah halaman.
-       * pagehide/beforeunload tidak boleh membuat active session baru.
-       */
+      // Quest selesai: refresh berikutnya harus kembali ke login.
       markCompletionForNextLoad();
       clearActiveSession();
 
-      /*
-       * Kirim record final langsung ke Google Sheets.
-       * Tidak menunggu response untuk pindah ke Finish.
-       */
-      syncRecordNow(finalRecord).then(()=>{
-        console.log("Final record synced.");
-      }).catch(error=>{
-        console.error("Final sync failed:",error);
-        queueSync(finalRecord);
-      });
+      qs("#fPre").textContent=`${state.pre??"-"}/100`;
+      qs("#fPost").textContent=`${state.post??"-"}/100`;
+      qs("#fPreDetail").textContent=`${state.preCorrect??0} dari 15 soal benar`;
+      qs("#fPostDetail").textContent=`${state.postCorrect??0} dari 15 soal benar`;
+      qs("#fXP").textContent=state.xp;
 
-      /*
-       * Render Finish SEKARANG.
-       */
-      qs("#fPre").textContent = `${state.pre??"-"}/100`;
-      qs("#fPost").textContent = `${state.post??"-"}/100`;
-      qs("#fPreDetail").textContent =
-        `${state.preCorrect??0} dari 15 soal benar`;
-      qs("#fPostDetail").textContent =
-        `${state.postCorrect??0} dari 15 soal benar`;
-      qs("#fXP").textContent = state.xp;
-
-      currentScreen = "#finish";
+      currentScreen="#finish";
       show("#finish",false);
       updateJourneyProgress();
 
