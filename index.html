@@ -1010,6 +1010,9 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       postCorrect:0
     };
 
+    const qs = selector => document.querySelector(selector);
+    const clone = obj => JSON.parse(JSON.stringify(obj));
+
     let state = clone(DEFAULT_STATE);
     let testMode = "pre";
     let qIndex = 0;
@@ -1029,9 +1032,6 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       boss:{input:"",process:"",output:"",cpu:"",ipo:"",reason:""}
     };
     let reflectionDraft = {r3:"",r2:"",r1:""};
-
-    const qs = selector => document.querySelector(selector);
-    const clone = obj => JSON.parse(JSON.stringify(obj));
 
     function safeNumber(value,fallback=0){
       const n = Number(value);
