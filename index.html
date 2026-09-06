@@ -1316,8 +1316,8 @@
         '<option value="">-- Pilih nama siswa --</option>';
 
       const roster =
-        (typeof CLASS_ROSTERS !== "undefined" && Array.isArray(CLASS_ROSTERS[classKey]))
-          ? CLASS_ROSTERS[classKey]
+        (window.CLASS_ROSTERS && Array.isArray(window.CLASS_ROSTERS[classKey]))
+          ? window.CLASS_ROSTERS[classKey]
           : [];
 
       for(const student of roster){
@@ -1348,8 +1348,8 @@
       const code = qs("#studentCode").value;
 
       const roster =
-        typeof CLASS_ROSTERS !== "undefined"
-          ? (CLASS_ROSTERS[classKey] || [])
+        window.CLASS_ROSTERS
+          ? (window.CLASS_ROSTERS[classKey] || [])
           : [];
 
       const student = roster.find(item => item.code===code);
@@ -1365,8 +1365,8 @@
       const code = qs("#studentCode").value;
 
       const roster =
-        typeof CLASS_ROSTERS !== "undefined"
-          ? (CLASS_ROSTERS[classKey] || [])
+        window.CLASS_ROSTERS
+          ? (window.CLASS_ROSTERS[classKey] || [])
           : [];
 
       const student = roster.find(item => item.code===code);
