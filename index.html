@@ -1384,25 +1384,61 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
 
     function jsonp(url,params={},timeout=10000){
       return new Promise((resolve,reject)=>{
-        const callback="cm2_cb_"+Date.now()+"_"+Math.random().toString(36).slice(2);
-        const script=document.createElement("script");
-        const query=new URLSearchParams({...params,callback});
-        let finished=false;
+        const callback =
+          "cm2_cb_" +
+          Date.now() +
+          "_" +
+          Math.random().toString(36).slice(2);
 
-        const finish=(fn,value)=>{
-          if(finished)return;
-          finished=true;
+        const script = document.createElement("script");
+        const query = new URLSearchParams({
+          ...params,
+          callback
+        });
+
+        let finished = false;
+
+        const timer = setTimeout(()=>{
+          finish(
+            reject,
+            new Error("Google Sheets request timeout.")
+          );
+        },timeout);
+
+        function finish(fn,value){
+          if(finished) return;
+
+          finished = true;
+
           clearTimeout(timer);
           delete window[callback];
-          script.remove();
+
+          if(script.parentNode){
+            script.parentNode.removeChild(script);
+          }
+
           fn(value);
+        }
+
+        window[callback] = data => {
+          finish(resolve,data);
         };
 
-        window[callback]=data=>finish(resolve,data);
-        script.onerror=()=>finish(reject,new Error("Google Sheets request gagal."));
+        script.async = true;
+
+        script.onerror = ()=>{
+          finish(
+            reject,
+            new Error("Google Sheets request gagal.")
+          );
+        };
+
+        script.src =
+          url +
+          (url.includes("?") ? "&" : "?") +
+          query.toString();
+
         document.head.appendChild(script);
-        const timer=setTimeout(()=>finish(reject,new Error("Google Sheets request timeout.")),timeout);
-        script.src=url+"?"+query.toString();
       });
     }
 
@@ -1493,7 +1529,11 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       saveActiveSession();
       }catch(error){
         console.error("Start session failed:",error);
-        alert("Tidak bisa memulai karena koneksi ke Google Sheets gagal. Coba lagi.");
+        alert(
+          "Tidak bisa memulai karena Google Sheets belum merespons. " +
+          "Pastikan Web App Apps Script sudah di-deploy sebagai versi terbaru " +
+          "dan aksesnya dapat digunakan siapa saja."
+        );
       }finally{
         if(button) button.disabled = false;
       }
