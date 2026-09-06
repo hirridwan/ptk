@@ -1436,6 +1436,15 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
     }
 
     async function syncRecordNow(record){
+      if(!record || !record.className || !record.code) return false;
+
+      // Hapus antrean lama untuk siswa yang sama agar record lama
+      // tidak datang belakangan dan menimpa jawaban terbaru.
+      syncQueue = syncQueue.filter(item => !(
+        item.className===record.className &&
+        item.code===record.code
+      ));
+
       try{
         await fetch(SHEET_WEB_APP_URL,{
           method:"POST",
@@ -1444,6 +1453,15 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
           headers:{"Content-Type":"text/plain;charset=utf-8"},
           body:JSON.stringify({action:"upsert",record})
         });
+
+        // Pastikan antrean tetap bersih setelah pengiriman langsung.
+        try{
+          localStorage.setItem(
+            "cm2_sync_queue_final",
+            JSON.stringify(syncQueue)
+          );
+        }catch(error){}
+
         return true;
       }catch(error){
         console.error("Immediate Google Sheets sync failed:",error);
@@ -1975,7 +1993,7 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       }).join("\n");
     }
 
-    function finishTest(autoFinish=false){
+    async function finishTest(autoFinish=false){
       storeAnswer();
       clearInterval(timerHandle);
 
@@ -1998,9 +2016,9 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         saveRecordLocalOnly(record);
         queueSync(record);
 
-        syncRecordNow(record).catch(error=>{
-          console.error("Pre-Test sync failed:",error);
-        });
+        // Kirim langsung dan tunggu selesai agar jawaban Pre-Test
+        // benar-benar tersimpan sebelum berpindah tahap.
+        await syncRecordNow(record);
 
         currentScreen = "#mini";
         show("#mini",false);
@@ -2017,9 +2035,8 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       saveRecordLocalOnly(record);
       queueSync(record);
 
-      syncRecordNow(record).catch(error=>{
-        console.error("Post-Test sync failed:",error);
-      });
+      // Tunggu pengiriman Post-Test selesai sebelum membuka refleksi.
+      await syncRecordNow(record);
 
       qs("#fPre").textContent = `${state.pre??"-"}/100`;
       qs("#fPost").textContent = `${state.post??"-"}/100`;
@@ -2525,13 +2542,17 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         reflection_r3:state.reflection?.r3||"",
         reflection_r2:state.reflection?.r2||"",
         reflection_r1:state.reflection?.r1||"",
-        pre_answers:getTestAnswerLogForRecord("pre"),
-        post_answers:getTestAnswerLogForRecord("post"),
+        pre_answers:
+          state.preAnswersText ||
+          getTestAnswerLogForRecord("pre"),
+        post_answers:
+          state.postAnswersText ||
+          getTestAnswerLogForRecord("post"),
         timestamp:new Date().toISOString()
       };
     }
 
-    function finishReflection(){
+    async function finishReflection(){
       const r3=normalizeReflectionText(qs("#r3")?.value);
       const r2=normalizeReflectionText(qs("#r2")?.value);
       const r1=normalizeReflectionText(qs("#r1")?.value);
@@ -2551,10 +2572,16 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       const finalRecord=buildRecord();
 
       saveRecordLocalOnly(finalRecord);
-      queueSync(finalRecord);
 
-      // Kirim langsung juga agar tidak menunggu timer queue.
-      syncRecordNow(finalRecord);
+      // Record final dikirim langsung dan ditunggu sampai selesai.
+      // Ini memastikan Pre-Test, Post-Test, Misi, dan Refleksi masuk
+      // sebagai satu data terakhir untuk siswa tersebut.
+      const synced = await syncRecordNow(finalRecord);
+
+      if(!synced){
+        // Tetap masukkan ke antrean sebagai fallback.
+        queueSync(finalRecord);
+      }
 
       // Quest selesai: refresh berikutnya harus kembali ke login.
       markCompletionForNextLoad();
