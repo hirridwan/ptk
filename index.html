@@ -68,7 +68,10 @@ body::after{
   animation-delay:-4s;
 }
 
-button,input,select,textarea{
+button,
+input,
+select,
+textarea{
   font:inherit;
 }
 
@@ -161,7 +164,9 @@ button{
   line-height:1.6;
 }
 
-h1,h2,h3{
+h1,
+h2,
+h3{
   margin-top:0;
 }
 
@@ -550,8 +555,12 @@ select option{
 }
 
 @keyframes titleShift{
-  0%,100%{background-position:0% 50%}
-  50%{background-position:100% 50%}
+  0%,100%{
+    background-position:0% 50%;
+  }
+  50%{
+    background-position:100% 50%;
+  }
 }
 
 @keyframes scanline{
@@ -559,8 +568,12 @@ select option{
     top:-8%;
     opacity:0;
   }
-  12%{opacity:1}
-  88%{opacity:1}
+  12%{
+    opacity:1;
+  }
+  88%{
+    opacity:1;
+  }
   100%{
     top:108%;
     opacity:0;
@@ -627,6 +640,7 @@ select option{
 }
 
 @media (prefers-reduced-motion: reduce){
+
   *,
   *::before,
   *::after{
@@ -635,6 +649,7 @@ select option{
     scroll-behavior:auto!important;
     transition-duration:.001ms!important;
   }
+
 }
 </style>
 </head>
@@ -686,7 +701,9 @@ select option{
 
 </div>
 
+
 <div class="wrap">
+
 
 <!-- ======================================================
      LOGIN
@@ -802,7 +819,10 @@ select option{
 
       </div>
 
-      <div class="actions" style="margin-top:20px;">
+      <div
+        class="actions"
+        style="margin-top:20px;"
+      >
 
         <button
           class="btn primary"
@@ -814,6 +834,7 @@ select option{
       </div>
 
     </div>
+
 
     <div class="scan-card">
 
@@ -901,12 +922,16 @@ select option{
 
   </div>
 
+
   <div
     class="progress"
     style="margin-top:18px;"
   >
+
     <span id="prog"></span>
+
   </div>
+
 
   <div
     class="section-label"
@@ -923,11 +948,14 @@ select option{
 
   </div>
 
+
   <div class="grid3">
 
     <div class="mission-card">
 
-      <span class="badge">1</span>
+      <span class="badge">
+        1
+      </span>
 
       <h3>
         Pre-Test
@@ -940,9 +968,12 @@ select option{
 
     </div>
 
+
     <div class="mission-card">
 
-      <span class="badge">2</span>
+      <span class="badge">
+        2
+      </span>
 
       <h3>
         Mini Lesson
@@ -954,9 +985,12 @@ select option{
 
     </div>
 
+
     <div class="mission-card">
 
-      <span class="badge">3</span>
+      <span class="badge">
+        3
+      </span>
 
       <h3>
         Mission 1
@@ -968,9 +1002,12 @@ select option{
 
     </div>
 
+
     <div class="mission-card">
 
-      <span class="badge">4</span>
+      <span class="badge">
+        4
+      </span>
 
       <h3>
         Mission 2
@@ -982,9 +1019,12 @@ select option{
 
     </div>
 
+
     <div class="mission-card">
 
-      <span class="badge">5</span>
+      <span class="badge">
+        5
+      </span>
 
       <h3>
         Mission 3
@@ -996,9 +1036,12 @@ select option{
 
     </div>
 
+
     <div class="mission-card">
 
-      <span class="badge">6</span>
+      <span class="badge">
+        6
+      </span>
 
       <h3>
         Boss Mission
@@ -1012,6 +1055,7 @@ select option{
 
   </div>
 
+
   <div
     class="mission-card"
     style="margin-top:18px;"
@@ -1022,16 +1066,20 @@ select option{
     </h3>
 
     <p class="muted">
+
       Kamu akan menjalani misi secara berurutan.
       <b>Pre-Test dan Post-Test dikerjakan secara individu.</b>
       Mission 1–3 dan Boss Mission dikerjakan sesuai
       pembagian peran dalam tim.
+
     </p>
 
     <p class="muted">
+
       Semua bagian harus diisi sebelum dapat dikirim.
       Jawaban objektif menghasilkan XP aktivitas.
       Jawaban uraian akan dinilai guru menggunakan rubrik.
+
     </p>
 
     <div class="notice">
@@ -1050,6 +1098,7 @@ select option{
     </div>
 
   </div>
+
 
   <div
     class="actions"
@@ -1098,8 +1147,10 @@ select option{
       ></div>
 
       <div class="footer-note">
+
         Semua soal wajib dijawab.
         Nilai = jumlah benar ÷ 15 × 100
+
       </div>
 
     </div>
@@ -1113,18 +1164,24 @@ select option{
 
   </div>
 
+
   <div
     class="required-note"
     style="margin-top:16px;"
   >
-    Jangan khawatir jika kamu perlu kembali ke soal sebelumnya.
+
+    Jangan khawatir jika kamu perlu kembali
+    ke soal sebelumnya.
     Jawaban yang sudah dipilih akan tetap tersimpan.
+
   </div>
+
 
   <div
     id="questionBox"
     style="margin-top:16px;"
   ></div>
+
 
   <div
     class="actions"
@@ -1173,8 +1230,11 @@ select option{
   </h2>
 
   <p class="muted">
+
     Baca bagian ini sebelum masuk ke Mission 1.
+
   </p>
+
 
   <div class="grid">
 
@@ -1185,17 +1245,22 @@ select option{
       </h3>
 
       <p>
+
         <b>Input</b> adalah data yang masuk ke komputer.
         <b>Process</b> adalah pengolahan data.
         <b>Output</b> adalah hasil yang keluar.
+
       </p>
 
       <p class="footer-note">
+
         Contoh:
         Keyboard → CPU → Monitor.
+
       </p>
 
     </div>
+
 
     <div class="mission-card">
 
@@ -1204,12 +1269,15 @@ select option{
       </h3>
 
       <p>
+
         CPU adalah pusat pengolahan komputer.
         <b>ALU</b> melakukan operasi aritmetika dan logika.
         <b>CU</b> mengatur dan mengendalikan jalannya instruksi.
+
       </p>
 
     </div>
+
 
     <div class="mission-card">
 
@@ -1218,12 +1286,15 @@ select option{
       </h3>
 
       <p>
+
         <b>RAM</b> adalah memori kerja sementara.
         <b>SSD/HDD</b> menyimpan file dan data
         agar tetap tersedia setelah komputer dimatikan.
+
       </p>
 
     </div>
+
 
     <div class="mission-card">
 
@@ -1232,15 +1303,18 @@ select option{
       </h3>
 
       <p>
+
         Baca kasus dengan teliti.
         Tentukan komponen yang tepat.
         Untuk uraian, jelaskan alasanmu,
         bukan hanya menyebutkan jawabannya.
+
       </p>
 
     </div>
 
   </div>
+
 
   <div
     class="mission-card"
@@ -1252,17 +1326,22 @@ select option{
     </h3>
 
     <p class="muted">
+
       Mission 1 membahas perbedaan RAM dan Storage.
       Pilih jawaban objektif terlebih dahulu,
       kemudian jelaskan alasanmu pada bagian uraian.
+
     </p>
 
     <p class="muted">
+
       Semua bagian Mission 1 wajib diisi
       sebelum dapat dikirim.
+
     </p>
 
   </div>
+
 
   <div
     class="actions"
@@ -1271,6 +1350,7 @@ select option{
 
     <button
       class="btn primary"
+      type="button"
       onclick="startMission1()"
     >
       Mulai Mission 1
@@ -1321,6 +1401,7 @@ select option{
 
   </div>
 
+
   <div
     class="mission-card"
     style="margin-top:16px;"
@@ -1337,10 +1418,12 @@ select option{
 
   </div>
 
+
   <div
     id="missionContent"
     style="margin-top:18px;"
   ></div>
+
 
   <div
     class="actions"
@@ -1393,8 +1476,10 @@ select option{
       </h2>
 
       <div class="muted">
+
         13 XP penyelesaian +
         17 XP uraian rubrik guru
+
       </div>
 
     </div>
@@ -1407,6 +1492,7 @@ select option{
     </div>
 
   </div>
+
 
   <div
     class="mission-card"
@@ -1425,13 +1511,14 @@ select option{
 
     </p>
 
-    <div
-      class="required-note"
-    >
+
+    <div class="required-note">
+
       Semua enam bagian Boss Mission wajib diisi
       sebelum jawaban dapat dikirim.
 
     </div>
+
 
     <div
       class="mission-card"
@@ -1462,6 +1549,7 @@ select option{
 
     </div>
 
+
     <div class="grid">
 
       <div>
@@ -1477,6 +1565,7 @@ select option{
 
       </div>
 
+
       <div>
 
         <label>
@@ -1490,6 +1579,7 @@ select option{
 
       </div>
 
+
       <div>
 
         <label>
@@ -1502,6 +1592,7 @@ select option{
         >
 
       </div>
+
 
       <div>
 
@@ -1518,8 +1609,11 @@ select option{
 
     </div>
 
+
     <label style="margin-top:14px;">
+
       Gambarkan / uraikan alur IPO
+
     </label>
 
     <textarea
@@ -1528,9 +1622,12 @@ select option{
       placeholder="Input → Process → Output"
     ></textarea>
 
+
     <label style="margin-top:14px;">
+
       Mengapa komponen tersebut ditempatkan
       pada tahap itu?
+
     </label>
 
     <textarea
@@ -1540,6 +1637,7 @@ select option{
     ></textarea>
 
   </div>
+
 
   <div
     class="actions"
@@ -1572,15 +1670,20 @@ select option{
   </h2>
 
   <p class="muted">
+
     Tulis refleksimu setelah seluruh rangkaian misi selesai.
     Semua bagian refleksi wajib diisi.
+
   </p>
 
-  <div
-    class="required-note"
-  >
-    3 hal + 2 hal + 1 hal harus lengkap sebelum dapat disimpan.
+
+  <div class="required-note">
+
+    3 hal + 2 hal + 1 hal harus lengkap
+    sebelum dapat disimpan.
+
   </div>
+
 
   <div class="grid">
 
@@ -1598,6 +1701,7 @@ select option{
 
     </div>
 
+
     <div>
 
       <label>
@@ -1614,8 +1718,11 @@ select option{
 
   </div>
 
+
   <label style="margin-top:14px;">
+
     1 hal yang masih membingungkan
+
   </label>
 
   <textarea
@@ -1623,6 +1730,7 @@ select option{
     rows="3"
     placeholder="Tuliskan satu hal..."
   ></textarea>
+
 
   <div
     class="actions"
@@ -1654,13 +1762,17 @@ select option{
     🎉 Misi Selesai!
   </div>
 
+
   <p
     class="muted"
     style="text-align:center;"
   >
+
     Seluruh rangkaian permainan telah selesai.
     Data tersimpan ke Google Sheets.
+
   </p>
+
 
   <div
     class="grid3"
@@ -1687,6 +1799,7 @@ select option{
 
     </div>
 
+
     <div class="kpi">
 
       <small>
@@ -1706,6 +1819,7 @@ select option{
       ></div>
 
     </div>
+
 
     <div class="kpi">
 
@@ -1728,6 +1842,7 @@ select option{
 
   </div>
 
+
   <div
     class="mission-card"
     style="margin-top:18px;"
@@ -1748,11 +1863,18 @@ select option{
 
 </section>
 
+
 </div>
 
-<div id="toast" class="toast"></div>
+
+<div
+  id="toast"
+  class="toast"
+></div>
+
 
 <script src="students.js"></script>
+
 
 <script>
 
@@ -2042,7 +2164,9 @@ let state = {
 
 };
 
+
 let missionDrafts = {
+
   m1:{
     a:"",
     b:"",
@@ -2072,13 +2196,18 @@ let missionDrafts = {
     ipo:"",
     reason:""
   }
+
 };
 
+
 let reflectionDraft = {
+
   r3:"",
   r2:"",
   r1:""
+
 };
+
 
 let currentScreen = "#login";
 
@@ -2134,6 +2263,7 @@ function show(id){
     id;
 
   saveActiveSession();
+
 }
 
 
@@ -2157,10 +2287,14 @@ function showToast(message){
         toast.classList.remove("show"),
       2600
     );
+
 }
 
 
-function safeNumber(value,fallback=0){
+function safeNumber(
+  value,
+  fallback=0
+){
 
   const n =
     Number(value);
@@ -2168,6 +2302,7 @@ function safeNumber(value,fallback=0){
   return Number.isFinite(n)
     ? n
     : fallback;
+
 }
 
 
@@ -2177,7 +2312,9 @@ function saveActiveSession(){
     !state.className ||
     !state.code
   ){
+
     return;
+
   }
 
   const sessionData = {
@@ -2221,7 +2358,9 @@ function clearActiveSession(){
 }
 
 
-function currentRemainingSeconds(endAt){
+function currentRemainingSeconds(
+  endAt
+){
 
   if(!endAt){
     return 0;
@@ -2230,7 +2369,8 @@ function currentRemainingSeconds(endAt){
   return Math.max(
     0,
     Math.ceil(
-      (endAt-Date.now())/1000
+      (endAt - Date.now()) /
+      1000
     )
   );
 
@@ -2330,10 +2470,16 @@ function startSession(){
     );
 
     return;
+
   }
 
-  clearInterval(timerHandle);
-  clearInterval(missionTimerHandle);
+  clearInterval(
+    timerHandle
+  );
+
+  clearInterval(
+    missionTimerHandle
+  );
 
   clearActiveSession();
 
@@ -2388,6 +2534,7 @@ function startSession(){
 
   };
 
+
   missionDrafts = {
 
     m1:{
@@ -2422,31 +2569,50 @@ function startSession(){
 
   };
 
+
   reflectionDraft = {
+
     r3:"",
     r2:"",
     r1:""
+
   };
 
-  qIndex=0;
-  selectedQuestions=[];
-  testEndAt=0;
-  missionType="";
-  missionEndAt=0;
+
+  qIndex =
+    0;
+
+  selectedQuestions =
+    [];
+
+  testEndAt =
+    0;
+
+  missionType =
+    "";
+
+  missionEndAt =
+    0;
+
 
   qs("#studentPill").textContent =
     `${state.name} • ${state.code} • ${state.className}`;
 
+
   qs("#dClass").textContent =
     `${state.className} • ${state.teacher}`;
+
 
   qs("#dCode").textContent =
     `${state.name} (${state.code})`;
 
+
   qs("#dTeam").textContent =
     state.team;
 
+
   updateTop();
+
 
   currentScreen =
     "#dash";
@@ -2508,6 +2674,7 @@ function shuffle(array){
   }
 
   return copy;
+
 }
 
 
@@ -2612,12 +2779,12 @@ function renderQuestion(){
     selectedQuestions[qIndex];
 
   if(!question){
-
     return;
   }
 
   qs("#qCount").textContent =
     `Soal ${qIndex+1} dari ${selectedQuestions.length}`;
+
 
   qs("#finishTestBtn")
     .classList.toggle(
@@ -2626,12 +2793,14 @@ function renderQuestion(){
       selectedQuestions.length-1
     );
 
+
   qs("#nextTestBtn")
     .classList.toggle(
       "hidden",
       qIndex ===
       selectedQuestions.length-1
     );
+
 
   qs("#questionBox").innerHTML = `
 
@@ -2643,7 +2812,9 @@ function renderQuestion(){
           margin-bottom:12px;
         "
       >
+
         ${escapeHtml(question.stem)}
+
       </div>
 
       ${
@@ -2660,8 +2831,10 @@ function renderQuestion(){
               >
 
               <span>
+
                 ${String.fromCharCode(65+index)}.
                 ${escapeHtml(option.text)}
+
               </span>
 
             </label>
@@ -2675,8 +2848,10 @@ function renderQuestion(){
 
   `;
 
+
   const previousChoice =
     state.answerChoices[qIndex];
+
 
   if(
     previousChoice !== null &&
@@ -2690,7 +2865,8 @@ function renderQuestion(){
       );
 
     if(radio){
-      radio.checked = true;
+      radio.checked =
+        true;
     }
 
   }
@@ -2704,6 +2880,7 @@ function storeAnswer(){
     document.querySelector(
       'input[name="q"]:checked'
     );
+
 
   if(!element){
 
@@ -2739,7 +2916,7 @@ function prevQ(){
 
   storeAnswer();
 
-  if(qIndex>0){
+  if(qIndex > 0){
 
     qIndex--;
 
@@ -2759,6 +2936,7 @@ function nextQ(){
       'input[name="q"]:checked'
     );
 
+
   if(!element){
 
     showToast(
@@ -2766,9 +2944,12 @@ function nextQ(){
     );
 
     return;
+
   }
 
+
   storeAnswer();
+
 
   if(
     qIndex <
@@ -2786,7 +2967,9 @@ function nextQ(){
 }
 
 
-function startTestTimer(seconds){
+function startTestTimer(
+  seconds
+){
 
   clearInterval(
     timerHandle
@@ -2795,14 +2978,29 @@ function startTestTimer(seconds){
   const requested =
     Math.max(
       1,
-      safeNumber(seconds,600)
+      safeNumber(
+        seconds,
+        600
+      )
     );
 
-  testEndAt =
-    Date.now() +
-    requested*1000;
+
+  if(
+    !testEndAt ||
+    currentRemainingSeconds(
+      testEndAt
+    ) <= 0
+  ){
+
+    testEndAt =
+      Date.now() +
+      requested*1000;
+
+  }
+
 
   updateTimer();
+
 
   timerHandle =
     setInterval(
@@ -2815,7 +3013,10 @@ function startTestTimer(seconds){
 
         updateTimer();
 
-        if(remaining<=0){
+
+        if(
+          remaining <= 0
+        ){
 
           clearInterval(
             timerHandle
@@ -2825,7 +3026,10 @@ function startTestTimer(seconds){
             true
           );
 
+          return;
+
         }
+
 
         saveActiveSession();
 
@@ -2863,39 +3067,51 @@ function updateTimer(){
       "0"
     );
 
+
   const timer =
     qs("#testTimer");
 
+
   timer.textContent =
     `${minutes}:${seconds}`;
+
 
   timer.classList.remove(
     "warning",
     "danger"
   );
 
-  if(remaining<=60){
+
+  if(
+    remaining <= 60
+  ){
+
     timer.classList.add(
       "danger"
     );
-  }else if(remaining<=180){
+
+  }else if(
+    remaining <= 180
+  ){
+
     timer.classList.add(
       "warning"
     );
+
   }
 
 }
 
 
-function finishTest(autoFinish=false){
+function finishTest(
+  autoFinish=false
+){
 
   storeAnswer();
 
-  /*
-   * Pre/Post test TIDAK BOLEH
-   * mempunyai soal kosong.
-   */
+
   const unanswered = [];
+
 
   for(
     let i=0;
@@ -2916,12 +3132,17 @@ function finishTest(autoFinish=false){
 
   }
 
-  if(unanswered.length){
 
-    if(autoFinish){
+  if(
+    unanswered.length
+  ){
+
+    if(
+      autoFinish
+    ){
 
       showToast(
-        "Waktu habis. Semua jawaban yang sudah terisi disimpan."
+        "Waktu habis. Soal yang belum dijawab tidak diberi poin."
       );
 
     }else{
@@ -2937,15 +3158,22 @@ function finishTest(autoFinish=false){
 
   }
 
+
   clearInterval(
     timerHandle
   );
+
+
+  testEndAt =
+    0;
+
 
   const correct =
     state.answers.filter(
       value =>
         value === true
     ).length;
+
 
   const score =
     Math.round(
@@ -2954,6 +3182,7 @@ function finishTest(autoFinish=false){
         questions.length
       ) * 100
     );
+
 
   if(
     testMode === "pre"
@@ -2970,7 +3199,9 @@ function finishTest(autoFinish=false){
     show("#mini");
 
     return;
+
   }
+
 
   state.post =
     score;
@@ -2979,6 +3210,7 @@ function finishTest(autoFinish=false){
     correct;
 
   localSave();
+
 
   qs("#fPre")
     .textContent =
@@ -2999,6 +3231,7 @@ function finishTest(autoFinish=false){
   qs("#fXP")
     .textContent =
       state.xp;
+
 
   show("#reflection");
 
@@ -3041,9 +3274,6 @@ function startMission(
   restoring=false
 ){
 
-  missionType =
-    type;
-
   const configs = {
 
     m1:{
@@ -3071,6 +3301,7 @@ function startMission(
 
           </p>
 
+
           <label class="option">
 
             <input
@@ -3086,6 +3317,7 @@ function startMission(
 
           </label>
 
+
           <label class="option">
 
             <input
@@ -3100,6 +3332,7 @@ function startMission(
             </span>
 
           </label>
+
 
           <label class="option">
 
@@ -3126,6 +3359,7 @@ function startMission(
 
           </p>
 
+
           <label class="option">
 
             <input
@@ -3141,6 +3375,7 @@ function startMission(
 
           </label>
 
+
           <label class="option">
 
             <input
@@ -3155,6 +3390,7 @@ function startMission(
             </span>
 
           </label>
+
 
           <label class="option">
 
@@ -3180,6 +3416,7 @@ function startMission(
 
           </p>
 
+
           <textarea
             id="m1reason"
             rows="3"
@@ -3190,6 +3427,7 @@ function startMission(
         </div>
 
       `
+
     },
 
 
@@ -3217,6 +3455,7 @@ function startMission(
 
           </p>
 
+
           <label class="option">
 
             <input
@@ -3231,6 +3470,7 @@ function startMission(
             </span>
 
           </label>
+
 
           <label class="option">
 
@@ -3257,6 +3497,7 @@ function startMission(
 
           </p>
 
+
           <label class="option">
 
             <input
@@ -3271,6 +3512,7 @@ function startMission(
             </span>
 
           </label>
+
 
           <label class="option">
 
@@ -3296,6 +3538,7 @@ function startMission(
 
           </p>
 
+
           <textarea
             id="m2reason"
             rows="3"
@@ -3306,6 +3549,7 @@ function startMission(
         </div>
 
       `
+
     },
 
 
@@ -3325,8 +3569,11 @@ function startMission(
         <div class="mission-card">
 
           <p>
+
             Pilih kasus lalu tuliskan alurnya.
+
           </p>
+
 
           <select
             id="m3case"
@@ -3419,13 +3666,13 @@ function startMission(
           </div>
 
 
-          <label
-            style="margin-top:14px;"
-          >
+          <label style="margin-top:14px;">
+
             Mengapa urutan tersebut
             sesuai IPO?
 
           </label>
+
 
           <textarea
             id="m3reason"
@@ -3437,54 +3684,107 @@ function startMission(
         </div>
 
       `
+
     }
 
   };
 
+
   const config =
     configs[type];
 
+
   if(!config){
+
+    showToast(
+      "Konfigurasi Mission tidak ditemukan."
+    );
+
     return;
+
   }
+
+
+  /*
+   * INI BAGIAN YANG DIPERBAIKI.
+   * Setiap kali startMission dipanggil,
+   * halaman Mission benar-benar ditampilkan.
+   */
+  show("#mission");
+
+
+  missionType =
+    type;
+
 
   qs("#missionTitle")
     .textContent =
       config.title;
 
+
   qs("#missionDesc")
     .textContent =
       config.desc;
+
 
   qs("#missionContent")
     .innerHTML =
       config.html;
 
+
   qs("#missionSubmit")
     .classList
     .remove("hidden");
+
 
   qs("#missionNext")
     .classList
     .add("hidden");
 
-  restoreMissionDraft(type);
+
+  restoreMissionDraft(
+    type
+  );
+
 
   if(restoring){
 
-    startMissionTimer(
+    const remaining =
       currentRemainingSeconds(
         missionEndAt
-      )
-    );
+      );
+
+
+    if(remaining > 0){
+
+      startMissionTimer(
+        remaining
+      );
+
+    }else{
+
+      missionEndAt =
+        Date.now() +
+        config.seconds*1000;
+
+      startMissionTimer(
+        config.seconds
+      );
+
+    }
 
   }else{
+
+    missionEndAt =
+      Date.now() +
+      config.seconds*1000;
 
     startMissionTimer(
       config.seconds
     );
 
   }
+
 
   saveActiveSession();
 
@@ -3496,8 +3796,11 @@ function captureMissionDraft(){
   if(
     !missionType
   ){
+
     return;
+
   }
+
 
   if(
     missionType === "m1"
@@ -3575,22 +3878,28 @@ function captureMissionDraft(){
 
   }
 
+
   saveActiveSession();
 
 }
 
 
-function restoreMissionDraft(type){
+function restoreMissionDraft(
+  type
+){
 
   const draft =
     missionDrafts[type];
+
 
   if(!draft){
     return;
   }
 
 
-  if(type==="m1"){
+  if(
+    type === "m1"
+  ){
 
     if(
       draft.a !== ""
@@ -3608,6 +3917,7 @@ function restoreMissionDraft(type){
 
     }
 
+
     if(
       draft.b !== ""
     ){
@@ -3624,15 +3934,20 @@ function restoreMissionDraft(type){
 
     }
 
+
     if(qs("#m1reason")){
+
       qs("#m1reason").value =
         draft.reason || "";
+
     }
 
   }
 
 
-  if(type==="m2"){
+  if(
+    type === "m2"
+  ){
 
     if(
       draft.a !== ""
@@ -3650,6 +3965,7 @@ function restoreMissionDraft(type){
 
     }
 
+
     if(
       draft.b !== ""
     ){
@@ -3666,45 +3982,67 @@ function restoreMissionDraft(type){
 
     }
 
+
     if(qs("#m2reason")){
+
       qs("#m2reason").value =
         draft.reason || "";
+
     }
 
   }
 
 
-  if(type==="m3"){
+  if(
+    type === "m3"
+  ){
 
     if(qs("#m3case")){
+
       qs("#m3case").value =
         draft.case ||
         "Mengetik tugas";
+
     }
+
 
     if(qs("#m3input")){
+
       qs("#m3input").value =
         draft.input || "";
+
     }
+
 
     if(qs("#m3process")){
+
       qs("#m3process").value =
         draft.process || "";
+
     }
+
 
     if(qs("#m3output")){
+
       qs("#m3output").value =
         draft.output || "";
+
     }
+
 
     if(qs("#m3storage")){
+
       qs("#m3storage").value =
         draft.storage || "";
+
     }
 
+
     if(qs("#m3reason")){
+
       qs("#m3reason").value =
         draft.reason || "";
+
     }
 
   }
@@ -3720,22 +4058,24 @@ function startMissionTimer(
     missionTimerHandle
   );
 
+
   let requested =
     safeNumber(
       seconds,
       600
     );
 
+
   if(
     requested <= 0
   ){
-    requested = 600;
+
+    requested =
+      600;
+
   }
 
-  /*
-   * Bila restore, missionEndAt
-   * sudah mempunyai deadline.
-   */
+
   if(
     !missionEndAt ||
     currentRemainingSeconds(
@@ -3749,7 +4089,9 @@ function startMissionTimer(
 
   }
 
+
   updateMissionTimer();
+
 
   missionTimerHandle =
     setInterval(
@@ -3760,7 +4102,9 @@ function startMissionTimer(
             missionEndAt
           );
 
+
         updateMissionTimer();
+
 
         if(
           remaining <= 0
@@ -3772,7 +4116,10 @@ function startMissionTimer(
 
           forceSubmitMission();
 
+          return;
+
         }
+
 
         saveActiveSession();
 
@@ -3790,6 +4137,7 @@ function updateMissionTimer(){
       missionEndAt
     );
 
+
   const minutes =
     String(
       Math.floor(
@@ -3801,6 +4149,7 @@ function updateMissionTimer(){
       "0"
     );
 
+
   const seconds =
     String(
       remaining%60
@@ -3810,24 +4159,32 @@ function updateMissionTimer(){
       "0"
     );
 
+
   const timer =
     qs("#missionTimer");
 
+
   timer.textContent =
     `${minutes}:${seconds}`;
+
 
   timer.classList.remove(
     "warning",
     "danger"
   );
 
-  if(remaining<=60){
+
+  if(
+    remaining<=60
+  ){
 
     timer.classList.add(
       "danger"
     );
 
-  }else if(remaining<=180){
+  }else if(
+    remaining<=180
+  ){
 
     timer.classList.add(
       "warning"
@@ -3846,12 +4203,14 @@ function submitMission(){
     missionTimerHandle
   );
 
+
   if(
     missionType === "m1"
   ){
 
     const draft =
       missionDrafts.m1;
+
 
     if(
       draft.a === "" ||
@@ -3865,6 +4224,7 @@ function submitMission(){
         "Semua bagian Mission 1 wajib diisi."
       );
 
+
       startMissionTimer(
         Math.max(
           1,
@@ -3874,26 +4234,39 @@ function submitMission(){
         )
       );
 
+
       return;
+
     }
+
 
     let score =
       0;
 
+
     if(
       draft.a === "0"
     ){
-      score += 8;
+
+      score +=
+        8;
+
     }
+
 
     if(
       draft.b === "1"
     ){
-      score += 8;
+
+      score +=
+        8;
+
     }
+
 
     state.m1 =
       score;
+
 
     state.essayAnswers.m1 =
       draft.reason.trim();
@@ -3908,6 +4281,7 @@ function submitMission(){
     const draft =
       missionDrafts.m2;
 
+
     if(
       draft.a === "" ||
       draft.b === "" ||
@@ -3920,6 +4294,7 @@ function submitMission(){
         "Semua bagian Mission 2 wajib diisi."
       );
 
+
       startMissionTimer(
         Math.max(
           1,
@@ -3929,26 +4304,39 @@ function submitMission(){
         )
       );
 
+
       return;
+
     }
+
 
     let score =
       0;
 
+
     if(
       draft.a === "0"
     ){
-      score += 8;
+
+      score +=
+        8;
+
     }
+
 
     if(
       draft.b === "1"
     ){
-      score += 8;
+
+      score +=
+        8;
+
     }
+
 
     state.m2 =
       score;
+
 
     state.essayAnswers.m2 =
       draft.reason.trim();
@@ -3963,6 +4351,7 @@ function submitMission(){
     const draft =
       missionDrafts.m3;
 
+
     if(
       !String(draft.input||"").trim() ||
       !String(draft.process||"").trim() ||
@@ -3975,6 +4364,7 @@ function submitMission(){
         "Semua bagian Mission 3 wajib diisi."
       );
 
+
       startMissionTimer(
         Math.max(
           1,
@@ -3984,14 +4374,19 @@ function submitMission(){
         )
       );
 
+
       return;
+
     }
 
-    let score =
+
+    const score =
       15;
+
 
     state.m3 =
       score;
+
 
     state.essayAnswers.m3 =
       [
@@ -4006,29 +4401,36 @@ function submitMission(){
   }
 
 
+  const missionScore =
+    missionType === "m1"
+      ? state.m1
+      : missionType === "m2"
+        ? state.m2
+        : state.m3;
+
+
   state.xp +=
-    (
-      missionType === "m1"
-        ? state.m1
-        : missionType === "m2"
-          ? state.m2
-          : state.m3
-    );
+    missionScore;
+
 
   updateTop();
 
   localSave();
 
+
   qs("#missionSubmit")
     .classList
     .add("hidden");
+
 
   qs("#missionNext")
     .classList
     .remove("hidden");
 
+
   missionEndAt =
     0;
+
 
   saveActiveSession();
 
@@ -4039,13 +4441,6 @@ function forceSubmitMission(){
 
   captureMissionDraft();
 
-  /*
-   * Waktu habis.
-   * Yang sudah terisi tetap disimpan.
-   * Sistem hanya mengakhiri misi.
-   * Selanjutnya siswa tidak perlu mengulang
-   * data yang sudah tersimpan.
-   */
 
   if(
     missionType === "m1"
@@ -4053,6 +4448,7 @@ function forceSubmitMission(){
 
     state.essayAnswers.m1 =
       missionDrafts.m1.reason || "";
+
 
     state.m1 =
       (
@@ -4075,6 +4471,7 @@ function forceSubmitMission(){
 
     state.essayAnswers.m2 =
       missionDrafts.m2.reason || "";
+
 
     state.m2 =
       (
@@ -4112,6 +4509,7 @@ function forceSubmitMission(){
           : 0
       );
 
+
     state.essayAnswers.m3 =
       [
         `Kasus: ${missionDrafts.m3.case}`,
@@ -4125,22 +4523,27 @@ function forceSubmitMission(){
   }
 
 
+  updateTop();
+
   localSave();
+
 
   qs("#missionSubmit")
     .classList
     .add("hidden");
 
+
   qs("#missionNext")
     .classList
     .remove("hidden");
 
+
   missionEndAt =
     0;
 
-  updateTop();
 
   saveActiveSession();
+
 
   showToast(
     "Waktu habis. Jawaban yang sudah diisi disimpan."
@@ -4186,8 +4589,25 @@ function startBoss(){
 
   restoreBossDraft();
 
+
+  if(
+    !missionEndAt ||
+    currentRemainingSeconds(
+      missionEndAt
+    ) <= 0
+  ){
+
+    missionEndAt =
+      Date.now() +
+      600*1000;
+
+  }
+
+
   startBossTimer(
-    600
+    currentRemainingSeconds(
+      missionEndAt
+    )
   );
 
 }
@@ -4217,6 +4637,7 @@ function captureBossDraft(){
 
   };
 
+
   saveActiveSession();
 
 }
@@ -4227,38 +4648,57 @@ function restoreBossDraft(){
   const draft =
     missionDrafts.boss;
 
+
   if(!draft){
     return;
   }
 
+
   if(qs("#bossInput")){
+
     qs("#bossInput").value =
       draft.input || "";
+
   }
+
 
   if(qs("#bossProcess")){
+
     qs("#bossProcess").value =
       draft.process || "";
+
   }
+
 
   if(qs("#bossOutput")){
+
     qs("#bossOutput").value =
       draft.output || "";
+
   }
+
 
   if(qs("#bossCpu")){
+
     qs("#bossCpu").value =
       draft.cpu || "";
+
   }
+
 
   if(qs("#bossIpo")){
+
     qs("#bossIpo").value =
       draft.ipo || "";
+
   }
 
+
   if(qs("#bossReason")){
+
     qs("#bossReason").value =
       draft.reason || "";
+
   }
 
 }
@@ -4272,11 +4712,23 @@ function startBossTimer(
     missionTimerHandle
   );
 
-  const requested =
+
+  let requested =
     safeNumber(
       seconds,
       600
     );
+
+
+  if(
+    requested <= 0
+  ){
+
+    requested =
+      600;
+
+  }
+
 
   if(
     !missionEndAt ||
@@ -4291,7 +4743,9 @@ function startBossTimer(
 
   }
 
+
   updateBossTimer();
+
 
   missionTimerHandle =
     setInterval(
@@ -4302,9 +4756,12 @@ function startBossTimer(
             missionEndAt
           );
 
+
         updateBossTimer();
 
+
         captureBossDraft();
+
 
         if(
           remaining <= 0
@@ -4316,7 +4773,12 @@ function startBossTimer(
 
           forceSubmitBoss();
 
+          return;
+
         }
+
+
+        saveActiveSession();
 
       },
       1000
@@ -4332,6 +4794,7 @@ function updateBossTimer(){
       missionEndAt
     );
 
+
   const minutes =
     String(
       Math.floor(
@@ -4343,6 +4806,7 @@ function updateBossTimer(){
       "0"
     );
 
+
   const seconds =
     String(
       remaining%60
@@ -4352,24 +4816,32 @@ function updateBossTimer(){
       "0"
     );
 
+
   const timer =
     qs("#bossTimer");
 
+
   timer.textContent =
     `${minutes}:${seconds}`;
+
 
   timer.classList.remove(
     "warning",
     "danger"
   );
 
-  if(remaining<=60){
+
+  if(
+    remaining<=60
+  ){
 
     timer.classList.add(
       "danger"
     );
 
-  }else if(remaining<=180){
+  }else if(
+    remaining<=180
+  ){
 
     timer.classList.add(
       "warning"
@@ -4384,12 +4856,15 @@ function submitBoss(){
 
   captureBossDraft();
 
+
   clearInterval(
     missionTimerHandle
   );
 
+
   const draft =
     missionDrafts.boss;
+
 
   if(
     !String(draft.input||"").trim() ||
@@ -4404,6 +4879,7 @@ function submitBoss(){
       "Semua bagian Boss Mission wajib diisi."
     );
 
+
     startBossTimer(
       Math.max(
         1,
@@ -4413,17 +4889,23 @@ function submitBoss(){
       )
     );
 
+
     return;
+
   }
+
 
   const score =
     13;
 
+
   state.boss =
     score;
 
+
   state.xp +=
     score;
+
 
   state.essayAnswers.boss =
     [
@@ -4435,12 +4917,15 @@ function submitBoss(){
       `Alasan: ${draft.reason}`
     ].join("\n");
 
+
   updateTop();
 
   localSave();
 
+
   missionEndAt =
     0;
+
 
   startPosttest();
 
@@ -4451,38 +4936,52 @@ function forceSubmitBoss(){
 
   captureBossDraft();
 
+
   const draft =
     missionDrafts.boss;
 
+
   state.boss =
     (
-      String(draft.input||"").trim()
+      String(
+        draft.input||""
+      ).trim()
         ? 3
         : 0
     ) +
     (
-      String(draft.process||"").trim()
+      String(
+        draft.process||""
+      ).trim()
         ? 3
         : 0
     ) +
     (
-      String(draft.output||"").trim()
+      String(
+        draft.output||""
+      ).trim()
         ? 3
         : 0
     ) +
     (
-      String(draft.cpu||"").trim()
+      String(
+        draft.cpu||""
+      ).trim()
         ? 2
         : 0
     ) +
     (
-      String(draft.ipo||"").trim()
+      String(
+        draft.ipo||""
+      ).trim()
         ? 2
         : 0
     );
 
+
   state.xp +=
     state.boss;
+
 
   state.essayAnswers.boss =
     [
@@ -4494,12 +4993,15 @@ function forceSubmitBoss(){
       `Alasan: ${draft.reason}`
     ].join("\n");
 
+
   localSave();
 
   updateTop();
 
+
   missionEndAt =
     0;
+
 
   startPosttest();
 
@@ -4525,6 +5027,7 @@ function captureReflectionDraft(){
 
   };
 
+
   saveActiveSession();
 
 }
@@ -4533,18 +5036,26 @@ function captureReflectionDraft(){
 function restoreReflectionDraft(){
 
   if(qs("#r3")){
+
     qs("#r3").value =
       reflectionDraft.r3 || "";
+
   }
+
 
   if(qs("#r2")){
+
     qs("#r2").value =
       reflectionDraft.r2 || "";
+
   }
 
+
   if(qs("#r1")){
+
     qs("#r1").value =
       reflectionDraft.r1 || "";
+
   }
 
 }
@@ -4554,20 +5065,24 @@ function finishReflection(){
 
   captureReflectionDraft();
 
+
   const r3 =
     String(
       reflectionDraft.r3 || ""
     ).trim();
+
 
   const r2 =
     String(
       reflectionDraft.r2 || ""
     ).trim();
 
+
   const r1 =
     String(
       reflectionDraft.r1 || ""
     ).trim();
+
 
   if(
     !r3 ||
@@ -4580,7 +5095,9 @@ function finishReflection(){
     );
 
     return;
+
   }
+
 
   state.reflection = {
 
@@ -4590,37 +5107,48 @@ function finishReflection(){
 
   };
 
+
   localSave();
+
 
   qs("#fPre")
     .textContent =
       `${state.pre ?? "-"}/100`;
 
+
   qs("#fPost")
     .textContent =
       `${state.post ?? "-"}/100`;
+
 
   qs("#fPreDetail")
     .textContent =
       `${state.preCorrect ?? 0} dari 15 soal benar`;
 
+
   qs("#fPostDetail")
     .textContent =
       `${state.postCorrect ?? 0} dari 15 soal benar`;
+
 
   qs("#fXP")
     .textContent =
       state.xp;
 
+
   missionEndAt =
     0;
+
 
   currentScreen =
     "#finish";
 
+
   saveActiveSession();
 
+
   show("#finish");
+
 
   showToast(
     "Refleksi berhasil disimpan."
@@ -4716,11 +5244,15 @@ function localSave(){
     !state.className ||
     !state.code
   ){
+
     return;
+
   }
+
 
   const record =
     buildRecord();
+
 
   const records =
     JSON.parse(
@@ -4728,6 +5260,7 @@ function localSave(){
         "cm2_records"
       ) || "[]"
     );
+
 
   const index =
     records.findIndex(
@@ -4737,6 +5270,7 @@ function localSave(){
         item.code ===
           record.code
     );
+
 
   if(index>=0){
 
@@ -4751,6 +5285,7 @@ function localSave(){
 
   }
 
+
   localStorage.setItem(
     "cm2_records",
     JSON.stringify(
@@ -4758,9 +5293,11 @@ function localSave(){
     )
   );
 
+
   queueSync(
     record
   );
+
 
   saveActiveSession();
 
@@ -4771,7 +5308,9 @@ function localSave(){
    GOOGLE SYNC
 ========================================================= */
 
-function queueSync(record){
+function queueSync(
+  record
+){
 
   syncQueue =
     syncQueue.filter(
@@ -4784,9 +5323,11 @@ function queueSync(record){
         )
     );
 
+
   syncQueue.push(
     record
   );
+
 
   localStorage.setItem(
     "cm2_sync_queue",
@@ -4795,9 +5336,11 @@ function queueSync(record){
     )
   );
 
+
   clearTimeout(
     window.__syncTimer
   );
+
 
   window.__syncTimer =
     setTimeout(
@@ -4814,11 +5357,15 @@ async function flushSyncQueue(){
     syncRunning ||
     !syncQueue.length
   ){
+
     return;
+
   }
+
 
   syncRunning =
     true;
+
 
   try{
 
@@ -4829,15 +5376,19 @@ async function flushSyncQueue(){
       const record =
         syncQueue[0];
 
+
       await fetch(
         SHEET_WEB_APP_URL,
         {
           method:"POST",
+
           mode:"no-cors",
+
           headers:{
             "Content-Type":
               "text/plain;charset=utf-8"
           },
+
           body:
             JSON.stringify(
               {
@@ -4845,10 +5396,13 @@ async function flushSyncQueue(){
                 record:record
               }
             )
+
         }
       );
 
+
       syncQueue.shift();
+
 
       localStorage.setItem(
         "cm2_sync_queue",
@@ -4859,12 +5413,15 @@ async function flushSyncQueue(){
 
     }
 
-  }catch(error){
+  }
+
+  catch(error){
 
     console.error(
       "Google Sheets sync failed:",
       error
     );
+
 
     localStorage.setItem(
       "cm2_sync_queue",
@@ -4873,12 +5430,15 @@ async function flushSyncQueue(){
       )
     );
 
+
     setTimeout(
       flushSyncQueue,
       3000
     );
 
-  }finally{
+  }
+
+  finally{
 
     syncRunning =
       false;
@@ -4899,11 +5459,13 @@ function restoreActiveSession(){
       "cm2_active_session"
     );
 
+
   if(!raw){
 
     return false;
 
   }
+
 
   try{
 
@@ -4911,6 +5473,7 @@ function restoreActiveSession(){
       JSON.parse(
         raw
       );
+
 
     if(
       !saved.state ||
@@ -4922,8 +5485,10 @@ function restoreActiveSession(){
 
     }
 
+
     state =
       saved.state;
+
 
     state.answers =
       Array.isArray(
@@ -4932,6 +5497,7 @@ function restoreActiveSession(){
         ? state.answers
         : [];
 
+
     state.answerChoices =
       Array.isArray(
         state.answerChoices
@@ -4939,27 +5505,33 @@ function restoreActiveSession(){
         ? state.answerChoices
         : [];
 
+
     missionDrafts =
       saved.missionDrafts ||
       missionDrafts;
+
 
     reflectionDraft =
       saved.reflectionDraft ||
       reflectionDraft;
 
+
     currentScreen =
       saved.currentScreen ||
       "#dash";
 
+
     testMode =
       saved.testMode ||
       "pre";
+
 
     qIndex =
       safeNumber(
         saved.qIndex,
         0
       );
+
 
     selectedQuestions =
       Array.isArray(
@@ -4968,15 +5540,18 @@ function restoreActiveSession(){
         ? saved.selectedQuestions
         : [];
 
+
     testEndAt =
       safeNumber(
         saved.testEndAt,
         0
       );
 
+
     missionType =
       saved.missionType ||
       "";
+
 
     missionEndAt =
       safeNumber(
@@ -4984,17 +5559,22 @@ function restoreActiveSession(){
         0
       );
 
+
     qs("#studentPill").textContent =
       `${state.name} • ${state.code} • ${state.className}`;
+
 
     qs("#dClass").textContent =
       `${state.className} • ${state.teacher}`;
 
+
     qs("#dCode").textContent =
       `${state.name} (${state.code})`;
 
+
     qs("#dTeam").textContent =
       state.team;
+
 
     updateTop();
 
@@ -5043,6 +5623,7 @@ function restoreActiveSession(){
 
       restoreBossDraft();
 
+
       if(
         currentRemainingSeconds(
           missionEndAt
@@ -5055,11 +5636,13 @@ function restoreActiveSession(){
 
       }
 
+
       startBossTimer(
         currentRemainingSeconds(
           missionEndAt
         )
       );
+
 
       return true;
 
@@ -5104,12 +5687,15 @@ function restoreActiveSession(){
 
         show("#test");
 
+
         qs("#testTitle").textContent =
           testMode === "pre"
             ? "Pre-Test — 15 Soal"
             : "Post-Test — 15 Soal";
 
+
         renderQuestion();
+
 
         if(
           currentRemainingSeconds(
@@ -5123,11 +5709,13 @@ function restoreActiveSession(){
 
         }
 
+
         startTestTimer(
           currentRemainingSeconds(
             testEndAt
           )
         );
+
 
         return true;
 
@@ -5165,18 +5753,23 @@ function restoreActiveSession(){
 
     }
 
+
     return false;
 
-  }catch(error){
+  }
+
+  catch(error){
 
     console.error(
       "Restore session error:",
       error
     );
 
+
     localStorage.removeItem(
       "cm2_active_session"
     );
+
 
     return false;
 
@@ -5191,21 +5784,26 @@ function showFinishScreen(){
     .textContent =
       `${state.pre ?? "-"}/100`;
 
+
   qs("#fPost")
     .textContent =
       `${state.post ?? "-"}/100`;
+
 
   qs("#fPreDetail")
     .textContent =
       `${state.preCorrect ?? 0} dari 15 soal benar`;
 
+
   qs("#fPostDetail")
     .textContent =
       `${state.postCorrect ?? 0} dari 15 soal benar`;
 
+
   qs("#fXP")
     .textContent =
       state.xp;
+
 
   show("#finish");
 
@@ -5223,11 +5821,30 @@ document.addEventListener(
     const id =
       event.target?.id;
 
-    if(
-      !id
-    ){
+
+    if(!id){
       return;
     }
+
+
+    if(
+      [
+        "m1reason",
+        "m2reason",
+        "m3input",
+        "m3process",
+        "m3output",
+        "m3storage",
+        "m3reason"
+      ].includes(id)
+    ){
+
+      captureMissionDraft();
+
+      return;
+
+    }
+
 
     if(
       [
@@ -5243,7 +5860,9 @@ document.addEventListener(
       captureBossDraft();
 
       return;
+
     }
+
 
     if(
       [
@@ -5256,6 +5875,7 @@ document.addEventListener(
       captureReflectionDraft();
 
       return;
+
     }
 
   }
@@ -5273,7 +5893,29 @@ document.addEventListener(
       storeAnswer();
 
       return;
+
     }
+
+
+    if(
+      [
+        "m1a",
+        "m1b",
+        "m2a",
+        "m2b",
+        "m3case"
+      ].includes(
+        event.target?.name ||
+        event.target?.id
+      )
+    ){
+
+      captureMissionDraft();
+
+      return;
+
+    }
+
 
     if(
       [
@@ -5291,6 +5933,7 @@ document.addEventListener(
       captureMissionDraft();
 
       return;
+
     }
 
   }
@@ -5309,6 +5952,7 @@ window.addEventListener(
 
     }
 
+
     if(
       currentScreen === "#mission"
     ){
@@ -5316,6 +5960,7 @@ window.addEventListener(
       captureMissionDraft();
 
     }
+
 
     if(
       currentScreen === "#boss"
@@ -5325,6 +5970,7 @@ window.addEventListener(
 
     }
 
+
     if(
       currentScreen === "#reflection"
     ){
@@ -5332,6 +5978,7 @@ window.addEventListener(
       captureReflectionDraft();
 
     }
+
 
     saveActiveSession();
 
@@ -5343,7 +5990,9 @@ window.addEventListener(
    ESCAPE HTML
 ========================================================= */
 
-function escapeHtml(value){
+function escapeHtml(
+  value
+){
 
   return String(
     value ?? ""
@@ -5368,36 +6017,6 @@ function escapeHtml(value){
 /* =========================================================
    START APPLICATION
 ========================================================= */
-
-function restoreSyncQueue(){
-
-  try{
-
-    const saved =
-      JSON.parse(
-        localStorage.getItem(
-          "cm2_sync_queue"
-        ) || "[]"
-      );
-
-    if(
-      Array.isArray(saved)
-    ){
-
-      syncQueue =
-        saved;
-
-    }
-
-  }catch(error){
-
-    syncQueue =
-      [];
-
-  }
-
-}
-
 
 populateStudents();
 
