@@ -66,7 +66,10 @@ body::after{
   animation-delay:-4s;
 }
 
-button,input,select,textarea{
+button,
+input,
+select,
+textarea{
   font:inherit;
 }
 
@@ -668,6 +671,7 @@ select option{
 }
 
 @media(max-width:820px){
+
   .hero,
   .grid,
   .grid3{
@@ -698,12 +702,16 @@ select option{
 }
 
 @media (prefers-reduced-motion: reduce){
-  *,*::before,*::after{
+
+  *,
+  *::before,
+  *::after{
     animation-duration:.001ms!important;
     animation-iteration-count:1!important;
     scroll-behavior:auto!important;
     transition-duration:.001ms!important;
   }
+
 }
 </style>
 </head>
@@ -1912,10 +1920,10 @@ const questions = [
 
 
 /* =========================================================
-   STATE
+   DEFAULT STATE
 ========================================================= */
 
-let state = {
+const DEFAULT_STATE = {
   code:"",
   name:"",
   className:"",
@@ -1946,6 +1954,10 @@ let state = {
   postCorrect:0
 };
 
+let state =
+  JSON.parse(
+    JSON.stringify(DEFAULT_STATE)
+  );
 
 let missionDrafts = {
 
@@ -1981,13 +1993,11 @@ let missionDrafts = {
 
 };
 
-
 let reflectionDraft = {
   r3:"",
   r2:"",
   r1:""
 };
-
 
 let currentScreen = "#login";
 let testMode = "pre";
@@ -2003,8 +2013,6 @@ let missionTimerHandle = null;
 let syncQueue = [];
 let syncRunning = false;
 
-let restoringSession = false;
-
 
 /* =========================================================
    HELPERS
@@ -2015,9 +2023,13 @@ selector =>
 document.querySelector(selector);
 
 
-function safeNumber(value,fallback=0){
+function safeNumber(
+  value,
+  fallback=0
+){
 
-  const n = Number(value);
+  const n =
+    Number(value);
 
   return Number.isFinite(n)
     ? n
@@ -2026,7 +2038,82 @@ function safeNumber(value,fallback=0){
 }
 
 
-function show(id, save=true){
+function clone(obj){
+
+  return JSON.parse(
+    JSON.stringify(obj)
+  );
+
+}
+
+
+/* =========================================================
+   SCREEN HASH
+========================================================= */
+
+function setScreenHash(screen){
+
+  try{
+
+    const current =
+      location.hash;
+
+    if(current !== screen){
+
+      history.replaceState(
+        null,
+        "",
+        location.pathname +
+        location.search +
+        screen
+      );
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "Hash save error:",
+      error
+    );
+
+  }
+
+}
+
+
+function getHashScreen(){
+
+  const hash =
+    location.hash;
+
+  const allowed = [
+    "#login",
+    "#dash",
+    "#test",
+    "#mini",
+    "#mission",
+    "#boss",
+    "#reflection",
+    "#finish"
+  ];
+
+  return allowed.includes(hash)
+    ? hash
+    : "";
+
+}
+
+
+/* =========================================================
+   SHOW
+========================================================= */
+
+function show(
+  id,
+  save=true,
+  updateHash=true
+){
 
   document
     .querySelectorAll("section")
@@ -2035,7 +2122,8 @@ function show(id, save=true){
         section.classList.add("hidden")
     );
 
-  const target = qs(id);
+  const target =
+    qs(id);
 
   if(!target){
     return;
@@ -2043,29 +2131,52 @@ function show(id, save=true){
 
   target.classList.remove("hidden");
 
-  currentScreen = id;
+  currentScreen =
+    id;
+
+  if(updateHash){
+
+    setScreenHash(id);
+
+  }
 
   updateJourneyProgress();
 
-  if(save && !restoringSession){
+  if(save){
+
     saveActiveSession();
+
   }
 
 }
 
 
+/* =========================================================
+   TOAST
+========================================================= */
+
 function showToast(message){
 
-  const toast = qs("#toast");
+  const toast =
+    qs("#toast");
 
-  toast.textContent = message;
+  if(!toast){
+    return;
+  }
+
+  toast.textContent =
+    message;
+
   toast.classList.add("show");
 
-  clearTimeout(window.__toastTimer);
+  clearTimeout(
+    window.__toastTimer
+  );
 
   window.__toastTimer =
     setTimeout(
-      () => toast.classList.remove("show"),
+      () =>
+        toast.classList.remove("show"),
       2600
     );
 
@@ -2078,22 +2189,27 @@ function showToast(message){
 
 function getJourneyProgress(){
 
-  const step = 100 / 7;
+  const step =
+    100 / 7;
 
   if(currentScreen === "#login"){
+
     return {
       percent:0,
       label:"Belum dimulai"
     };
+
   }
 
   if(currentScreen === "#dash"){
 
-    if(state.pre !== null && state.pre !== undefined){
+    if(state.pre !== null){
+
       return {
         percent:step,
         label:"Pre-Test selesai • Siap masuk Mini Lesson"
       };
+
     }
 
     return {
@@ -2106,10 +2222,12 @@ function getJourneyProgress(){
   if(currentScreen === "#test"){
 
     if(testMode === "pre"){
+
       return {
         percent:0,
         label:"Sedang mengerjakan Pre-Test"
       };
+
     }
 
     return {
@@ -2131,17 +2249,21 @@ function getJourneyProgress(){
   if(currentScreen === "#mission"){
 
     if(missionType === "m1"){
+
       return {
         percent:step * 2,
         label:"Mission 1 — RAM or Storage"
       };
+
     }
 
     if(missionType === "m2"){
+
       return {
         percent:step * 3,
         label:"Mission 2 — ALU or CU"
       };
+
     }
 
     return {
@@ -2188,28 +2310,38 @@ function getJourneyProgress(){
 
 function updateJourneyProgress(){
 
-  const data = getJourneyProgress();
+  const data =
+    getJourneyProgress();
 
-  const percent = Math.round(
-    Math.max(
-      0,
-      Math.min(
-        100,
-        data.percent
+  const percent =
+    Math.round(
+      Math.max(
+        0,
+        Math.min(
+          100,
+          data.percent
+        )
       )
-    )
-  );
+    );
 
-  const bar = qs("#globalJourneyBar");
-  const stage = qs("#globalJourneyStage");
+  const bar =
+    qs("#globalJourneyBar");
+
+  const stage =
+    qs("#globalJourneyStage");
 
   if(bar){
-    bar.style.width = percent + "%";
+
+    bar.style.width =
+      percent + "%";
+
   }
 
   if(stage){
+
     stage.textContent =
       `${data.label} • ${percent}%`;
+
   }
 
   const finishPercent =
@@ -2219,11 +2351,17 @@ function updateJourneyProgress(){
     qs("#finishJourneyBar");
 
   if(finishPercent){
-    finishPercent.textContent = "100%";
+
+    finishPercent.textContent =
+      "100%";
+
   }
 
   if(finishBar){
-    finishBar.style.width = "100%";
+
+    finishBar.style.width =
+      "100%";
+
   }
 
 }
@@ -2233,64 +2371,99 @@ function updateJourneyProgress(){
    ACTIVE SESSION
 ========================================================= */
 
+function buildActiveSession(){
+
+  return {
+
+    version:5,
+
+    state:clone(state),
+
+    missionDrafts:
+      clone(missionDrafts),
+
+    reflectionDraft:
+      clone(reflectionDraft),
+
+    currentScreen:
+      currentScreen,
+
+    testMode:
+      testMode,
+
+    qIndex:
+      qIndex,
+
+    selectedQuestions:
+      clone(selectedQuestions),
+
+    testEndAt:
+      testEndAt,
+
+    missionType:
+      missionType,
+
+    missionEndAt:
+      missionEndAt,
+
+    savedAt:
+      Date.now()
+
+  };
+
+}
+
+
 function saveActiveSession(){
 
   if(
     !state.className ||
     !state.code
   ){
+
     return;
+
   }
 
-  const sessionData = {
-
-    version:2,
-
-    state:state,
-
-    missionDrafts:missionDrafts,
-
-    reflectionDraft:reflectionDraft,
-
-    currentScreen:currentScreen,
-
-    testMode:testMode,
-
-    qIndex:qIndex,
-
-    selectedQuestions:selectedQuestions,
-
-    testEndAt:testEndAt,
-
-    missionType:missionType,
-
-    missionEndAt:missionEndAt
-
-  };
+  const session =
+    buildActiveSession();
 
   try{
 
+    const raw =
+      JSON.stringify(session);
+
+    /*
+     * Tiga backup penyimpanan.
+     */
+
     localStorage.setItem(
       "cm2_active_session",
-      JSON.stringify(sessionData)
+      raw
     );
 
     localStorage.setItem(
-      "cm2_last_state",
-      JSON.stringify({
-        className:state.className,
-        code:state.code,
-        name:state.name,
-        teacher:state.teacher,
-        team:state.team,
-        role:state.role
-      })
+      "cm2_student_session",
+      raw
+    );
+
+    localStorage.setItem(
+      "cm2_current_screen",
+      currentScreen
+    );
+
+    /*
+     * URL hash juga menyimpan halaman aktif.
+     */
+
+    setScreenHash(
+      currentScreen
     );
 
   }catch(error){
 
     console.error(
-      "Save active session failed:",
+      "Failed saving active session:",
       error
     );
 
@@ -2299,11 +2472,75 @@ function saveActiveSession(){
 }
 
 
+function loadActiveSession(){
+
+  const candidates = [
+    "cm2_active_session",
+    "cm2_student_session"
+  ];
+
+  for(
+    const key of candidates
+  ){
+
+    try{
+
+      const raw =
+        localStorage.getItem(
+          key
+        );
+
+      if(!raw){
+        continue;
+      }
+
+      const parsed =
+        JSON.parse(raw);
+
+      if(
+        parsed &&
+        parsed.state &&
+        parsed.state.code &&
+        parsed.state.className
+      ){
+
+        return parsed;
+
+      }
+
+    }catch(error){
+
+      console.error(
+        "Read session error:",
+        error
+      );
+
+    }
+
+  }
+
+  return null;
+
+}
+
+
 function clearActiveSession(){
 
-  localStorage.removeItem(
-    "cm2_active_session"
-  );
+  try{
+
+    localStorage.removeItem(
+      "cm2_active_session"
+    );
+
+    localStorage.removeItem(
+      "cm2_student_session"
+    );
+
+    localStorage.removeItem(
+      "cm2_current_screen"
+    );
+
+  }catch(error){}
 
 }
 
@@ -2317,7 +2554,7 @@ function currentRemainingSeconds(endAt){
   return Math.max(
     0,
     Math.ceil(
-      (endAt-Date.now())/1000
+      (endAt - Date.now()) / 1000
     )
   );
 
@@ -2336,31 +2573,42 @@ function populateStudents(){
   const select =
     qs("#studentCode");
 
+  if(!select){
+    return;
+  }
+
   select.innerHTML =
     '<option value="">-- Pilih nama siswa --</option>';
 
   const roster =
     CLASS_ROSTERS[classKey] || [];
 
-  roster.forEach(student => {
+  roster.forEach(
+    student => {
 
-    const option =
-      document.createElement("option");
+      const option =
+        document.createElement(
+          "option"
+        );
 
-    option.value =
-      student.code;
+      option.value =
+        student.code;
 
-    option.textContent =
-      student.name;
+      option.textContent =
+        student.name;
 
-    select.appendChild(option);
+      select.appendChild(
+        option
+      );
 
-  });
+    }
+  );
 
 }
 
 
-qs("#studentCode").addEventListener(
+qs("#studentCode")
+.addEventListener(
   "change",
   () => {
 
@@ -2373,7 +2621,8 @@ qs("#studentCode").addEventListener(
     const student =
       (CLASS_ROSTERS[classKey] || [])
       .find(
-        item => item.code === code
+        item =>
+          item.code === code
       );
 
     if(student){
@@ -2398,12 +2647,16 @@ function startSession(){
   const student =
     (CLASS_ROSTERS[classKey] || [])
     .find(
-      item => item.code === code
+      item =>
+        item.code === code
     );
 
   if(!student){
 
-    alert("Pilih kelas dan nama siswa.");
+    alert(
+      "Pilih kelas dan nama siswa."
+    );
+
     return;
 
   }
@@ -2493,13 +2746,26 @@ function startSession(){
     r1:""
   };
 
-  currentScreen="#dash";
-  testMode="pre";
-  qIndex=0;
-  selectedQuestions=[];
-  testEndAt=0;
-  missionType="";
-  missionEndAt=0;
+  currentScreen =
+    "#dash";
+
+  testMode =
+    "pre";
+
+  qIndex =
+    0;
+
+  selectedQuestions =
+    [];
+
+  testEndAt =
+    0;
+
+  missionType =
+    "";
+
+  missionEndAt =
+    0;
 
   qs("#studentPill").textContent =
     `${state.name} • ${state.code} • ${state.className}`;
@@ -2513,8 +2779,13 @@ function startSession(){
   qs("#dTeam").textContent =
     state.team;
 
+  show(
+    "#dash",
+    true,
+    true
+  );
+
   updateTop();
-  show("#dash");
 
 }
 
@@ -2548,7 +2819,8 @@ function updateTop(){
 
 function shuffle(array){
 
-  const copy=[...array];
+  const copy =
+    [...array];
 
   for(
     let i=copy.length-1;
@@ -2558,11 +2830,17 @@ function shuffle(array){
 
     const j =
       Math.floor(
-        Math.random()*(i+1)
+        Math.random() * (i+1)
       );
 
-    [copy[i],copy[j]] =
-    [copy[j],copy[i]];
+    [
+      copy[i],
+      copy[j]
+    ] =
+    [
+      copy[j],
+      copy[i]
+    ];
 
   }
 
@@ -2582,7 +2860,7 @@ function shuffledQuestion(question){
         question.opts.map(
           (text,index) => ({
             text,
-            ok:index===question.a
+            ok:index === question.a
           })
         )
       )
@@ -2592,25 +2870,36 @@ function shuffledQuestion(question){
 }
 
 
+function createTestQuestions(){
+
+  return shuffle(
+    questions.map(
+      shuffledQuestion
+    )
+  );
+
+}
+
+
 function startPretest(){
 
-  testMode="pre";
-  qIndex=0;
+  testMode =
+    "pre";
 
-  state.answers=[];
-  state.answerChoices=[];
+  qIndex =
+    0;
+
+  state.answers =
+    [];
+
+  state.answerChoices =
+    [];
 
   selectedQuestions =
-    shuffle(
-      questions.map(
-        shuffledQuestion
-      )
-    );
+    createTestQuestions();
 
   testEndAt =
-    Date.now()+600000;
-
-  show("#test");
+    Date.now() + 600000;
 
   startTest();
 
@@ -2619,23 +2908,23 @@ function startPretest(){
 
 function startPosttest(){
 
-  testMode="post";
-  qIndex=0;
+  testMode =
+    "post";
 
-  state.answers=[];
-  state.answerChoices=[];
+  qIndex =
+    0;
+
+  state.answers =
+    [];
+
+  state.answerChoices =
+    [];
 
   selectedQuestions =
-    shuffle(
-      questions.map(
-        shuffledQuestion
-      )
-    );
+    createTestQuestions();
 
   testEndAt =
-    Date.now()+600000;
-
-  show("#test");
+    Date.now() + 600000;
 
   startTest();
 
@@ -2645,15 +2934,21 @@ function startPosttest(){
 function startTest(){
 
   qs("#testTitle").textContent =
-    testMode==="pre"
+    testMode === "pre"
       ? "Pre-Test — 15 Soal"
       : "Post-Test — 15 Soal";
 
-  startTestTimer(600);
+  show(
+    "#test",
+    true,
+    true
+  );
+
+  startTestTimer(
+    600
+  );
 
   renderQuestion();
-
-  updateJourneyProgress();
 
   saveActiveSession();
 
@@ -2675,31 +2970,33 @@ function renderQuestion(){
   qs("#finishTestBtn")
     .classList.toggle(
       "hidden",
-      qIndex !== selectedQuestions.length-1
+      qIndex !== selectedQuestions.length - 1
     );
 
   qs("#nextTestBtn")
     .classList.toggle(
       "hidden",
-      qIndex === selectedQuestions.length-1
+      qIndex === selectedQuestions.length - 1
     );
 
   qs("#questionBox").innerHTML = `
 
     <div class="mission-card">
 
-      <div style="
-        font-weight:800;
-        margin-bottom:12px;
-      ">
-
-        ${escapeHtml(question.stem)}
-
+      <div
+        style="
+          font-weight:800;
+          margin-bottom:12px;
+        "
+      >
+        ${escapeHtml(
+          question.stem
+        )}
       </div>
 
       ${
         question.opts.map(
-          (option,index)=>`
+          (option,index) => `
 
             <label class="option">
 
@@ -2710,8 +3007,12 @@ function renderQuestion(){
               >
 
               <span>
-                ${String.fromCharCode(65+index)}.
-                ${escapeHtml(option.text)}
+                ${String.fromCharCode(
+                  65+index
+                )}.
+                ${escapeHtml(
+                  option.text
+                )}
               </span>
 
             </label>
@@ -2739,7 +3040,10 @@ function renderQuestion(){
       );
 
     if(radio){
-      radio.checked=true;
+
+      radio.checked =
+        true;
+
     }
 
   }
@@ -2766,7 +3070,7 @@ function updateQuestionProgress(){
   const percent =
     total
       ? Math.round(
-          (answered/total)*100
+          answered / total * 100
         )
       : 0;
 
@@ -2777,13 +3081,17 @@ function updateQuestionProgress(){
     qs("#questionProgressPercent");
 
   if(bar){
+
     bar.style.width =
-      percent+"%";
+      percent + "%";
+
   }
 
   if(text){
+
     text.textContent =
-      percent+"%";
+      percent + "%";
+
   }
 
 }
@@ -2798,15 +3106,21 @@ function storeAnswer(){
 
   if(!element){
 
-    state.answers[qIndex]=null;
-    state.answerChoices[qIndex]=null;
+    state.answers[qIndex] =
+      null;
+
+    state.answerChoices[qIndex] =
+      null;
 
   }else{
 
     const choice =
-      Number(element.value);
+      Number(
+        element.value
+      );
 
-    state.answerChoices[qIndex]=choice;
+    state.answerChoices[qIndex] =
+      choice;
 
     state.answers[qIndex] =
       selectedQuestions[qIndex]
@@ -2816,6 +3130,7 @@ function storeAnswer(){
   }
 
   updateQuestionProgress();
+
   saveActiveSession();
 
 }
@@ -2825,7 +3140,7 @@ function prevQ(){
 
   storeAnswer();
 
-  if(qIndex>0){
+  if(qIndex > 0){
 
     qIndex--;
 
@@ -2859,7 +3174,7 @@ function nextQ(){
 
   if(
     qIndex <
-    selectedQuestions.length-1
+    selectedQuestions.length - 1
   ){
 
     qIndex++;
@@ -2875,16 +3190,23 @@ function nextQ(){
 
 function startTestTimer(seconds){
 
-  clearInterval(timerHandle);
+  clearInterval(
+    timerHandle
+  );
 
   if(
     !testEndAt ||
-    currentRemainingSeconds(testEndAt)<=0
+    currentRemainingSeconds(
+      testEndAt
+    ) <= 0
   ){
 
     testEndAt =
-      Date.now()+
-      safeNumber(seconds,600)*1000;
+      Date.now() +
+      safeNumber(
+        seconds,
+        600
+      ) * 1000;
 
   }
 
@@ -2895,15 +3217,23 @@ function startTestTimer(seconds){
       () => {
 
         const remaining =
-          currentRemainingSeconds(testEndAt);
+          currentRemainingSeconds(
+            testEndAt
+          );
 
         updateTimer();
 
-        if(remaining<=0){
+        if(
+          remaining <= 0
+        ){
 
-          clearInterval(timerHandle);
+          clearInterval(
+            timerHandle
+          );
 
-          finishTest(true);
+          finishTest(
+            true
+          );
 
           return;
 
@@ -2921,20 +3251,34 @@ function startTestTimer(seconds){
 function updateTimer(){
 
   const remaining =
-    currentRemainingSeconds(testEndAt);
+    currentRemainingSeconds(
+      testEndAt
+    );
 
   const minutes =
     String(
-      Math.floor(remaining/60)
-    ).padStart(2,"0");
+      Math.floor(
+        remaining / 60
+      )
+    ).padStart(
+      2,
+      "0"
+    );
 
   const seconds =
     String(
-      remaining%60
-    ).padStart(2,"0");
+      remaining % 60
+    ).padStart(
+      2,
+      "0"
+    );
 
   const timer =
     qs("#testTimer");
+
+  if(!timer){
+    return;
+  }
 
   timer.textContent =
     `${minutes}:${seconds}`;
@@ -2944,24 +3288,35 @@ function updateTimer(){
     "danger"
   );
 
-  if(remaining<=60){
+  if(
+    remaining <= 60
+  ){
 
-    timer.classList.add("danger");
+    timer.classList.add(
+      "danger"
+    );
 
-  }else if(remaining<=180){
+  }else if(
+    remaining <= 180
+  ){
 
-    timer.classList.add("warning");
+    timer.classList.add(
+      "warning"
+    );
 
   }
 
 }
 
 
-function finishTest(autoFinish=false){
+function finishTest(
+  autoFinish=false
+){
 
   storeAnswer();
 
-  const unanswered=[];
+  const unanswered =
+    [];
 
   for(
     let i=0;
@@ -2970,19 +3325,25 @@ function finishTest(autoFinish=false){
   ){
 
     if(
-      state.answers[i]!==true &&
-      state.answers[i]!==false
+      state.answers[i] !== true &&
+      state.answers[i] !== false
     ){
 
-      unanswered.push(i+1);
+      unanswered.push(
+        i+1
+      );
 
     }
 
   }
 
-  if(unanswered.length){
+  if(
+    unanswered.length
+  ){
 
-    if(autoFinish){
+    if(
+      autoFinish
+    ){
 
       showToast(
         "Waktu habis. Soal yang belum dijawab tidak diberi poin."
@@ -2991,7 +3352,7 @@ function finishTest(autoFinish=false){
     }else{
 
       showToast(
-        "Masih ada soal yang belum dijawab: "+
+        "Masih ada soal yang belum dijawab: " +
         unanswered.join(", ")
       );
 
@@ -3001,54 +3362,77 @@ function finishTest(autoFinish=false){
 
   }
 
-  clearInterval(timerHandle);
+  clearInterval(
+    timerHandle
+  );
 
-  testEndAt=0;
+  testEndAt =
+    0;
 
   const correct =
     state.answers.filter(
-      value=>value===true
+      value =>
+        value === true
     ).length;
 
   const score =
     Math.round(
-      (correct/questions.length)*100
+      (
+        correct /
+        questions.length
+      ) * 100
     );
 
-  if(testMode==="pre"){
+  if(
+    testMode === "pre"
+  ){
 
-    state.pre=score;
-    state.preCorrect=correct;
+    state.pre =
+      score;
+
+    state.preCorrect =
+      correct;
 
     localSave();
 
-    show("#mini");
+    show(
+      "#mini",
+      true,
+      true
+    );
 
     return;
 
   }
 
-  state.post=score;
-  state.postCorrect=correct;
+  state.post =
+    score;
+
+  state.postCorrect =
+    correct;
 
   localSave();
 
   qs("#fPre").textContent =
-    `${state.pre??"-"}/100`;
+    `${state.pre ?? "-"}/100`;
 
   qs("#fPost").textContent =
-    `${state.post??"-"}/100`;
+    `${state.post ?? "-"}/100`;
 
   qs("#fPreDetail").textContent =
-    `${state.preCorrect??0} dari 15 soal benar`;
+    `${state.preCorrect ?? 0} dari 15 soal benar`;
 
   qs("#fPostDetail").textContent =
-    `${state.postCorrect??0} dari 15 soal benar`;
+    `${state.postCorrect ?? 0} dari 15 soal benar`;
 
   qs("#fXP").textContent =
     state.xp;
 
-  show("#reflection");
+  show(
+    "#reflection",
+    true,
+    true
+  );
 
 }
 
@@ -3058,107 +3442,157 @@ function finishTest(autoFinish=false){
 ========================================================= */
 
 function startMission1(){
-  startMission("m1");
+
+  startMission(
+    "m1"
+  );
+
 }
+
 
 function startMission2(){
-  startMission("m2");
+
+  startMission(
+    "m2"
+  );
+
 }
+
 
 function startMission3(){
-  startMission("m3");
+
+  startMission(
+    "m3"
+  );
+
 }
 
 
-function startMission(type,restoring=false){
+function startMission(
+  type,
+  restoring=false
+){
 
-  const configs={
+  const configs = {
 
     m1:{
 
-      title:"Mission 1 — RAM or Storage?",
-      desc:"16 XP objektif + 9 XP uraian rubrik",
-      seconds:600,
+      title:
+        "Mission 1 — RAM or Storage?",
+
+      desc:
+        "16 XP objektif + 9 XP uraian rubrik",
+
+      seconds:
+        600,
 
       html:`
 
         <div class="mission-card">
 
           <p>
+
             <b>1.</b>
-            Komputer sedang membuka banyak tab browser.
-            Komponen memori kerja sementara adalah ...
+            Komputer sedang membuka
+            banyak tab browser.
+            Komponen memori kerja
+            sementara adalah ...
+
           </p>
 
           <label class="option">
+
             <input
               type="radio"
               name="m1a"
               value="0"
               onchange="captureMissionDraft()"
             >
+
             <span>RAM</span>
+
           </label>
 
           <label class="option">
+
             <input
               type="radio"
               name="m1a"
               value="1"
               onchange="captureMissionDraft()"
             >
+
             <span>SSD</span>
+
           </label>
 
           <label class="option">
+
             <input
               type="radio"
               name="m1a"
               value="2"
               onchange="captureMissionDraft()"
             >
+
             <span>Monitor</span>
+
           </label>
 
           <p>
+
             <b>2.</b>
-            Roni menyimpan dokumen agar dapat dibuka minggu depan.
+            Roni menyimpan dokumen
+            agar dapat dibuka minggu depan.
             Pilihan yang tepat adalah ...
+
           </p>
 
           <label class="option">
+
             <input
               type="radio"
               name="m1b"
               value="0"
               onchange="captureMissionDraft()"
             >
+
             <span>RAM</span>
+
           </label>
 
           <label class="option">
+
             <input
               type="radio"
               name="m1b"
               value="1"
               onchange="captureMissionDraft()"
             >
+
             <span>SSD/HDD</span>
+
           </label>
 
           <label class="option">
+
             <input
               type="radio"
               name="m1b"
               value="2"
               onchange="captureMissionDraft()"
             >
+
             <span>CPU</span>
+
           </label>
 
           <p>
+
             <b>3.</b>
-            Mengapa RAM dan storage tidak sama?
+            Mengapa RAM dan storage
+            tidak sama?
+
           </p>
 
           <textarea
@@ -3171,73 +3605,99 @@ function startMission(type,restoring=false){
         </div>
 
       `
-
     },
 
     m2:{
 
-      title:"Mission 2 — ALU or CU?",
-      desc:"16 XP objektif + 9 XP uraian rubrik",
-      seconds:600,
+      title:
+        "Mission 2 — ALU or CU?",
+
+      desc:
+        "16 XP objektif + 9 XP uraian rubrik",
+
+      seconds:
+        600,
 
       html:`
 
         <div class="mission-card">
 
           <p>
+
             <b>1.</b>
             CPU menghitung 125 × 8.
-            Bagian yang melakukan operasi hitung adalah ...
+            Bagian yang melakukan
+            operasi hitung adalah ...
+
           </p>
 
           <label class="option">
+
             <input
               type="radio"
               name="m2a"
               value="0"
               onchange="captureMissionDraft()"
             >
+
             <span>ALU</span>
+
           </label>
 
           <label class="option">
+
             <input
               type="radio"
               name="m2a"
               value="1"
               onchange="captureMissionDraft()"
             >
+
             <span>CU</span>
+
           </label>
 
           <p>
+
             <b>2.</b>
-            Bagian CPU yang mengatur jalannya instruksi program adalah ...
+            Bagian CPU yang mengatur
+            jalannya instruksi program
+            adalah ...
+
           </p>
 
           <label class="option">
+
             <input
               type="radio"
               name="m2b"
               value="0"
               onchange="captureMissionDraft()"
             >
+
             <span>ALU</span>
+
           </label>
 
           <label class="option">
+
             <input
               type="radio"
               name="m2b"
               value="1"
               onchange="captureMissionDraft()"
             >
+
             <span>CU</span>
+
           </label>
 
           <p>
+
             <b>3.</b>
-            Jelaskan perbedaan tugas ALU dan CU.
+            Jelaskan perbedaan
+            tugas ALU dan CU.
+
           </p>
 
           <textarea
@@ -3250,14 +3710,18 @@ function startMission(type,restoring=false){
         </div>
 
       `
-
     },
 
     m3:{
 
-      title:"Mission 3 — Trace the Data",
-      desc:"15 XP struktur + 5 XP uraian rubrik",
-      seconds:900,
+      title:
+        "Mission 3 — Trace the Data",
+
+      desc:
+        "15 XP struktur + 5 XP uraian rubrik",
+
+      seconds:
+        900,
 
       html:`
 
@@ -3272,10 +3736,21 @@ function startMission(type,restoring=false){
             onchange="captureMissionDraft()"
           >
 
-            <option>Mengetik tugas</option>
-            <option>Merekam suara</option>
-            <option>Membuka foto</option>
-            <option>Mencetak dokumen</option>
+            <option>
+              Mengetik tugas
+            </option>
+
+            <option>
+              Merekam suara
+            </option>
+
+            <option>
+              Membuka foto
+            </option>
+
+            <option>
+              Mencetak dokumen
+            </option>
 
           </select>
 
@@ -3286,7 +3761,9 @@ function startMission(type,restoring=false){
 
             <div>
 
-              <label>Input</label>
+              <label>
+                Input
+              </label>
 
               <input
                 id="m3input"
@@ -3298,7 +3775,9 @@ function startMission(type,restoring=false){
 
             <div>
 
-              <label>Process</label>
+              <label>
+                Process
+              </label>
 
               <input
                 id="m3process"
@@ -3310,7 +3789,9 @@ function startMission(type,restoring=false){
 
             <div>
 
-              <label>Output</label>
+              <label>
+                Output
+              </label>
 
               <input
                 id="m3output"
@@ -3322,7 +3803,9 @@ function startMission(type,restoring=false){
 
             <div>
 
-              <label>Storage</label>
+              <label>
+                Storage
+              </label>
 
               <input
                 id="m3storage"
@@ -3334,8 +3817,11 @@ function startMission(type,restoring=false){
 
           </div>
 
-          <label style="margin-top:14px;">
-            Mengapa urutan tersebut sesuai IPO?
+          <label
+            style="margin-top:14px;"
+          >
+            Mengapa urutan tersebut
+            sesuai IPO?
           </label>
 
           <textarea
@@ -3348,12 +3834,12 @@ function startMission(type,restoring=false){
         </div>
 
       `
-
     }
 
   };
 
-  const config = configs[type];
+  const config =
+    configs[type];
 
   if(!config){
 
@@ -3365,9 +3851,14 @@ function startMission(type,restoring=false){
 
   }
 
-  missionType=type;
+  missionType =
+    type;
 
-  show("#mission");
+  show(
+    "#mission",
+    true,
+    true
+  );
 
   qs("#missionTitle").textContent =
     config.title;
@@ -3379,12 +3870,16 @@ function startMission(type,restoring=false){
     config.html;
 
   qs("#missionSubmit")
-    .classList.remove("hidden");
+    .classList
+    .remove("hidden");
 
   qs("#missionNext")
-    .classList.add("hidden");
+    .classList
+    .add("hidden");
 
-  restoreMissionDraft(type);
+  restoreMissionDraft(
+    type
+  );
 
   if(restoring){
 
@@ -3393,29 +3888,33 @@ function startMission(type,restoring=false){
         missionEndAt
       );
 
-    if(remaining<=0){
+    if(remaining <= 0){
 
       missionEndAt =
-        Date.now()+
-        config.seconds*1000;
+        Date.now() +
+        config.seconds * 1000;
 
-      remaining=config.seconds;
+      remaining =
+        config.seconds;
 
     }
 
-    startMissionTimer(remaining);
+    startMissionTimer(
+      remaining
+    );
 
   }else{
 
     missionEndAt =
-      Date.now()+
-      config.seconds*1000;
+      Date.now() +
+      config.seconds * 1000;
 
-    startMissionTimer(config.seconds);
+    startMissionTimer(
+      config.seconds
+    );
 
   }
 
-  updateJourneyProgress();
   saveActiveSession();
 
 }
@@ -3427,9 +3926,11 @@ function captureMissionDraft(){
     return;
   }
 
-  if(missionType==="m1"){
+  if(
+    missionType === "m1"
+  ){
 
-    missionDrafts.m1={
+    missionDrafts.m1 = {
 
       a:
         qs(
@@ -3448,9 +3949,11 @@ function captureMissionDraft(){
 
   }
 
-  if(missionType==="m2"){
+  if(
+    missionType === "m2"
+  ){
 
-    missionDrafts.m2={
+    missionDrafts.m2 = {
 
       a:
         qs(
@@ -3469,9 +3972,11 @@ function captureMissionDraft(){
 
   }
 
-  if(missionType==="m3"){
+  if(
+    missionType === "m3"
+  ){
 
-    missionDrafts.m3={
+    missionDrafts.m3 = {
 
       case:
         qs("#m3case")?.value ?? "",
@@ -3509,9 +4014,9 @@ function restoreMissionDraft(type){
     return;
   }
 
-  if(type==="m1"){
+  if(type === "m1"){
 
-    if(draft.a!==""){
+    if(draft.a !== ""){
 
       const el =
         qs(
@@ -3519,12 +4024,12 @@ function restoreMissionDraft(type){
         );
 
       if(el){
-        el.checked=true;
+        el.checked = true;
       }
 
     }
 
-    if(draft.b!==""){
+    if(draft.b !== ""){
 
       const el =
         qs(
@@ -3532,21 +4037,23 @@ function restoreMissionDraft(type){
         );
 
       if(el){
-        el.checked=true;
+        el.checked = true;
       }
 
     }
 
     if(qs("#m1reason")){
+
       qs("#m1reason").value =
         draft.reason || "";
+
     }
 
   }
 
-  if(type==="m2"){
+  if(type === "m2"){
 
-    if(draft.a!==""){
+    if(draft.a !== ""){
 
       const el =
         qs(
@@ -3554,12 +4061,12 @@ function restoreMissionDraft(type){
         );
 
       if(el){
-        el.checked=true;
+        el.checked = true;
       }
 
     }
 
-    if(draft.b!==""){
+    if(draft.b !== ""){
 
       const el =
         qs(
@@ -3567,48 +4074,63 @@ function restoreMissionDraft(type){
         );
 
       if(el){
-        el.checked=true;
+        el.checked = true;
       }
 
     }
 
     if(qs("#m2reason")){
+
       qs("#m2reason").value =
         draft.reason || "";
+
     }
 
   }
 
-  if(type==="m3"){
+  if(type === "m3"){
 
     if(qs("#m3case")){
+
       qs("#m3case").value =
-        draft.case || "Mengetik tugas";
+        draft.case ||
+        "Mengetik tugas";
+
     }
 
     if(qs("#m3input")){
+
       qs("#m3input").value =
         draft.input || "";
+
     }
 
     if(qs("#m3process")){
+
       qs("#m3process").value =
         draft.process || "";
+
     }
 
     if(qs("#m3output")){
+
       qs("#m3output").value =
         draft.output || "";
+
     }
 
     if(qs("#m3storage")){
+
       qs("#m3storage").value =
         draft.storage || "";
+
     }
 
     if(qs("#m3reason")){
+
       qs("#m3reason").value =
         draft.reason || "";
+
     }
 
   }
@@ -3616,24 +4138,39 @@ function restoreMissionDraft(type){
 }
 
 
-function startMissionTimer(seconds){
+function startMissionTimer(
+  seconds
+){
 
-  clearInterval(missionTimerHandle);
+  clearInterval(
+    missionTimerHandle
+  );
 
   let requested =
-    safeNumber(seconds,600);
+    safeNumber(
+      seconds,
+      600
+    );
 
-  if(requested<=0){
-    requested=600;
+  if(
+    requested <= 0
+  ){
+
+    requested =
+      600;
+
   }
 
   if(
     !missionEndAt ||
-    currentRemainingSeconds(missionEndAt)<=0
+    currentRemainingSeconds(
+      missionEndAt
+    ) <= 0
   ){
 
     missionEndAt =
-      Date.now()+requested*1000;
+      Date.now() +
+      requested * 1000;
 
   }
 
@@ -3650,7 +4187,9 @@ function startMissionTimer(seconds){
 
         updateMissionTimer();
 
-        if(remaining<=0){
+        if(
+          remaining <= 0
+        ){
 
           clearInterval(
             missionTimerHandle
@@ -3680,16 +4219,28 @@ function updateMissionTimer(){
 
   const minutes =
     String(
-      Math.floor(remaining/60)
-    ).padStart(2,"0");
+      Math.floor(
+        remaining / 60
+      )
+    ).padStart(
+      2,
+      "0"
+    );
 
   const seconds =
     String(
-      remaining%60
-    ).padStart(2,"0");
+      remaining % 60
+    ).padStart(
+      2,
+      "0"
+    );
 
   const timer =
     qs("#missionTimer");
+
+  if(!timer){
+    return;
+  }
 
   timer.textContent =
     `${minutes}:${seconds}`;
@@ -3699,13 +4250,21 @@ function updateMissionTimer(){
     "danger"
   );
 
-  if(remaining<=60){
+  if(
+    remaining <= 60
+  ){
 
-    timer.classList.add("danger");
+    timer.classList.add(
+      "danger"
+    );
 
-  }else if(remaining<=180){
+  }else if(
+    remaining <= 180
+  ){
 
-    timer.classList.add("warning");
+    timer.classList.add(
+      "warning"
+    );
 
   }
 
@@ -3720,15 +4279,19 @@ function submitMission(){
     missionTimerHandle
   );
 
-  if(missionType==="m1"){
+  if(
+    missionType === "m1"
+  ){
 
     const draft =
       missionDrafts.m1;
 
     if(
-      draft.a==="" ||
-      draft.b==="" ||
-      !String(draft.reason||"").trim()
+      draft.a === "" ||
+      draft.b === "" ||
+      !String(
+        draft.reason || ""
+      ).trim()
     ){
 
       showToast(
@@ -3748,31 +4311,46 @@ function submitMission(){
 
     }
 
-    let score=0;
+    let score =
+      0;
 
-    if(draft.a==="0"){
-      score+=8;
+    if(
+      draft.a === "0"
+    ){
+
+      score += 8;
+
     }
 
-    if(draft.b==="1"){
-      score+=8;
+    if(
+      draft.b === "1"
+    ){
+
+      score += 8;
+
     }
 
-    state.m1=score;
-    state.essayAnswers.m1=
+    state.m1 =
+      score;
+
+    state.essayAnswers.m1 =
       draft.reason.trim();
 
   }
 
-  else if(missionType==="m2"){
+  else if(
+    missionType === "m2"
+  ){
 
     const draft =
       missionDrafts.m2;
 
     if(
-      draft.a==="" ||
-      draft.b==="" ||
-      !String(draft.reason||"").trim()
+      draft.a === "" ||
+      draft.b === "" ||
+      !String(
+        draft.reason || ""
+      ).trim()
     ){
 
       showToast(
@@ -3792,19 +4370,29 @@ function submitMission(){
 
     }
 
-    let score=0;
+    let score =
+      0;
 
-    if(draft.a==="0"){
-      score+=8;
+    if(
+      draft.a === "0"
+    ){
+
+      score += 8;
+
     }
 
-    if(draft.b==="1"){
-      score+=8;
+    if(
+      draft.b === "1"
+    ){
+
+      score += 8;
+
     }
 
-    state.m2=score;
+    state.m2 =
+      score;
 
-    state.essayAnswers.m2=
+    state.essayAnswers.m2 =
       draft.reason.trim();
 
   }
@@ -3815,11 +4403,21 @@ function submitMission(){
       missionDrafts.m3;
 
     if(
-      !String(draft.input||"").trim() ||
-      !String(draft.process||"").trim() ||
-      !String(draft.output||"").trim() ||
-      !String(draft.storage||"").trim() ||
-      !String(draft.reason||"").trim()
+      !String(
+        draft.input || ""
+      ).trim() ||
+      !String(
+        draft.process || ""
+      ).trim() ||
+      !String(
+        draft.output || ""
+      ).trim() ||
+      !String(
+        draft.storage || ""
+      ).trim() ||
+      !String(
+        draft.reason || ""
+      ).trim()
     ){
 
       showToast(
@@ -3839,9 +4437,10 @@ function submitMission(){
 
     }
 
-    state.m3=15;
+    state.m3 =
+      15;
 
-    state.essayAnswers.m3=[
+    state.essayAnswers.m3 = [
 
       `Kasus: ${draft.case}`,
       `Input: ${draft.input}`,
@@ -3855,25 +4454,29 @@ function submitMission(){
   }
 
   const missionScore =
-    missionType==="m1"
+    missionType === "m1"
       ? state.m1
-      : missionType==="m2"
+      : missionType === "m2"
         ? state.m2
         : state.m3;
 
-  state.xp += missionScore;
+  state.xp +=
+    missionScore;
 
   updateTop();
 
   localSave();
 
   qs("#missionSubmit")
-    .classList.add("hidden");
+    .classList
+    .add("hidden");
 
   qs("#missionNext")
-    .classList.remove("hidden");
+    .classList
+    .remove("hidden");
 
-  missionEndAt=0;
+  missionEndAt =
+    0;
 
   saveActiveSession();
 
@@ -3884,42 +4487,79 @@ function forceSubmitMission(){
 
   captureMissionDraft();
 
-  let missionScore=0;
+  let missionScore =
+    0;
 
-  if(missionType==="m1"){
+  if(
+    missionType === "m1"
+  ){
 
     state.essayAnswers.m1 =
       missionDrafts.m1.reason || "";
 
     state.m1 =
-      (missionDrafts.m1.a==="0"?8:0) +
-      (missionDrafts.m1.b==="1"?8:0);
+      (
+        missionDrafts.m1.a === "0"
+          ? 8
+          : 0
+      ) +
+      (
+        missionDrafts.m1.b === "1"
+          ? 8
+          : 0
+      );
 
-    missionScore=state.m1;
+    missionScore =
+      state.m1;
 
   }
 
-  if(missionType==="m2"){
+  if(
+    missionType === "m2"
+  ){
 
     state.essayAnswers.m2 =
       missionDrafts.m2.reason || "";
 
     state.m2 =
-      (missionDrafts.m2.a==="0"?8:0) +
-      (missionDrafts.m2.b==="1"?8:0);
+      (
+        missionDrafts.m2.a === "0"
+          ? 8
+          : 0
+      ) +
+      (
+        missionDrafts.m2.b === "1"
+          ? 8
+          : 0
+      );
 
-    missionScore=state.m2;
+    missionScore =
+      state.m2;
 
   }
 
-  if(missionType==="m3"){
+  if(
+    missionType === "m3"
+  ){
 
     state.m3 =
-      (missionDrafts.m3.input?5:0) +
-      (missionDrafts.m3.process?5:0) +
-      (missionDrafts.m3.output?5:0);
+      (
+        missionDrafts.m3.input
+          ? 5
+          : 0
+      ) +
+      (
+        missionDrafts.m3.process
+          ? 5
+          : 0
+      ) +
+      (
+        missionDrafts.m3.output
+          ? 5
+          : 0
+      );
 
-    state.essayAnswers.m3=[
+    state.essayAnswers.m3 = [
 
       `Kasus: ${missionDrafts.m3.case}`,
       `Input: ${missionDrafts.m3.input}`,
@@ -3930,23 +4570,28 @@ function forceSubmitMission(){
 
     ].join("\n");
 
-    missionScore=state.m3;
+    missionScore =
+      state.m3;
 
   }
 
-  state.xp += missionScore;
+  state.xp +=
+    missionScore;
 
   updateTop();
 
   localSave();
 
   qs("#missionSubmit")
-    .classList.add("hidden");
+    .classList
+    .add("hidden");
 
   qs("#missionNext")
-    .classList.remove("hidden");
+    .classList
+    .remove("hidden");
 
-  missionEndAt=0;
+  missionEndAt =
+    0;
 
   saveActiveSession();
 
@@ -3959,14 +4604,24 @@ function forceSubmitMission(){
 
 function nextMission(){
 
-  if(missionType==="m1"){
+  if(
+    missionType === "m1"
+  ){
+
     startMission2();
+
   }
-  else if(missionType==="m2"){
+  else if(
+    missionType === "m2"
+  ){
+
     startMission3();
+
   }
   else{
+
     startBoss();
+
   }
 
 }
@@ -3978,17 +4633,24 @@ function nextMission(){
 
 function startBoss(){
 
-  show("#boss");
+  show(
+    "#boss",
+    true,
+    true
+  );
 
   restoreBossDraft();
 
   if(
     !missionEndAt ||
-    currentRemainingSeconds(missionEndAt)<=0
+    currentRemainingSeconds(
+      missionEndAt
+    ) <= 0
   ){
 
     missionEndAt =
-      Date.now()+600000;
+      Date.now() +
+      600000;
 
   }
 
@@ -3998,12 +4660,14 @@ function startBoss(){
     )
   );
 
+  saveActiveSession();
+
 }
 
 
 function captureBossDraft(){
 
-  missionDrafts.boss={
+  missionDrafts.boss = {
 
     input:
       qs("#bossInput")?.value ?? "",
@@ -4040,56 +4704,83 @@ function restoreBossDraft(){
   }
 
   if(qs("#bossInput")){
+
     qs("#bossInput").value =
       draft.input || "";
+
   }
 
   if(qs("#bossProcess")){
+
     qs("#bossProcess").value =
       draft.process || "";
+
   }
 
   if(qs("#bossOutput")){
+
     qs("#bossOutput").value =
       draft.output || "";
+
   }
 
   if(qs("#bossCpu")){
+
     qs("#bossCpu").value =
       draft.cpu || "";
+
   }
 
   if(qs("#bossIpo")){
+
     qs("#bossIpo").value =
       draft.ipo || "";
+
   }
 
   if(qs("#bossReason")){
+
     qs("#bossReason").value =
       draft.reason || "";
+
   }
 
 }
 
 
-function startBossTimer(seconds){
+function startBossTimer(
+  seconds
+){
 
-  clearInterval(missionTimerHandle);
+  clearInterval(
+    missionTimerHandle
+  );
 
   let requested =
-    safeNumber(seconds,600);
+    safeNumber(
+      seconds,
+      600
+    );
 
-  if(requested<=0){
-    requested=600;
+  if(
+    requested <= 0
+  ){
+
+    requested =
+      600;
+
   }
 
   if(
     !missionEndAt ||
-    currentRemainingSeconds(missionEndAt)<=0
+    currentRemainingSeconds(
+      missionEndAt
+    ) <= 0
   ){
 
     missionEndAt =
-      Date.now()+requested*1000;
+      Date.now() +
+      requested * 1000;
 
   }
 
@@ -4108,7 +4799,9 @@ function startBossTimer(seconds){
 
         captureBossDraft();
 
-        if(remaining<=0){
+        if(
+          remaining <= 0
+        ){
 
           clearInterval(
             missionTimerHandle
@@ -4136,16 +4829,28 @@ function updateBossTimer(){
 
   const minutes =
     String(
-      Math.floor(remaining/60)
-    ).padStart(2,"0");
+      Math.floor(
+        remaining / 60
+      )
+    ).padStart(
+      2,
+      "0"
+    );
 
   const seconds =
     String(
-      remaining%60
-    ).padStart(2,"0");
+      remaining % 60
+    ).padStart(
+      2,
+      "0"
+    );
 
   const timer =
     qs("#bossTimer");
+
+  if(!timer){
+    return;
+  }
 
   timer.textContent =
     `${minutes}:${seconds}`;
@@ -4155,13 +4860,21 @@ function updateBossTimer(){
     "danger"
   );
 
-  if(remaining<=60){
+  if(
+    remaining <= 60
+  ){
 
-    timer.classList.add("danger");
+    timer.classList.add(
+      "danger"
+    );
 
-  }else if(remaining<=180){
+  }else if(
+    remaining <= 180
+  ){
 
-    timer.classList.add("warning");
+    timer.classList.add(
+      "warning"
+    );
 
   }
 
@@ -4180,12 +4893,24 @@ function submitBoss(){
     missionDrafts.boss;
 
   if(
-    !String(draft.input||"").trim() ||
-    !String(draft.process||"").trim() ||
-    !String(draft.output||"").trim() ||
-    !String(draft.cpu||"").trim() ||
-    !String(draft.ipo||"").trim() ||
-    !String(draft.reason||"").trim()
+    !String(
+      draft.input || ""
+    ).trim() ||
+    !String(
+      draft.process || ""
+    ).trim() ||
+    !String(
+      draft.output || ""
+    ).trim() ||
+    !String(
+      draft.cpu || ""
+    ).trim() ||
+    !String(
+      draft.ipo || ""
+    ).trim() ||
+    !String(
+      draft.reason || ""
+    ).trim()
   ){
 
     showToast(
@@ -4205,11 +4930,13 @@ function submitBoss(){
 
   }
 
-  state.boss=13;
+  state.boss =
+    13;
 
-  state.xp+=13;
+  state.xp +=
+    13;
 
-  state.essayAnswers.boss=[
+  state.essayAnswers.boss = [
 
     `Input: ${draft.input}`,
     `Process: ${draft.process}`,
@@ -4224,7 +4951,8 @@ function submitBoss(){
 
   localSave();
 
-  missionEndAt=0;
+  missionEndAt =
+    0;
 
   startPosttest();
 
@@ -4239,16 +4967,46 @@ function forceSubmitBoss(){
     missionDrafts.boss;
 
   state.boss =
+    (
+      String(
+        draft.input || ""
+      ).trim()
+        ? 3
+        : 0
+    ) +
+    (
+      String(
+        draft.process || ""
+      ).trim()
+        ? 3
+        : 0
+    ) +
+    (
+      String(
+        draft.output || ""
+      ).trim()
+        ? 3
+        : 0
+    ) +
+    (
+      String(
+        draft.cpu || ""
+      ).trim()
+        ? 2
+        : 0
+    ) +
+    (
+      String(
+        draft.ipo || ""
+      ).trim()
+        ? 2
+        : 0
+    );
 
-    (String(draft.input||"").trim()?3:0) +
-    (String(draft.process||"").trim()?3:0) +
-    (String(draft.output||"").trim()?3:0) +
-    (String(draft.cpu||"").trim()?2:0) +
-    (String(draft.ipo||"").trim()?2:0);
+  state.xp +=
+    state.boss;
 
-  state.xp += state.boss;
-
-  state.essayAnswers.boss=[
+  state.essayAnswers.boss = [
 
     `Input: ${draft.input}`,
     `Process: ${draft.process}`,
@@ -4263,7 +5021,8 @@ function forceSubmitBoss(){
 
   updateTop();
 
-  missionEndAt=0;
+  missionEndAt =
+    0;
 
   startPosttest();
 
@@ -4276,11 +5035,16 @@ function forceSubmitBoss(){
 
 function captureReflectionDraft(){
 
-  reflectionDraft={
+  reflectionDraft = {
 
-    r3:qs("#r3")?.value ?? "",
-    r2:qs("#r2")?.value ?? "",
-    r1:qs("#r1")?.value ?? ""
+    r3:
+      qs("#r3")?.value ?? "",
+
+    r2:
+      qs("#r2")?.value ?? "",
+
+    r1:
+      qs("#r1")?.value ?? ""
 
   };
 
@@ -4292,18 +5056,24 @@ function captureReflectionDraft(){
 function restoreReflectionDraft(){
 
   if(qs("#r3")){
+
     qs("#r3").value =
       reflectionDraft.r3 || "";
+
   }
 
   if(qs("#r2")){
+
     qs("#r2").value =
       reflectionDraft.r2 || "";
+
   }
 
   if(qs("#r1")){
+
     qs("#r1").value =
       reflectionDraft.r1 || "";
+
   }
 
 }
@@ -4328,7 +5098,11 @@ function finishReflection(){
       reflectionDraft.r1 || ""
     ).trim();
 
-  if(!r3 || !r2 || !r1){
+  if(
+    !r3 ||
+    !r2 ||
+    !r1
+  ){
 
     showToast(
       "Semua bagian refleksi 3–2–1 wajib diisi."
@@ -4338,34 +5112,36 @@ function finishReflection(){
 
   }
 
-  state.reflection={
+  state.reflection = {
+
     r3:r3,
     r2:r2,
     r1:r1
+
   };
 
   localSave();
 
   qs("#fPre").textContent =
-    `${state.pre??"-"}/100`;
+    `${state.pre ?? "-"}/100`;
 
   qs("#fPost").textContent =
-    `${state.post??"-"}/100`;
+    `${state.post ?? "-"}/100`;
 
   qs("#fPreDetail").textContent =
-    `${state.preCorrect??0} dari 15 soal benar`;
+    `${state.preCorrect ?? 0} dari 15 soal benar`;
 
   qs("#fPostDetail").textContent =
-    `${state.postCorrect??0} dari 15 soal benar`;
+    `${state.postCorrect ?? 0} dari 15 soal benar`;
 
   qs("#fXP").textContent =
     state.xp;
 
-  currentScreen="#finish";
-
-  show("#finish");
-
-  updateJourneyProgress();
+  show(
+    "#finish",
+    true,
+    true
+  );
 
   showToast(
     "Refleksi berhasil disimpan."
@@ -4382,21 +5158,44 @@ function buildRecord(){
 
   return {
 
-    className:state.className,
-    teacher:state.teacher,
-    code:state.code,
-    name:state.name,
-    team:state.team,
-    role:state.role,
+    className:
+      state.className,
 
-    pre:state.pre,
-    m1:state.m1,
-    m2:state.m2,
-    m3:state.m3,
-    boss:state.boss,
-    post:state.post,
+    teacher:
+      state.teacher,
 
-    xp:state.xp,
+    code:
+      state.code,
+
+    name:
+      state.name,
+
+    team:
+      state.team,
+
+    role:
+      state.role,
+
+    pre:
+      state.pre,
+
+    m1:
+      state.m1,
+
+    m2:
+      state.m2,
+
+    m3:
+      state.m3,
+
+    boss:
+      state.boss,
+
+    post:
+      state.post,
+
+    xp:
+      state.xp,
 
     rubric_m1:"",
     rubric_m2:"",
@@ -4438,13 +5237,15 @@ function localSave(){
     !state.className ||
     !state.code
   ){
+
     return;
+
   }
 
   const record =
     buildRecord();
 
-  let records=[];
+  let records = [];
 
   try{
 
@@ -4455,27 +5256,40 @@ function localSave(){
         ) || "[]"
       );
 
-    if(!Array.isArray(records)){
-      records=[];
+    if(
+      !Array.isArray(records)
+    ){
+
+      records = [];
+
     }
 
   }catch(error){
 
-    records=[];
+    records = [];
 
   }
 
   const index =
     records.findIndex(
       item =>
-        item.className===record.className &&
-        item.code===record.code
+        item.className ===
+          record.className &&
+        item.code ===
+          record.code
     );
 
-  if(index>=0){
-    records[index]=record;
+  if(index >= 0){
+
+    records[index] =
+      record;
+
   }else{
-    records.push(record);
+
+    records.push(
+      record
+    );
+
   }
 
   try{
@@ -4485,16 +5299,11 @@ function localSave(){
       JSON.stringify(records)
     );
 
-  }catch(error){
+  }catch(error){}
 
-    console.error(
-      "Save records failed:",
-      error
-    );
-
-  }
-
-  queueSync(record);
+  queueSync(
+    record
+  );
 
   saveActiveSession();
 
@@ -4511,18 +5320,24 @@ function queueSync(record){
     syncQueue.filter(
       item =>
         !(
-          item.className===record.className &&
-          item.code===record.code
+          item.className ===
+            record.className &&
+          item.code ===
+            record.code
         )
     );
 
-  syncQueue.push(record);
+  syncQueue.push(
+    record
+  );
 
   try{
 
     localStorage.setItem(
       "cm2_sync_queue",
-      JSON.stringify(syncQueue)
+      JSON.stringify(
+        syncQueue
+      )
     );
 
   }catch(error){}
@@ -4546,14 +5361,19 @@ async function flushSyncQueue(){
     syncRunning ||
     !syncQueue.length
   ){
+
     return;
+
   }
 
-  syncRunning=true;
+  syncRunning =
+    true;
 
   try{
 
-    while(syncQueue.length){
+    while(
+      syncQueue.length
+    ){
 
       const record =
         syncQueue[0];
@@ -4570,7 +5390,8 @@ async function flushSyncQueue(){
           body:
             JSON.stringify({
               action:"upsert",
-              record:record
+              record:
+                record
             })
         }
       );
@@ -4581,7 +5402,9 @@ async function flushSyncQueue(){
 
         localStorage.setItem(
           "cm2_sync_queue",
-          JSON.stringify(syncQueue)
+          JSON.stringify(
+            syncQueue
+          )
         );
 
       }catch(error){}
@@ -4599,7 +5422,9 @@ async function flushSyncQueue(){
 
       localStorage.setItem(
         "cm2_sync_queue",
-        JSON.stringify(syncQueue)
+        JSON.stringify(
+          syncQueue
+        )
       );
 
     }catch(error){}
@@ -4611,7 +5436,8 @@ async function flushSyncQueue(){
 
   }finally{
 
-    syncRunning=false;
+    syncRunning =
+      false;
 
   }
 
@@ -4619,21 +5445,15 @@ async function flushSyncQueue(){
 
 
 /* =========================================================
-   RESTORE SESSION — FIX REFRESH
+   RESTORE ACTIVE SESSION
 ========================================================= */
 
 function restoreActiveSession(){
 
-  restoringSession=true;
+  const saved =
+    loadActiveSession();
 
-  let raw =
-    localStorage.getItem(
-      "cm2_active_session"
-    );
-
-  if(!raw){
-
-    restoringSession=false;
+  if(!saved){
 
     return false;
 
@@ -4641,46 +5461,41 @@ function restoreActiveSession(){
 
   try{
 
-    const saved =
-      JSON.parse(raw);
+    state = {
 
-    if(
-      !saved ||
-      !saved.state ||
-      !saved.state.code ||
-      !saved.state.className
-    ){
+      ...clone(
+        DEFAULT_STATE
+      ),
 
-      restoringSession=false;
-
-      return false;
-
-    }
-
-    state={
-      ...state,
       ...saved.state
+
     };
 
     state.answers =
-      Array.isArray(saved.state.answers)
-        ? saved.state.answers
+      Array.isArray(
+        state.answers
+      )
+        ? state.answers
         : [];
 
     state.answerChoices =
-      Array.isArray(saved.state.answerChoices)
-        ? saved.state.answerChoices
+      Array.isArray(
+        state.answerChoices
+      )
+        ? state.answerChoices
         : [];
 
     state.reflection =
-      saved.state.reflection || {
+      saved.state.reflection ||
+      {
         r3:"",
         r2:"",
         r1:""
       };
 
     state.essayAnswers =
-      saved.state.essayAnswers || {
+      saved.state.essayAnswers ||
+      {
         m1:"",
         m2:"",
         m3:"",
@@ -4688,25 +5503,30 @@ function restoreActiveSession(){
       };
 
     missionDrafts =
-      saved.missionDrafts || missionDrafts;
+      saved.missionDrafts ||
+      missionDrafts;
 
     reflectionDraft =
-      saved.reflectionDraft || reflectionDraft;
-
-    currentScreen =
-      saved.currentScreen || "#dash";
+      saved.reflectionDraft ||
+      reflectionDraft;
 
     testMode =
-      saved.testMode || "pre";
+      saved.testMode ||
+      "pre";
 
     qIndex =
       Math.max(
         0,
-        safeNumber(saved.qIndex,0)
+        safeNumber(
+          saved.qIndex,
+          0
+        )
       );
 
     selectedQuestions =
-      Array.isArray(saved.selectedQuestions)
+      Array.isArray(
+        saved.selectedQuestions
+      )
         ? saved.selectedQuestions
         : [];
 
@@ -4717,13 +5537,43 @@ function restoreActiveSession(){
       );
 
     missionType =
-      saved.missionType || "";
+      saved.missionType ||
+      "";
 
     missionEndAt =
       safeNumber(
         saved.missionEndAt,
         0
       );
+
+
+    /*
+     * PRIORITAS:
+     *
+     * 1. hash URL
+     * 2. currentScreen tersimpan
+     * 3. backup localStorage
+     * 4. dashboard
+     */
+
+    const hashScreen =
+      getHashScreen();
+
+    const savedScreen =
+      saved.currentScreen ||
+      localStorage.getItem(
+        "cm2_current_screen"
+      ) ||
+      "#dash";
+
+    let targetScreen =
+      hashScreen ||
+      savedScreen;
+
+
+    /*
+     * Pulihkan informasi siswa.
+     */
 
     qs("#studentPill").textContent =
       `${state.name} • ${state.code} • ${state.className}`;
@@ -4740,47 +5590,55 @@ function restoreActiveSession(){
     updateTop();
 
 
-    /* -----------------------------------------------
+    /* =====================================================
        FINISH
-    ----------------------------------------------- */
+    ===================================================== */
 
-    if(currentScreen==="#finish"){
+    if(
+      targetScreen === "#finish"
+    ){
 
       showFinishScreen();
 
-      restoringSession=false;
-
       return true;
 
     }
 
 
-    /* -----------------------------------------------
+    /* =====================================================
        REFLECTION
-    ----------------------------------------------- */
+    ===================================================== */
 
-    if(currentScreen==="#reflection"){
+    if(
+      targetScreen === "#reflection"
+    ){
 
-      show("#reflection",false);
+      show(
+        "#reflection",
+        false,
+        true
+      );
 
       restoreReflectionDraft();
 
-      updateJourneyProgress();
-
-      restoringSession=false;
-
       return true;
 
     }
 
 
-    /* -----------------------------------------------
+    /* =====================================================
        BOSS
-    ----------------------------------------------- */
+    ===================================================== */
 
-    if(currentScreen==="#boss"){
+    if(
+      targetScreen === "#boss"
+    ){
 
-      show("#boss",false);
+      show(
+        "#boss",
+        false,
+        true
+      );
 
       restoreBossDraft();
 
@@ -4789,41 +5647,51 @@ function restoreActiveSession(){
           missionEndAt
         );
 
-      if(remaining<=0){
+      if(
+        remaining <= 0
+      ){
 
         missionEndAt =
-          Date.now()+600000;
+          Date.now() +
+          600000;
 
-        remaining=600;
+        remaining =
+          600;
 
       }
 
-      restoringSession=false;
+      startBossTimer(
+        remaining
+      );
 
-      startBossTimer(remaining);
-
-      updateJourneyProgress();
+      saveActiveSession();
 
       return true;
 
     }
 
 
-    /* -----------------------------------------------
+    /* =====================================================
        MISSION
-    ----------------------------------------------- */
+    ===================================================== */
 
-    if(currentScreen==="#mission"){
+    if(
+      targetScreen === "#mission"
+    ){
 
-      if(missionType){
+      /*
+       * Mission tidak boleh jatuh ke login.
+       */
 
-        const savedMissionType =
-          missionType;
-
-        restoringSession=false;
+      if(
+        missionType &&
+        ["m1","m2","m3"].includes(
+          missionType
+        )
+      ){
 
         startMission(
-          savedMissionType,
+          missionType,
           true
         );
 
@@ -4834,18 +5702,27 @@ function restoreActiveSession(){
     }
 
 
-    /* -----------------------------------------------
+    /* =====================================================
        TEST
-    ----------------------------------------------- */
+    ===================================================== */
 
-    if(currentScreen==="#test"){
+    if(
+      targetScreen === "#test"
+    ){
 
-      if(selectedQuestions.length){
+      if(
+        selectedQuestions.length ===
+        questions.length
+      ){
 
-        show("#test",false);
+        show(
+          "#test",
+          false,
+          true
+        );
 
         qs("#testTitle").textContent =
-          testMode==="pre"
+          testMode === "pre"
             ? "Pre-Test — 15 Soal"
             : "Post-Test — 15 Soal";
 
@@ -4856,26 +5733,23 @@ function restoreActiveSession(){
             testEndAt
           );
 
-        if(remaining<=0){
+        if(
+          remaining <= 0
+        ){
 
-          /*
-           * Jangan buat sesi baru.
-           * Kalau timer benar-benar habis,
-           * langsung proses jawaban yang ada.
-           */
-          restoringSession=false;
-
-          finishTest(true);
+          finishTest(
+            true
+          );
 
           return true;
 
         }
 
-        restoringSession=false;
+        startTestTimer(
+          remaining
+        );
 
-        startTestTimer(remaining);
-
-        updateJourneyProgress();
+        saveActiveSession();
 
         return true;
 
@@ -4884,30 +5758,38 @@ function restoreActiveSession(){
     }
 
 
-    /* -----------------------------------------------
+    /* =====================================================
        MINI
-    ----------------------------------------------- */
+    ===================================================== */
 
-    if(currentScreen==="#mini"){
+    if(
+      targetScreen === "#mini"
+    ){
 
-      restoringSession=false;
-
-      show("#mini",false);
+      show(
+        "#mini",
+        false,
+        true
+      );
 
       return true;
 
     }
 
 
-    /* -----------------------------------------------
-       DASH
-    ----------------------------------------------- */
+    /* =====================================================
+       DASHBOARD
+    ===================================================== */
 
-    if(currentScreen==="#dash"){
+    if(
+      targetScreen === "#dash"
+    ){
 
-      restoringSession=false;
-
-      show("#dash",false);
+      show(
+        "#dash",
+        false,
+        true
+      );
 
       return true;
 
@@ -4916,28 +5798,17 @@ function restoreActiveSession(){
 
     /*
      * FALLBACK:
-     * kalau currentScreen rusak tapi siswa masih
-     * punya session aktif, jangan pernah lempar ke login.
+     * sesi siswa valid → dashboard,
+     * TIDAK kembali ke login.
      */
 
-    if(
-      state.code &&
-      state.className
-    ){
+    show(
+      "#dash",
+      false,
+      true
+    );
 
-      currentScreen="#dash";
-
-      restoringSession=false;
-
-      show("#dash",false);
-
-      return true;
-
-    }
-
-    restoringSession=false;
-
-    return false;
+    return true;
 
   }catch(error){
 
@@ -4947,12 +5818,23 @@ function restoreActiveSession(){
     );
 
     /*
-     * Jangan langsung menghapus session.
-     * Ini penting supaya refresh tidak menghilangkan
-     * progres ketika ada data sedikit berbeda.
+     * Jangan hapus session.
      */
 
-    restoringSession=false;
+    if(
+      state.code &&
+      state.className
+    ){
+
+      show(
+        "#dash",
+        false,
+        true
+      );
+
+      return true;
+
+    }
 
     return false;
 
@@ -4961,34 +5843,41 @@ function restoreActiveSession(){
 }
 
 
+/* =========================================================
+   FINISH SCREEN
+========================================================= */
+
 function showFinishScreen(){
 
   qs("#fPre").textContent =
-    `${state.pre??"-"}/100`;
+    `${state.pre ?? "-"}/100`;
 
   qs("#fPost").textContent =
-    `${state.post??"-"}/100`;
+    `${state.post ?? "-"}/100`;
 
   qs("#fPreDetail").textContent =
-    `${state.preCorrect??0} dari 15 soal benar`;
+    `${state.preCorrect ?? 0} dari 15 soal benar`;
 
   qs("#fPostDetail").textContent =
-    `${state.postCorrect??0} dari 15 soal benar`;
+    `${state.postCorrect ?? 0} dari 15 soal benar`;
 
   qs("#fXP").textContent =
     state.xp;
 
-  currentScreen="#finish";
+  currentScreen =
+    "#finish";
 
-  show("#finish",false);
-
-  updateJourneyProgress();
+  show(
+    "#finish",
+    false,
+    true
+  );
 
 }
 
 
 /* =========================================================
-   AUTO SAVE
+   AUTO SAVE INPUT
 ========================================================= */
 
 document.addEventListener(
@@ -5015,6 +5904,7 @@ document.addEventListener(
     ){
 
       captureMissionDraft();
+
       return;
 
     }
@@ -5031,6 +5921,7 @@ document.addEventListener(
     ){
 
       captureBossDraft();
+
       return;
 
     }
@@ -5044,6 +5935,7 @@ document.addEventListener(
     ){
 
       captureReflectionDraft();
+
       return;
 
     }
@@ -5056,9 +5948,12 @@ document.addEventListener(
   "change",
   event => {
 
-    if(event.target?.name==="q"){
+    if(
+      event.target?.name === "q"
+    ){
 
       storeAnswer();
+
       return;
 
     }
@@ -5075,19 +5970,17 @@ document.addEventListener(
     ){
 
       captureMissionDraft();
+
       return;
 
     }
 
     if(
-      [
-        "m3case"
-      ].includes(
-        event.target?.id
-      )
+      event.target?.id === "m3case"
     ){
 
       captureMissionDraft();
+
       return;
 
     }
@@ -5100,75 +5993,108 @@ document.addEventListener(
    PAGE LIFECYCLE
 ========================================================= */
 
-window.addEventListener(
-  "pagehide",
-  () => {
+function saveBeforeLeave(){
 
-    try{
+  try{
 
-      if(currentScreen==="#test"){
-        storeAnswer();
-      }
+    if(
+      currentScreen === "#test"
+    ){
 
-      if(currentScreen==="#mission"){
-        captureMissionDraft();
-      }
-
-      if(currentScreen==="#boss"){
-        captureBossDraft();
-      }
-
-      if(currentScreen==="#reflection"){
-        captureReflectionDraft();
-      }
-
-      saveActiveSession();
-
-    }catch(error){
-
-      console.error(
-        "Pagehide save error:",
-        error
-      );
+      storeAnswer();
 
     }
 
-  }
-);
+    if(
+      currentScreen === "#mission"
+    ){
 
+      captureMissionDraft();
+
+    }
+
+    if(
+      currentScreen === "#boss"
+    ){
+
+      captureBossDraft();
+
+    }
+
+    if(
+      currentScreen === "#reflection"
+    ){
+
+      captureReflectionDraft();
+
+    }
+
+    /*
+     * Selalu simpan halaman terakhir.
+     */
+
+    saveActiveSession();
+
+  }catch(error){
+
+    console.error(
+      "Page save error:",
+      error
+    );
+
+  }
+
+}
+
+
+window.addEventListener(
+  "pagehide",
+  saveBeforeLeave
+);
 
 window.addEventListener(
   "beforeunload",
+  saveBeforeLeave
+);
+
+
+/* =========================================================
+   HASH CHANGE
+========================================================= */
+
+window.addEventListener(
+  "hashchange",
   () => {
 
-    try{
+    /*
+     * Hash hanya dipakai sebagai
+     * penanda halaman.
+     *
+     * Jangan mereset sesi.
+     */
 
-      if(currentScreen==="#test"){
-        storeAnswer();
-      }
+    if(
+      !state.code ||
+      !state.className
+    ){
 
-      if(currentScreen==="#mission"){
-        captureMissionDraft();
-      }
-
-      if(currentScreen==="#boss"){
-        captureBossDraft();
-      }
-
-      if(currentScreen==="#reflection"){
-        captureReflectionDraft();
-      }
-
-      saveActiveSession();
-
-    }catch(error){
-
-      console.error(
-        "Beforeunload save error:",
-        error
-      );
+      return;
 
     }
+
+    const screen =
+      getHashScreen();
+
+    if(!screen){
+      return;
+    }
+
+    currentScreen =
+      screen;
+
+    updateJourneyProgress();
+
+    saveActiveSession();
 
   }
 );
@@ -5184,20 +6110,23 @@ function escapeHtml(value){
     value ?? ""
   ).replace(
     /[&<>"']/g,
-    character => ({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#39;"
-    })[character]
+    character =>
+      ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
+      })[
+        character
+      ]
   );
 
 }
 
 
 /* =========================================================
-   START APPLICATION
+   INITIALIZATION
 ========================================================= */
 
 populateStudents();
@@ -5206,20 +6135,25 @@ restoreSyncQueue();
 
 flushSyncQueue();
 
+
 /*
- * Yang paling penting:
- * restore session dilakukan terakhir setelah semua
- * fungsi dan elemen sudah siap.
+ * Restore adalah langkah terakhir.
  */
 
 const restored =
   restoreActiveSession();
 
+
 if(!restored){
 
-  currentScreen="#login";
+  currentScreen =
+    "#login";
 
-  show("#login",false);
+  show(
+    "#login",
+    false,
+    true
+  );
 
   updateJourneyProgress();
 
