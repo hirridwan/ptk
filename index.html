@@ -1,4315 +1,3574 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Computer Mission 2.0 — Siswa</title>
-
-  <style>
-    :root{
-      --bg:#07111f;
-      --bg2:#0c1830;
-      --panel:rgba(15,28,52,.92);
-      --ink:#eef5ff;
-      --muted:#a9b8cf;
-      --cyan:#49d7ff;
-      --blue:#5c7cff;
-      --purple:#9b6cff;
-      --green:#46e6a2;
-      --yellow:#ffd86a;
-      --red:#ff6b7a;
-      --line:rgba(255,255,255,.10);
-      --shadow:0 22px 60px rgba(0,0,0,.35);
-    }
-
-    *{box-sizing:border-box}
-
-    html{scroll-behavior:smooth}
-
-    body{
-      margin:0;
-      min-height:100vh;
-      color:var(--ink);
-      font-family:Inter,Segoe UI,Arial,sans-serif;
-      background:
-        radial-gradient(circle at 10% 10%,rgba(92,124,255,.20),transparent 28%),
-        radial-gradient(circle at 90% 15%,rgba(255,97,199,.14),transparent 25%),
-        linear-gradient(160deg,var(--bg),var(--bg2));
-      overflow-x:hidden;
-    }
-
-    body::before,
-    body::after{
-      content:"";
-      position:fixed;
-      width:420px;
-      height:420px;
-      border-radius:50%;
-      filter:blur(70px);
-      opacity:.12;
-      z-index:-1;
-      pointer-events:none;
-      animation:floatOrb 10s ease-in-out infinite alternate;
-    }
-
-    body::before{
-      left:-140px;
-      top:18%;
-      background:var(--cyan);
-    }
-
-    body::after{
-      right:-140px;
-      bottom:4%;
-      background:var(--purple);
-      animation-delay:-4s;
-    }
-
-    @keyframes floatOrb{
-      0%{
-        transform:translate3d(0,-18px,0) scale(.94);
-      }
-      100%{
-        transform:translate3d(0,20px,0) scale(1.06);
-      }
-    }
-
-    @keyframes screenIn{
-      from{
-        opacity:0;
-        transform:translateY(14px) scale(.995);
-      }
-      to{
-        opacity:1;
-        transform:none;
-      }
-    }
-
-    @keyframes titleShift{
-      0%,100%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-    }
-
-    @keyframes pulseGlow{
-      0%,100%{
-        transform:scale(1);
-        box-shadow:0 0 0 rgba(73,215,255,0);
-      }
-      50%{
-        transform:scale(1.04);
-        box-shadow:0 0 24px rgba(73,215,255,.24);
-      }
-    }
-
-    @keyframes floatIcon{
-      0%,100%{
-        transform:translateY(0) rotate(0deg);
-      }
-      50%{
-        transform:translateY(-7px) rotate(2deg);
-      }
-    }
-
-    @keyframes progressGlow{
-      0%,100%{filter:brightness(1)}
-      50%{filter:brightness(1.22)}
-    }
-
-    @keyframes scanline{
-      0%{
-        top:-8%;
-        opacity:0;
-      }
-      12%{opacity:1}
-      88%{opacity:1}
-      100%{
-        top:108%;
-        opacity:0;
-      }
-    }
-
-    button,input,select,textarea{
-      font:inherit;
-    }
-
-    button{
-      cursor:pointer;
-      border:0;
-    }
-
-    .hidden{
-      display:none!important;
-    }
-
-    .topbar{
-      position:sticky;
-      top:0;
-      z-index:20;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      padding:14px 20px;
-      background:rgba(4,10,22,.82);
-      backdrop-filter:blur(16px);
-      border-bottom:1px solid var(--line);
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:900;
-    }
-
-    .brand-icon{
-      width:38px;
-      height:38px;
-      border-radius:12px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg,var(--blue),var(--purple));
-      animation:pulseGlow 3.4s ease-in-out infinite;
-    }
-
-    .topstats{
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-
-    .pill{
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(255,255,255,.07);
-      border:1px solid var(--line);
-      font-size:13px;
-    }
-
-    .wrap{
-      max-width:1120px;
-      margin:28px auto;
-      padding:0 18px 50px;
-    }
-
-    .panel{
-      background:
-        linear-gradient(
-          180deg,
-          rgba(18,35,63,.94),
-          rgba(10,23,43,.96)
-        );
-      border:1px solid var(--line);
-      border-radius:24px;
-      box-shadow:var(--shadow);
-      padding:28px;
-      animation:screenIn .5s ease both;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .panel::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(
-          120deg,
-          rgba(255,255,255,.05),
-          transparent 35%,
-          rgba(92,124,255,.04)
-        );
-      pointer-events:none;
-    }
-
-    h1,h2,h3{margin-top:0}
-
-    h1{
-      font-size:clamp(34px,6vw,58px);
-      line-height:1.02;
-      letter-spacing:-1.8px;
-    }
-
-    h2{
-      font-size:clamp(24px,4vw,34px);
-    }
-
-    .muted{
-      color:var(--muted);
-    }
-
-    .hero{
-      display:grid;
-      grid-template-columns:1.25fr .75fr;
-      gap:22px;
-    }
-
-    .hero-kicker{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(73,215,255,.10);
-      border:1px solid rgba(73,215,255,.25);
-      font-size:11px;
-      font-weight:900;
-    }
-
-    .game-title{
-      margin:18px 0 14px;
-      background:
-        linear-gradient(
-          90deg,
-          #fff,
-          var(--cyan),
-          #bdaaff,
-          #fff
-        );
-      background-size:240% 100%;
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-      animation:titleShift 8s ease-in-out infinite;
-    }
-
-    .scan-card{
-      min-height:250px;
-      display:grid;
-      place-items:center;
-      border-radius:24px;
-      background:
-        linear-gradient(
-          145deg,
-          rgba(73,215,255,.10),
-          rgba(155,108,255,.10)
-        );
-      border:1px solid rgba(73,215,255,.18);
-    }
-
-    .scan-grid{
-      width:220px;
-      height:220px;
-      border-radius:26px;
-      display:grid;
-      place-items:center;
-      font-size:52px;
-      background:
-        linear-gradient(
-          rgba(255,255,255,.05) 1px,
-          transparent 1px
-        ),
-        linear-gradient(
-          90deg,
-          rgba(255,255,255,.05) 1px,
-          transparent 1px
-        );
-      background-size:22px 22px;
-      position:relative;
-      overflow:hidden;
-      box-shadow:inset 0 0 50px rgba(73,215,255,.08);
-    }
-
-    .scan-grid::before{
-      content:"";
-      position:absolute;
-      left:10%;
-      right:10%;
-      height:3px;
-      top:-8%;
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          var(--cyan),
-          transparent
-        );
-      box-shadow:0 0 20px var(--cyan);
-      animation:scanline 2.8s linear infinite;
-    }
-
-    .scan-grid::after{
-      content:"";
-      position:absolute;
-      inset:28%;
-      border-radius:22px;
-      border:2px dashed rgba(255,255,255,.28);
-      box-shadow:0 0 26px rgba(92,124,255,.28);
-      animation:pulseGlow 3s ease-in-out infinite;
-    }
-
-    .scan-icon{
-      position:relative;
-      z-index:2;
-      animation:floatIcon 3s ease-in-out infinite;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:16px;
-    }
-
-    .grid3{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:14px;
-    }
-
-    label{
-      display:block;
-      font-weight:800;
-      font-size:13px;
-      margin-bottom:8px;
-      color:#d8e4f5;
-    }
-
-    input,select,textarea{
-      width:100%;
-      padding:13px 14px;
-      color:var(--ink);
-      background:rgba(255,255,255,.055);
-      border:1px solid var(--line);
-      border-radius:12px;
-      outline:none;
-    }
-
-    select option{
-      color:#111;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus{
-      border-color:rgba(73,215,255,.55);
-      box-shadow:0 0 0 4px rgba(73,215,255,.08);
-    }
-
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .btn{
-      padding:12px 16px;
-      border-radius:12px;
-      font-weight:900;
-      transition:
-        transform .18s ease,
-        filter .18s ease,
-        box-shadow .18s ease;
-    }
-
-    .btn:hover{
-      transform:translateY(-2px);
-      filter:brightness(1.07);
-    }
-
-    .primary{
-      color:#fff;
-      background:
-        linear-gradient(
-          135deg,
-          var(--blue),
-          var(--purple)
-        );
-      box-shadow:0 12px 28px rgba(92,124,255,.28);
-    }
-
-    .primary:hover{
-      box-shadow:0 16px 34px rgba(92,124,255,.38);
-    }
-
-    .secondary{
-      color:#eff5ff;
-      background:rgba(255,255,255,.08);
-      border:1px solid var(--line);
-    }
-
-    .good{
-      color:#062416;
-      background:
-        linear-gradient(
-          135deg,
-          #1dbb82,
-          var(--green)
-        );
-    }
-
-    .ghost{
-      color:#dce7f7;
-      background:transparent;
-      border:1px solid var(--line);
-    }
-
-    .mission-card,
-    .kpi{
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:18px;
-      background:rgba(255,255,255,.035);
-      transition:
-        transform .2s ease,
-        border-color .2s ease,
-        box-shadow .2s ease;
-    }
-
-    .mission-card:hover{
-      transform:translateY(-4px);
-      border-color:rgba(73,215,255,.30);
-      box-shadow:0 14px 34px rgba(0,0,0,.22);
-    }
-
-    .badge{
-      display:inline-flex;
-      padding:6px 9px;
-      border-radius:999px;
-      background:rgba(92,124,255,.13);
-      border:1px solid rgba(92,124,255,.25);
-      font-size:11px;
-      font-weight:900;
-    }
-
-    .option{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding:12px;
-      margin:8px 0;
-      border:1px solid var(--line);
-      border-radius:12px;
-      background:rgba(255,255,255,.03);
-      transition:.18s ease;
-    }
-
-    .option:hover{
-      transform:translateX(3px);
-      border-color:rgba(73,215,255,.30);
-      background:rgba(73,215,255,.05);
-    }
-
-    .option input{
-      width:auto;
-      margin-top:4px;
-    }
-
-    .timer{
-      padding:8px 12px;
-      border-radius:12px;
-      border:1px solid var(--line);
-      font-weight:900;
-      background:rgba(255,255,255,.05);
-    }
-
-    .progress{
-      height:10px;
-      border:1px solid var(--line);
-      border-radius:99px;
-      overflow:hidden;
-      background:rgba(255,255,255,.04);
-    }
-
-    .progress span{
-      display:block;
-      height:100%;
-      background:
-        linear-gradient(
-          90deg,
-          var(--cyan),
-          var(--blue),
-          var(--purple)
-        );
-      animation:progressGlow 2.4s ease-in-out infinite;
-      transition:width .4s ease;
-    }
-
-    .big{
-      font-size:42px;
-      font-weight:950;
-      text-align:center;
-    }
-
-    .score{
-      font-size:22px;
-      font-weight:950;
-    }
-
-    .footer-note{
-      font-size:12px;
-      color:#8ea0ba;
-      line-height:1.6;
-    }
-
-    .explore-card{
-      border:1px solid rgba(73,215,255,.22);
-      border-radius:20px;
-      padding:20px;
-      background:
-        linear-gradient(
-          145deg,
-          rgba(73,215,255,.08),
-          rgba(155,108,255,.06)
-        );
-    }
-
-    .explore-icon{
-      font-size:42px;
-      margin-bottom:10px;
-      animation:floatIcon 3s ease-in-out infinite;
-      display:inline-block;
-    }
-
-    .stage-number{
-      width:36px;
-      height:36px;
-      border-radius:12px;
-      display:grid;
-      place-items:center;
-      font-weight:950;
-      background:
-        linear-gradient(
-          135deg,
-          rgba(73,215,255,.16),
-          rgba(92,124,255,.18)
-        );
-      border:1px solid rgba(73,215,255,.20);
-    }
-
-    .toast{
-      position:fixed;
-      right:18px;
-      bottom:18px;
-      z-index:50;
-      max-width:380px;
-      padding:13px 15px;
-      border-radius:13px;
-      background:#08101f;
-      border:1px solid var(--line);
-      opacity:0;
-      transform:translateY(12px);
-      transition:.25s;
-      font-weight:800;
-    }
-
-    .toast.show{
-      opacity:1;
-      transform:none;
-    }
-
-    @media(prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
-        animation-duration:.001ms!important;
-        animation-iteration-count:1!important;
-        transition-duration:.001ms!important;
-      }
-    }
-
-    @media(max-width:820px){
-      .hero,
-      .grid,
-      .grid3{
-        grid-template-columns:1fr;
-      }
-
-      .topstats{
-        display:none;
-      }
-
-      .panel{
-        padding:20px;
-      }
-
-      .wrap{
-        margin:18px auto;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Mission 2.0 — Siswa</title>
+
+<style>
+:root{
+  --bg:#07111f;
+  --bg2:#0c1830;
+  --panel:rgba(15,28,52,.92);
+  --ink:#eef5ff;
+  --muted:#a9b8cf;
+  --cyan:#49d7ff;
+  --blue:#5c7cff;
+  --purple:#9b6cff;
+  --green:#46e6a2;
+  --red:#ff6b7a;
+  --yellow:#ffd86a;
+  --line:rgba(255,255,255,.10);
+  --shadow:0 22px 60px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--ink);
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(92,124,255,.20),transparent 28%),
+    radial-gradient(circle at 90% 15%,rgba(255,97,199,.14),transparent 25%),
+    radial-gradient(circle at 50% 100%,rgba(73,215,255,.10),transparent 30%),
+    linear-gradient(160deg,var(--bg),var(--bg2));
+  overflow-x:hidden;
+}
+
+body::before,
+body::after{
+  content:"";
+  position:fixed;
+  width:420px;
+  height:420px;
+  border-radius:50%;
+  filter:blur(70px);
+  opacity:.12;
+  z-index:-1;
+  pointer-events:none;
+  animation:floatOrb 10s ease-in-out infinite alternate;
+}
+
+body::before{
+  left:-140px;
+  top:18%;
+  background:var(--cyan);
+}
+
+body::after{
+  right:-140px;
+  bottom:4%;
+  background:var(--purple);
+  animation-delay:-4s;
+}
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+  border:0;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  padding:14px 20px;
+  background:rgba(4,10,22,.82);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:900;
+}
+
+.brand-icon{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  box-shadow:0 8px 26px rgba(92,124,255,.35);
+  animation:pulseGlow 3.4s ease-in-out infinite;
+}
+
+.topstats{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.pill{
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.07);
+  border:1px solid var(--line);
+  font-size:13px;
+}
+
+.wrap{
+  max-width:1120px;
+  margin:28px auto;
+  padding:0 18px 50px;
+}
+
+.panel{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(18,35,63,.94),
+      rgba(10,23,43,.96)
+    );
+  border:1px solid var(--line);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  padding:28px;
+  animation:screenIn .5s ease both;
+}
+
+.center{
+  text-align:center;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.footer-note{
+  font-size:12px;
+  color:#8ea0ba;
+  line-height:1.6;
+}
+
+h1,
+h2,
+h3{
+  margin-top:0;
+}
+
+h1{
+  font-size:clamp(34px,6vw,58px);
+  line-height:1.02;
+  letter-spacing:-1.8px;
+}
+
+h2{
+  font-size:clamp(24px,4vw,34px);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+}
+
+.grid3{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+}
+
+.hero{
+  display:grid;
+  grid-template-columns:1.25fr .75fr;
+  gap:22px;
+  align-items:stretch;
+}
+
+.hero-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(73,215,255,.10);
+  border:1px solid rgba(73,215,255,.25);
+  color:#bfefff;
+  font-size:11px;
+  font-weight:900;
+}
+
+.game-title{
+  margin:18px 0 14px;
+  background:
+    linear-gradient(
+      90deg,
+      #fff,
+      var(--cyan),
+      #bdaaff,
+      #fff
+    );
+  background-size:240% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:titleShift 8s ease-in-out infinite;
+}
+
+.scan-card{
+  min-height:250px;
+  display:grid;
+  place-items:center;
+  border-radius:24px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(73,215,255,.10),
+      rgba(155,108,255,.10)
+    ),
+    rgba(255,255,255,.03);
+  border:1px solid rgba(73,215,255,.18);
+  animation:borderPulse 4s ease-in-out infinite;
+}
+
+.scan-grid{
+  width:220px;
+  height:220px;
+  border-radius:26px;
+  display:grid;
+  place-items:center;
+  font-size:52px;
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(
+      rgba(255,255,255,.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.05) 1px,
+      transparent 1px
+    );
+  background-size:22px 22px;
+  box-shadow:inset 0 0 50px rgba(73,215,255,.08);
+}
+
+.scan-grid::before{
+  content:"";
+  position:absolute;
+  left:10%;
+  right:10%;
+  height:3px;
+  top:-8%;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    var(--cyan),
+    transparent
+  );
+  box-shadow:0 0 20px var(--cyan);
+  animation:scanline 2.8s linear infinite;
+}
+
+.scan-grid::after{
+  content:"";
+  position:absolute;
+  inset:28%;
+  border-radius:22px;
+  border:2px dashed rgba(255,255,255,.28);
+  box-shadow:0 0 26px rgba(92,124,255,.28);
+  animation:pulseGlow 3s ease-in-out infinite;
+}
+
+.scan-grid{
+  animation:floatIcon 3s ease-in-out infinite;
+}
+
+label{
+  display:block;
+  font-weight:800;
+  font-size:13px;
+  color:#d8e4f5;
+  margin-bottom:8px;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:13px 14px;
+  color:var(--ink);
+  background:rgba(255,255,255,.055);
+  border:1px solid var(--line);
+  border-radius:12px;
+  outline:none;
+  transition:.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:rgba(73,215,255,.55);
+  box-shadow:0 0 0 4px rgba(73,215,255,.08);
+}
+
+select option{
+  color:#111;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  padding:12px 16px;
+  border-radius:12px;
+  font-weight:900;
+  transition:.18s ease;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.07);
+}
+
+.primary{
+  color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  box-shadow:0 12px 28px rgba(92,124,255,.28);
+}
+
+.primary:hover{
+  box-shadow:0 16px 34px rgba(92,124,255,.38);
+}
+
+.secondary{
+  color:#eff5ff;
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--line);
+}
+
+.good{
+  color:#062416;
+  background:linear-gradient(135deg,#1dbb82,var(--green));
+  box-shadow:0 12px 28px rgba(70,230,162,.18);
+}
+
+.ghost{
+  color:#dce7f7;
+  background:transparent;
+  border:1px solid var(--line);
+}
+
+.mission-card,
+.kpi{
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:18px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.045),
+      rgba(255,255,255,.02)
+    );
+  transition:.2s ease;
+}
+
+.mission-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(73,215,255,.30);
+  box-shadow:0 14px 34px rgba(0,0,0,.22);
+}
+
+.badge{
+  display:inline-flex;
+  padding:6px 9px;
+  border-radius:999px;
+  background:rgba(92,124,255,.13);
+  color:#cbd6ff;
+  border:1px solid rgba(92,124,255,.25);
+  font-size:11px;
+  font-weight:900;
+}
+
+.option{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:12px;
+  margin:8px 0;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:rgba(255,255,255,.03);
+  transition:.18s ease;
+}
+
+.option:hover{
+  transform:translateX(3px);
+  border-color:rgba(73,215,255,.35);
+  background:rgba(73,215,255,.05);
+}
+
+.option input{
+  width:auto;
+  margin-top:4px;
+}
+
+.timer{
+  padding:8px 12px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.06);
+  font-weight:900;
+}
+
+.progress{
+  height:10px;
+  border:1px solid var(--line);
+  border-radius:99px;
+  overflow:hidden;
+  background:rgba(255,255,255,.05);
+}
+
+.progress span{
+  display:block;
+  height:100%;
+  width:0%;
+  background:linear-gradient(
+    90deg,
+    var(--cyan),
+    var(--blue),
+    var(--purple)
+  );
+  animation:progressGlow 2.4s ease-in-out infinite;
+}
+
+.big{
+  font-size:42px;
+  font-weight:950;
+}
+
+.score{
+  font-size:22px;
+  font-weight:950;
+}
+
+.section-label{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.toast{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:50;
+  max-width:380px;
+  padding:13px 15px;
+  border-radius:13px;
+  background:rgba(8,16,31,.96);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  opacity:0;
+  transform:translateY(12px);
+  transition:.25s;
+  font-weight:800;
+}
+
+.toast.show{
+  opacity:1;
+  transform:none;
+}
+
+@keyframes floatOrb{
+  from{
+    transform:translate3d(0,-18px,0) scale(.94);
+  }
+  to{
+    transform:translate3d(0,20px,0) scale(1.06);
+  }
+}
+
+@keyframes screenIn{
+  from{
+    opacity:0;
+    transform:translateY(14px) scale(.995);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+@keyframes titleShift{
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
+
+@keyframes scanline{
+  0%{
+    top:-8%;
+    opacity:0;
+  }
+  12%{opacity:1}
+  88%{opacity:1}
+  100%{
+    top:108%;
+    opacity:0;
+  }
+}
+
+@keyframes pulseGlow{
+  0%,100%{
+    transform:scale(1);
+    box-shadow:0 0 0 rgba(73,215,255,0);
+  }
+  50%{
+    transform:scale(1.04);
+    box-shadow:0 0 24px rgba(73,215,255,.24);
+  }
+}
+
+@keyframes floatIcon{
+  0%,100%{
+    transform:translateY(0) rotate(0deg);
+  }
+  50%{
+    transform:translateY(-7px) rotate(2deg);
+  }
+}
+
+@keyframes borderPulse{
+  0%,100%{
+    border-color:var(--line);
+  }
+  50%{
+    border-color:rgba(73,215,255,.32);
+  }
+}
+
+@keyframes progressGlow{
+  0%,100%{
+    filter:brightness(1);
+  }
+  50%{
+    filter:brightness(1.22);
+  }
+}
+
+@media(max-width:820px){
+
+  .hero,
+  .grid,
+  .grid3{
+    grid-template-columns:1fr;
+  }
+
+  .topstats{
+    display:none;
+  }
+
+  .panel{
+    padding:20px;
+  }
+
+  .wrap{
+    margin:18px auto;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <div class="topbar">
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-icon">🧠</div>
 
-    <div class="brand">
+    <div>
+      <div>
+        COMPUTER MISSION
+        <span style="opacity:.55">2.0</span>
+      </div>
 
-      <div class="brand-icon">
-        🧠
+      <div style="
+        font-size:10px;
+        color:#91a5c1;
+        letter-spacing:1px;
+      ">
+        STUDENT MODE // X SERIES
+      </div>
+    </div>
+  </div>
+
+  <div class="topstats">
+    <span class="pill" id="studentPill">
+      Belum mulai
+    </span>
+
+    <span class="pill">
+      ⚡ XP
+      <b id="xpTop">0</b>
+    </span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<section id="login" class="panel">
+
+  <div class="hero">
+
+    <div>
+
+      <span class="hero-kicker">
+        ⚡ DIGITAL QUEST • PTK SIKLUS II
+      </span>
+
+      <h1 class="game-title">
+        Where Does<br>
+        My Data Go?
+      </h1>
+
+      <p style="line-height:1.7;">
+        Selamat datang,
+        <b>Data Detective</b>.
+        Selesaikan rangkaian misi untuk memahami
+        <b>Input → Process → Output</b>,
+        CPU, RAM, Storage, dan cara kerja komputer.
+      </p>
+
+      <div
+        class="grid"
+        style="margin-top:22px;"
+      >
+
+        <div>
+
+          <label>Kelas</label>
+
+          <select
+            id="classSelect"
+            onchange="populateStudents()"
+          >
+            <option value="">
+              -- Pilih kelas --
+            </option>
+
+            <option value="X5">
+              X-5
+            </option>
+
+            <option value="X8">
+              X-8
+            </option>
+
+            <option value="X11">
+              X-11
+            </option>
+          </select>
+
+        </div>
+
+        <div>
+
+          <label>Nama siswa</label>
+
+          <select id="studentCode">
+            <option value="">
+              -- Pilih nama siswa --
+            </option>
+          </select>
+
+        </div>
+
+        <div>
+
+          <label>Tim</label>
+
+          <select id="team">
+            <option>Tim 1</option>
+            <option>Tim 2</option>
+            <option>Tim 3</option>
+            <option>Tim 4</option>
+            <option>Tim 5</option>
+            <option>Tim 6</option>
+          </select>
+
+        </div>
+
+        <div>
+
+          <label>Peran</label>
+
+          <select id="role">
+            <option>Leader</option>
+            <option>Reader</option>
+            <option>Recorder</option>
+            <option>Card/Device Manager</option>
+            <option>Checker</option>
+            <option>Time Keeper</option>
+            <option>Anggota Pendukung</option>
+          </select>
+
+        </div>
+
+      </div>
+
+      <div
+        class="actions"
+        style="margin-top:20px;"
+      >
+
+        <button
+          class="btn primary"
+          onclick="startSession()"
+        >
+          🚀 Mulai Misi
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="scan-card">
+
+      <div class="scan-grid">
+        🖥️
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section id="dash" class="panel hidden">
+
+  <div class="grid3">
+
+    <div class="kpi">
+      <small>Kelas / Guru</small>
+      <div id="dClass" class="score">
+        -
+      </div>
+    </div>
+
+    <div class="kpi">
+      <small>Kode / Nama</small>
+      <div id="dCode" class="score">
+        -
+      </div>
+    </div>
+
+    <div class="kpi">
+      <small>Tim</small>
+      <div id="dTeam" class="score">
+        -
+      </div>
+    </div>
+
+    <div class="kpi">
+      <small>XP</small>
+      <div id="dXP" class="score">
+        0
+      </div>
+    </div>
+
+  </div>
+
+  <div
+    class="progress"
+    style="margin-top:18px;"
+  >
+    <span id="prog"></span>
+  </div>
+
+  <div
+    class="section-label"
+    style="margin-top:24px;"
+  >
+
+    <h2 style="margin:0;">
+      MISSION MAP
+    </h2>
+
+    <span class="badge">
+      6 STAGE QUEST
+    </span>
+
+  </div>
+
+  <div class="grid3">
+
+    <div class="mission-card">
+      <span class="badge">1</span>
+      <h3>Pre-Test</h3>
+      <p>15 soal individu.</p>
+    </div>
+
+    <div class="mission-card">
+      <span class="badge">2</span>
+      <h3>Mini Lesson</h3>
+      <p>IPO, CPU, RAM, Storage.</p>
+    </div>
+
+    <div class="mission-card">
+      <span class="badge">3</span>
+      <h3>Mission 1</h3>
+      <p>RAM or Storage.</p>
+    </div>
+
+    <div class="mission-card">
+      <span class="badge">4</span>
+      <h3>Mission 2</h3>
+      <p>ALU or CU.</p>
+    </div>
+
+    <div class="mission-card">
+      <span class="badge">5</span>
+      <h3>Mission 3</h3>
+      <p>Trace the Data.</p>
+    </div>
+
+    <div class="mission-card">
+      <span class="badge">6</span>
+      <h3>Boss Mission</h3>
+      <p>Solve the Computer Case.</p>
+    </div>
+
+  </div>
+
+  <div
+    class="mission-card"
+    style="margin-top:18px;"
+  >
+
+    <h3>Aturan Permainan</h3>
+
+    <p class="muted">
+      Kamu akan menjalani misi secara berurutan.
+      Kerjakan sendiri pada bagian Pre-Test dan Post-Test.
+      Pada Mission 1–3 dan Boss Mission, kerjakan
+      sesuai pembagian peran tim.
+    </p>
+
+    <p class="muted">
+      Setiap misi memiliki batas waktu.
+      Jawaban objektif memberikan XP aktivitas.
+      Jawaban uraian akan dinilai guru menggunakan rubrik.
+    </p>
+
+    <p class="footer-note">
+      Urutan permainan:
+      Pre-Test → Mini Lesson → Mission 1 →
+      Mission 2 → Mission 3 → Boss Mission →
+      Post-Test → Refleksi 3–2–1.
+    </p>
+
+  </div>
+
+  <div
+    class="actions"
+    style="margin-top:18px;"
+  >
+
+    <button
+      class="btn primary"
+      onclick="startPretest()"
+    >
+      Mulai Pre-Test
+    </button>
+
+  </div>
+
+</section>
+
+
+<section id="test" class="panel hidden">
+
+  <div
+    style="
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    "
+  >
+
+    <div>
+
+      <h2 id="testTitle">
+        Pre-Test
+      </h2>
+
+      <div
+        id="qCount"
+        class="muted"
+      ></div>
+
+      <div class="footer-note">
+        Nilai = jumlah benar ÷ 15 × 100
+      </div>
+
+    </div>
+
+    <div
+      id="testTimer"
+      class="timer"
+    >
+      10:00
+    </div>
+
+  </div>
+
+  <div
+    id="questionBox"
+    style="margin-top:16px;"
+  ></div>
+
+  <div
+    class="actions"
+    style="margin-top:16px;"
+  >
+
+    <button
+      class="btn secondary"
+      onclick="prevQ()"
+    >
+      Sebelumnya
+    </button>
+
+    <button
+      class="btn primary"
+      onclick="nextQ()"
+    >
+      Berikutnya
+    </button>
+
+    <button
+      class="btn good hidden"
+      id="finishTestBtn"
+      onclick="finishTest()"
+    >
+      Selesai
+    </button>
+
+  </div>
+
+</section>
+
+
+<section id="mini" class="panel hidden">
+
+  <h2>Mini Lesson</h2>
+
+  <p class="muted">
+    Baca bagian ini sebelum masuk ke Mission 1.
+  </p>
+
+  <div class="grid">
+
+    <div class="mission-card">
+
+      <h3>1. Input → Process → Output</h3>
+
+      <p>
+        <b>Input</b> adalah data yang masuk ke komputer.
+        <b>Process</b> adalah pengolahan data.
+        <b>Output</b> adalah hasil yang keluar.
+      </p>
+
+      <p class="footer-note">
+        Contoh:
+        Keyboard → CPU → Monitor.
+      </p>
+
+    </div>
+
+    <div class="mission-card">
+
+      <h3>2. CPU</h3>
+
+      <p>
+        CPU adalah pusat pengolahan komputer.
+        <b>ALU</b> melakukan operasi aritmetika
+        dan logika.
+        <b>CU</b> mengatur dan mengendalikan
+        jalannya instruksi.
+      </p>
+
+    </div>
+
+    <div class="mission-card">
+
+      <h3>3. RAM dan Storage</h3>
+
+      <p>
+        <b>RAM</b> adalah memori kerja sementara.
+        <b>SSD/HDD</b> menyimpan file dan data
+        agar tetap tersedia ketika komputer dimatikan.
+      </p>
+
+    </div>
+
+    <div class="mission-card">
+
+      <h3>4. Cara Menjawab Misi</h3>
+
+      <p>
+        Baca kasus dengan teliti.
+        Tentukan komponen yang tepat.
+        Untuk uraian, jelaskan alasanmu,
+        bukan hanya menyebutkan jawabannya.
+      </p>
+
+    </div>
+
+  </div>
+
+  <div
+    class="mission-card"
+    style="margin-top:18px;"
+  >
+
+    <h3>Petunjuk Sebelum Mission 1</h3>
+
+    <p class="muted">
+      Mission 1 membahas perbedaan RAM dan Storage.
+      Pilih jawaban objektif terlebih dahulu,
+      kemudian jelaskan alasanmu pada bagian uraian.
+    </p>
+
+    <p class="muted">
+      Setelah Mission 1 selesai, sistem otomatis
+      membawa kamu ke Mission 2.
+    </p>
+
+  </div>
+
+  <div
+    class="actions"
+    style="margin-top:18px;"
+  >
+
+    <button
+      class="btn primary"
+      onclick="startMission1()"
+    >
+      Mulai Mission 1
+    </button>
+
+  </div>
+
+</section>
+
+
+<section id="mission" class="panel hidden">
+
+  <div
+    style="
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    "
+  >
+
+    <div>
+
+      <h2 id="missionTitle">
+        Mission
+      </h2>
+
+      <div
+        id="missionDesc"
+        class="muted"
+      ></div>
+
+    </div>
+
+    <div
+      id="missionTimer"
+      class="timer"
+    >
+      10:00
+    </div>
+
+  </div>
+
+  <div
+    class="mission-card"
+    style="margin-top:16px;"
+  >
+
+    <div class="footer-note">
+      Baca pertanyaan → diskusikan sesuai peran →
+      masukkan jawaban → klik Kirim Jawaban.
+    </div>
+
+  </div>
+
+  <div
+    id="missionContent"
+    style="margin-top:18px;"
+  ></div>
+
+  <div
+    class="actions"
+    style="margin-top:16px;"
+  >
+
+    <button
+      id="missionSubmit"
+      class="btn primary"
+      onclick="submitMission()"
+    >
+      Kirim Jawaban
+    </button>
+
+    <button
+      id="missionNext"
+      class="btn good hidden"
+      onclick="nextMission()"
+    >
+      Lanjut
+    </button>
+
+  </div>
+
+</section>
+
+
+<section id="boss" class="panel hidden">
+
+  <div
+    style="
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    "
+  >
+
+    <div>
+
+      <h2>
+        👑 Boss Mission
+      </h2>
+
+      <div class="muted">
+        13 XP penyelesaian +
+        17 XP uraian rubrik guru
+      </div>
+
+    </div>
+
+    <div
+      id="bossTimer"
+      class="timer"
+    >
+      10:00
+    </div>
+
+  </div>
+
+  <div
+    class="mission-card"
+    style="margin-top:16px;"
+  >
+
+    <p>
+      <b>Kasus:</b>
+      Dina melakukan video call menggunakan laptop.
+      Ia berbicara melalui microphone dan wajahnya
+      ditangkap webcam.
+      Komputer memproses data tersebut,
+      kemudian suara dan gambar diterima
+      oleh lawan bicara.
+    </p>
+
+    <div
+      class="mission-card"
+      style="margin-top:12px;"
+    >
+
+      <h3>Petunjuk Boss Mission</h3>
+
+      <p class="muted">
+        Tentukan perangkat yang menjadi
+        <b>Input</b>, jelaskan <b>Process</b>,
+        tentukan <b>Output</b>, lalu jelaskan
+        peran CPU dan Memory.
+      </p>
+
+      <p class="muted">
+        Terakhir, tuliskan alur IPO secara utuh
+        dan berikan alasan mengapa setiap komponen
+        berada pada tahap tersebut.
+      </p>
+
+    </div>
+
+    <div class="grid">
+
+      <div>
+
+        <label>
+          Input yang terlibat
+        </label>
+
+        <input
+          id="bossInput"
+          placeholder="microphone, webcam"
+        >
+
       </div>
 
       <div>
 
-        <div>
-          COMPUTER MISSION
-          <span style="opacity:.55">2.0</span>
-        </div>
+        <label>
+          Process
+        </label>
 
-        <div style="
-          font-size:10px;
-          color:#91a5c1;
-          letter-spacing:1px;
-        ">
-          STUDENT MODE // X SERIES
-        </div>
+        <input
+          id="bossProcess"
+          placeholder="Jelaskan singkat"
+        >
+
+      </div>
+
+      <div>
+
+        <label>
+          Output
+        </label>
+
+        <input
+          id="bossOutput"
+          placeholder="speaker, monitor"
+        >
+
+      </div>
+
+      <div>
+
+        <label>
+          Memory / CPU
+        </label>
+
+        <input
+          id="bossCpu"
+          placeholder="Jelaskan perannya"
+        >
 
       </div>
 
     </div>
 
-    <div class="topstats">
+    <label style="margin-top:14px;">
+      Gambarkan / uraikan alur IPO
+    </label>
 
-      <span
-        class="pill"
-        id="studentPill"
-      >
-        Belum mulai
-      </span>
+    <textarea
+      id="bossIpo"
+      rows="3"
+      placeholder="Input → Process → Output"
+    ></textarea>
 
-      <span class="pill">
-        ⚡ XP
-        <b id="xpTop">0</b>
-      </span>
+    <label style="margin-top:14px;">
+      Mengapa komponen tersebut ditempatkan
+      pada tahap itu?
+    </label>
 
-    </div>
+    <textarea
+      id="bossReason"
+      rows="3"
+    ></textarea>
 
   </div>
 
+  <div
+    class="actions"
+    style="margin-top:16px;"
+  >
 
-  <div class="wrap">
-
-
-    <!-- LOGIN -->
-
-    <section
-      id="login"
-      class="panel"
+    <button
+      class="btn primary"
+      onclick="submitBoss()"
     >
+      Kirim Boss Mission
+    </button>
 
-      <div class="hero">
+  </div>
 
-        <div>
+</section>
 
-          <span class="hero-kicker">
-            ⚡ DIGITAL QUEST • PTK SIKLUS II
-          </span>
 
-          <h1 class="game-title">
-            Where Does<br>
-            My Data Go?
-          </h1>
+<section id="reflection" class="panel hidden">
 
-          <p style="line-height:1.7;">
+  <h2>
+    Refleksi 3–2–1
+  </h2>
 
-            Selamat datang,
-            <b>Data Detective</b>.
+  <p class="muted">
+    Tulis refleksimu setelah seluruh rangkaian misi selesai.
+  </p>
 
-            Pelajari sistem komputer,
-            eksplorasi perangkat,
-            lalu selesaikan
-            rangkaian mission bersama timmu.
+  <div class="grid">
 
-          </p>
+    <div>
 
-          <div
-            class="grid"
-            style="margin-top:22px"
-          >
-
-            <div>
-
-              <label>
-                Kelas
-              </label>
-
-              <select
-                id="classSelect"
-                onchange="populateStudents()"
-              >
-
-                <option value="">
-                  -- Pilih kelas --
-                </option>
-
-                <option value="X5">
-                  X-5
-                </option>
-
-                <option value="X8">
-                  X-8
-                </option>
-
-                <option value="X11">
-                  X-11
-                </option>
-
-              </select>
-
-            </div>
-
-
-            <div>
-
-              <label>
-                Nama siswa
-              </label>
-
-              <select id="studentCode">
-
-                <option value="">
-                  -- Pilih nama siswa --
-                </option>
-
-              </select>
-
-            </div>
-
-
-            <div>
-
-              <label>
-                Tim
-              </label>
-
-              <select id="team">
-
-                <option>Tim 1</option>
-                <option>Tim 2</option>
-                <option>Tim 3</option>
-                <option>Tim 4</option>
-                <option>Tim 5</option>
-                <option>Tim 6</option>
-
-              </select>
-
-            </div>
-
-
-            <div>
-
-              <label>
-                Peran
-              </label>
-
-              <select id="role">
-
-                <option>
-                  Leader
-                </option>
-
-                <option>
-                  Reader
-                </option>
-
-                <option>
-                  Recorder
-                </option>
-
-                <option>
-                  Card/Device Manager
-                </option>
-
-                <option>
-                  Checker
-                </option>
-
-                <option>
-                  Time Keeper
-                </option>
-
-                <option>
-                  Anggota Pendukung
-                </option>
-
-              </select>
-
-            </div>
-
-          </div>
-
-
-          <div
-            class="actions"
-            style="margin-top:20px"
-          >
-
-            <button
-              class="btn primary"
-              onclick="startSession()"
-            >
-              🚀 Mulai Misi
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div class="scan-card">
-
-          <div class="scan-grid">
-
-            <div class="scan-icon">
-              🖥️
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- DASHBOARD SISWA -->
-
-    <section
-      id="dash"
-      class="panel hidden"
-    >
-
-      <div class="grid3">
-
-        <div class="kpi">
-
-          <small>
-            Kelas / Guru
-          </small>
-
-          <div
-            id="dClass"
-            class="score"
-          >
-            -
-          </div>
-
-        </div>
-
-
-        <div class="kpi">
-
-          <small>
-            Kode / Nama
-          </small>
-
-          <div
-            id="dCode"
-            class="score"
-          >
-            -
-          </div>
-
-        </div>
-
-
-        <div class="kpi">
-
-          <small>
-            Tim
-          </small>
-
-          <div
-            id="dTeam"
-            class="score"
-          >
-            -
-          </div>
-
-        </div>
-
-
-        <div class="kpi">
-
-          <small>
-            XP
-          </small>
-
-          <div
-            id="dXP"
-            class="score"
-          >
-            0
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div style="margin-top:18px">
-
-        <div class="progress">
-          <span id="prog"></span>
-        </div>
-
-      </div>
-
-
-      <div
-        class="section-label"
-        style="
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          margin-top:24px;
-        "
-      >
-
-        <h2 style="margin:0">
-          MISSION MAP
-        </h2>
-
-        <span class="badge">
-          7 STAGE QUEST
-        </span>
-
-      </div>
-
-
-      <div class="grid3">
-
-
-        <div class="mission-card">
-
-          <div class="stage-number">
-            1
-          </div>
-
-          <h3>
-            Pre-test
-          </h3>
-
-          <p>
-            15 soal individu
-          </p>
-
-        </div>
-
-
-        <div class="mission-card">
-
-          <div class="stage-number">
-            2
-          </div>
-
-          <h3>
-            Mini Lesson
-          </h3>
-
-          <p>
-            IPO, CPU, RAM, Storage
-          </p>
-
-        </div>
-
-
-        <div class="mission-card">
-
-          <div class="stage-number">
-            3
-          </div>
-
-          <h3>
-            Eksplorasi Perangkat
-          </h3>
-
-          <p>
-            Kenali perangkat komputer
-            secara interaktif
-          </p>
-
-        </div>
-
-
-        <div class="mission-card">
-
-          <div class="stage-number">
-            4
-          </div>
-
-          <h3>
-            Mission 1
-          </h3>
-
-          <p>
-            RAM or Storage
-          </p>
-
-        </div>
-
-
-        <div class="mission-card">
-
-          <div class="stage-number">
-            5
-          </div>
-
-          <h3>
-            Mission 2
-          </h3>
-
-          <p>
-            ALU or CU
-          </p>
-
-        </div>
-
-
-        <div class="mission-card">
-
-          <div class="stage-number">
-            6
-          </div>
-
-          <h3>
-            Mission 3
-          </h3>
-
-          <p>
-            Trace the Data
-          </p>
-
-        </div>
-
-
-        <div class="mission-card">
-
-          <div class="stage-number">
-            7
-          </div>
-
-          <h3>
-            Boss Mission
-          </h3>
-
-          <p>
-            Solve the Computer Case
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="explore-card"
-        style="margin-top:20px"
-      >
-
-        <div class="explore-icon">
-          🖥️
-        </div>
-
-        <h3>
-          Eksplorasi Perangkat Komputer
-        </h3>
-
-        <p class="muted">
-          Sebelum masuk ke mission,
-          kamu akan mengenali beberapa
-          perangkat komputer seperti
-          motherboard, CPU, RAM, SSD,
-          keyboard, dan monitor.
-        </p>
-
-        <p class="footer-note">
-          Kamu dapat memutar dan memperbesar
-          simulasi perangkat.
-        </p>
-
-        <div
-          class="actions"
-          style="margin-top:14px"
-        >
-
-          <button
-            class="btn secondary"
-            onclick="openExploration()"
-          >
-            🧩 Buka Eksplorasi
-          </button>
-
-          <button
-            id="mission1Button"
-            class="btn primary"
-            onclick="continueToMission1()"
-          >
-            Mulai Mission 1
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="mission-card"
-        style="
-          margin-top:18px;
-          border-color:rgba(73,215,255,.18);
-        "
-      >
-
-        <h3>
-          Alur belajar
-        </h3>
-
-        <p class="muted" style="line-height:1.8">
-
-          <b>Pre-Test</b>
-          →
-          <b>Mini Lesson</b>
-          →
-          <b>Eksplorasi Perangkat</b>
-          →
-          <b>Mission 1</b>
-          →
-          <b>Mission 2</b>
-          →
-          <b>Mission 3</b>
-          →
-          <b>Boss</b>
-          →
-          <b>Post-Test</b>
-          →
-          <b>Refleksi</b>
-
-        </p>
-
-      </div>
-
-    </section>
-
-
-    <!-- TEST -->
-
-    <section
-      id="test"
-      class="panel hidden"
-    >
-
-      <div
-        style="
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          gap:10px;
-        "
-      >
-
-        <div>
-
-          <h2 id="testTitle">
-            Pre-test
-          </h2>
-
-          <div
-            id="qCount"
-            class="muted"
-          ></div>
-
-          <div class="footer-note">
-            Nilai = jumlah benar ÷ 15 × 100
-          </div>
-
-        </div>
-
-        <div
-          id="testTimer"
-          class="timer"
-        >
-          10:00
-        </div>
-
-      </div>
-
-
-      <div
-        id="questionBox"
-        style="margin-top:16px"
-      ></div>
-
-
-      <div
-        class="actions"
-        style="margin-top:16px"
-      >
-
-        <button
-          class="btn secondary"
-          onclick="prevQ()"
-        >
-          Sebelumnya
-        </button>
-
-        <button
-          class="btn primary"
-          onclick="nextQ()"
-        >
-          Berikutnya
-        </button>
-
-        <button
-          class="btn good hidden"
-          id="finishTestBtn"
-          onclick="finishTest()"
-        >
-          Selesai
-        </button>
-
-      </div>
-
-    </section>
-
-
-    <!-- MINI LESSON -->
-
-    <section
-      id="mini"
-      class="panel hidden"
-    >
-
-      <h2>
-        Mini Lesson
-      </h2>
-
-      <p class="muted">
-        Pahami konsep dasarnya sebelum
-        melakukan eksplorasi perangkat.
-      </p>
-
-
-      <div class="grid">
-
-
-        <div class="mission-card">
-
-          <h3>
-            IPO
-          </h3>
-
-          <p>
-            <b>Input</b> =
-            data masuk.
-
-            <br><br>
-
-            <b>Process</b> =
-            data diolah.
-
-            <br><br>
-
-            <b>Output</b> =
-            hasil keluar.
-
-          </p>
-
-        </div>
-
-
-        <div class="mission-card">
-
-          <h3>
-            CPU
-          </h3>
-
-          <p>
-            <b>ALU</b>
-            digunakan untuk operasi
-            aritmetika dan logika.
-
-            <br><br>
-
-            <b>CU</b>
-            mengatur jalannya instruksi.
-          </p>
-
-        </div>
-
-
-        <div class="mission-card">
-
-          <h3>
-            RAM vs Storage
-          </h3>
-
-          <p>
-
-            <b>RAM</b>
-            adalah memori kerja sementara.
-
-            <br><br>
-
-            <b>SSD/HDD</b>
-            menyimpan file untuk digunakan
-            kembali.
-
-          </p>
-
-        </div>
-
-
-        <div class="mission-card">
-
-          <h3>
-            Hubungan Komponen
-          </h3>
-
-          <p>
-            Komputer menerima input,
-            menggunakan memory dalam proses,
-            memproses data dengan CPU,
-            lalu menghasilkan output.
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="explore-card"
-        style="margin-top:20px"
-      >
-
-        <div
-          style="
-            display:flex;
-            align-items:center;
-            gap:12px;
-          "
-        >
-
-          <div class="stage-number">
-            1
-          </div>
-
-          <div>
-
-            <h3 style="margin:0">
-              Berikutnya: Eksplorasi
-            </h3>
-
-            <div class="muted">
-              Kenali perangkat sebelum
-              menghadapi Mission 1.
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div
-          class="actions"
-          style="margin-top:16px"
-        >
-
-          <button
-            class="btn primary"
-            onclick="openExploration()"
-          >
-            🖥️ Eksplorasi Perangkat
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- MISSION -->
-
-    <section
-      id="mission"
-      class="panel hidden"
-    >
-
-      <div
-        style="
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          gap:12px;
-        "
-      >
-
-        <div>
-
-          <span class="badge">
-            MISSION RUN
-          </span>
-
-          <h2 id="missionTitle">
-            Mission
-          </h2>
-
-          <div
-            id="missionDesc"
-            class="muted"
-          ></div>
-
-        </div>
-
-        <div
-          id="missionTimer"
-          class="timer"
-        >
-          10:00
-        </div>
-
-      </div>
-
-
-      <div
-        class="mission-card"
-        style="
-          margin-top:16px;
-          border-color:rgba(73,215,255,.18)
-        "
-      >
-
-        <b>
-          Petunjuk
-        </b>
-
-        <div
-          id="missionHint"
-          class="muted"
-          style="
-            margin-top:6px;
-            line-height:1.6;
-          "
-        ></div>
-
-      </div>
-
-
-      <div
-        id="missionContent"
-        style="margin-top:18px"
-      ></div>
-
-
-      <div
-        class="actions"
-        style="margin-top:16px"
-      >
-
-        <button
-          id="missionSubmit"
-          class="btn primary"
-          onclick="submitMission()"
-        >
-          Kirim Jawaban
-        </button>
-
-        <button
-          id="missionNext"
-          class="btn good hidden"
-          onclick="nextMission()"
-        >
-          Lanjut
-        </button>
-
-      </div>
-
-    </section>
-
-
-    <!-- BOSS -->
-
-    <section
-      id="boss"
-      class="panel hidden"
-    >
-
-      <div
-        style="
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          gap:12px;
-        "
-      >
-
-        <div>
-
-          <span class="badge">
-            FINAL STAGE
-          </span>
-
-          <h2>
-            👑 Boss Mission
-          </h2>
-
-          <div class="muted">
-            13 XP penyelesaian +
-            17 XP uraian rubrik guru
-          </div>
-
-        </div>
-
-        <div
-          id="bossTimer"
-          class="timer"
-        >
-          10:00
-        </div>
-
-      </div>
-
-
-      <div
-        class="mission-card"
-        style="margin-top:16px"
-      >
-
-        <p>
-
-          <b>Kasus:</b>
-
-          Dina melakukan video call
-          menggunakan laptop.
-          Ia berbicara melalui microphone
-          dan wajahnya ditangkap webcam.
-
-          Komputer memproses data tersebut,
-          kemudian suara dan gambar diterima
-          oleh lawan bicara.
-
-        </p>
-
-
-        <div class="grid">
-
-
-          <div>
-
-            <label>
-              Input yang terlibat
-            </label>
-
-            <input
-              id="bossInput"
-              placeholder="microphone, webcam"
-            >
-
-          </div>
-
-
-          <div>
-
-            <label>
-              Process
-            </label>
-
-            <input
-              id="bossProcess"
-              placeholder="Jelaskan singkat"
-            >
-
-          </div>
-
-
-          <div>
-
-            <label>
-              Output
-            </label>
-
-            <input
-              id="bossOutput"
-              placeholder="speaker, monitor"
-            >
-
-          </div>
-
-
-          <div>
-
-            <label>
-              Memory / CPU
-            </label>
-
-            <input
-              id="bossCpu"
-              placeholder="Jelaskan perannya"
-            >
-
-          </div>
-
-
-        </div>
-
-
-        <label style="margin-top:14px">
-          Gambarkan/uraikan alur IPO
-        </label>
-
-        <textarea
-          id="bossIpo"
-          rows="3"
-          placeholder="Input → Process → Output"
-        ></textarea>
-
-
-        <label style="margin-top:14px">
-          Mengapa komponen tersebut
-          ditempatkan pada tahap itu?
-        </label>
-
-        <textarea
-          id="bossReason"
-          rows="3"
-        ></textarea>
-
-      </div>
-
-
-      <div
-        class="actions"
-        style="margin-top:16px"
-      >
-
-        <button
-          class="btn primary"
-          onclick="submitBoss()"
-        >
-          Kirim Boss Mission
-        </button>
-
-      </div>
-
-    </section>
-
-
-    <!-- REFLECTION -->
-
-    <section
-      id="reflection"
-      class="panel hidden"
-    >
-
-      <span class="badge">
-        REFLECTION
-      </span>
-
-      <h2>
-        Refleksi 3–2–1
-      </h2>
-
-      <p class="muted">
-        Refleksikan apa yang kamu pelajari
-        setelah seluruh rangkaian mission.
-      </p>
-
-
-      <div class="grid">
-
-        <div>
-
-          <label>
-            3 hal yang saya pahami
-          </label>
-
-          <textarea
-            id="r3"
-            rows="4"
-            placeholder="Tuliskan tiga hal..."
-          ></textarea>
-
-        </div>
-
-
-        <div>
-
-          <label>
-            2 hal yang membantu saya
-          </label>
-
-          <textarea
-            id="r2"
-            rows="4"
-            placeholder="Tuliskan dua hal..."
-          ></textarea>
-
-        </div>
-
-      </div>
-
-
-      <label style="margin-top:14px">
-        1 hal yang masih membingungkan
+      <label>
+        3 hal yang saya pahami
       </label>
 
       <textarea
-        id="r1"
-        rows="3"
-        placeholder="Tuliskan satu hal..."
+        id="r3"
+        rows="4"
+        placeholder="Tuliskan tiga hal..."
       ></textarea>
 
+    </div>
 
-      <div
-        class="actions"
-        style="margin-top:16px"
-      >
+    <div>
 
-        <button
-          class="btn primary"
-          onclick="finishReflection()"
-        >
-          Simpan & Selesai
-        </button>
+      <label>
+        2 hal yang membantu saya
+      </label>
 
-      </div>
+      <textarea
+        id="r2"
+        rows="4"
+        placeholder="Tuliskan dua hal..."
+      ></textarea>
 
-    </section>
-
-
-    <!-- FINISH -->
-
-    <section
-      id="finish"
-      class="panel hidden"
-    >
-
-      <div class="big">
-        🎉 Misi Selesai!
-      </div>
-
-      <p
-        class="muted"
-        style="text-align:center"
-      >
-        Data telah dikirim ke Google Sheets.
-        Guru dapat melihat hasil tes,
-        jawaban uraian, dan refleksi.
-      </p>
-
-
-      <div
-        class="grid3"
-        style="margin-top:18px"
-      >
-
-        <div class="kpi">
-
-          <small>
-            Pre-Test
-          </small>
-
-          <div
-            id="fPre"
-            class="score"
-          >
-            -
-          </div>
-
-          <div
-            id="fPreDetail"
-            class="footer-note"
-          ></div>
-
-        </div>
-
-
-        <div class="kpi">
-
-          <small>
-            Post-Test
-          </small>
-
-          <div
-            id="fPost"
-            class="score"
-          >
-            -
-          </div>
-
-          <div
-            id="fPostDetail"
-            class="footer-note"
-          ></div>
-
-        </div>
-
-
-        <div class="kpi">
-
-          <small>
-            Total XP
-          </small>
-
-          <div
-            id="fXP"
-            class="score"
-          >
-            -
-          </div>
-
-          <div class="footer-note">
-            Skor gamifikasi
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="mission-card"
-        style="margin-top:18px"
-      >
-
-        <b>
-          Terima kasih, Data Detective.
-        </b>
-
-        <p
-          class="muted"
-          style="line-height:1.7"
-        >
-          Kamu sudah menyelesaikan
-          seluruh rangkaian Computer Mission 2.0.
-        </p>
-
-      </div>
-
-    </section>
+    </div>
 
   </div>
 
+  <label style="margin-top:14px;">
+    1 hal yang masih membingungkan
+  </label>
+
+  <textarea
+    id="r1"
+    rows="3"
+    placeholder="Tuliskan satu hal..."
+  ></textarea>
 
   <div
-    id="toast"
-    class="toast"
-  ></div>
+    class="actions"
+    style="margin-top:16px;"
+  >
+
+    <button
+      class="btn primary"
+      onclick="finishReflection()"
+    >
+      Simpan & Selesai
+    </button>
+
+  </div>
+
+</section>
 
 
-  <script src="students.js"></script>
+<section id="finish" class="panel hidden">
 
-  <script>
+  <div class="big">
+    🎉 Misi Selesai!
+  </div>
 
-    /* =====================================================
-       GOOGLE SHEETS
-    ===================================================== */
+  <p
+    class="muted"
+    style="text-align:center;"
+  >
+    Seluruh rangkaian permainan telah selesai.
+    Data tersimpan ke Google Sheets.
+  </p>
 
-    const SHEET_WEB_APP_URL =
-      "https://script.google.com/macros/s/AKfycbx_H6HUvj4CZYRBTakW3qEBdeX1KzxaCOzxb_4RYCd5t2EAOQy8Ubcvuk-rCvVDNhTX/exec";
+  <div
+    class="grid3"
+    style="margin-top:18px;"
+  >
+
+    <div class="kpi">
+      <small>Pre-Test</small>
+
+      <div
+        id="fPre"
+        class="score"
+      >
+        -
+      </div>
+
+      <div
+        id="fPreDetail"
+        class="footer-note"
+      ></div>
+    </div>
+
+    <div class="kpi">
+      <small>Post-Test</small>
+
+      <div
+        id="fPost"
+        class="score"
+      >
+        -
+      </div>
+
+      <div
+        id="fPostDetail"
+        class="footer-note"
+      ></div>
+    </div>
+
+    <div class="kpi">
+      <small>Total XP</small>
+
+      <div
+        id="fXP"
+        class="score"
+      >
+        -
+      </div>
+
+      <div class="footer-note">
+        Skor gamifikasi
+      </div>
+    </div>
+
+  </div>
+
+  <div
+    class="mission-card"
+    style="margin-top:18px;"
+  >
+
+    <b>Catatan:</b>
+
+    <p class="muted">
+      Pre-Test dan Post-Test merupakan asesmen individu.
+      XP berasal dari aktivitas permainan.
+      Jawaban uraian dinilai guru menggunakan rubrik.
+    </p>
+
+  </div>
+
+</section>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="students.js"></script>
+
+<script>
+
+/* =========================================================
+   GOOGLE SHEETS
+========================================================= */
+
+const SHEET_WEB_APP_URL =
+"https://script.google.com/macros/s/AKfycbx_H6HUvj4CZYRBTakW3qEBdeX1KzxaCOzxb_4RYCd5t2EAOQy8Ubcvuk-rCvVDNhTX/exec";
 
 
-    /* =====================================================
-       QUESTIONS
-    ===================================================== */
+/* =========================================================
+   QUESTIONS
+========================================================= */
 
-    const questions = [
+const questions = [
 
-      {
-        stem:
-          "Ketika seseorang mengetik pesan pada laptop, tulisan yang diketik kemudian muncul di layar. Urutan proses IPO yang paling tepat adalah ...",
-        opts:[
-          "Keyboard → CPU → Monitor",
-          "Monitor → CPU → Keyboard",
-          "CPU → Monitor → Keyboard",
-          "Keyboard → Monitor → CPU",
-          "Monitor → Keyboard → CPU"
-        ],
-        a:0
-      },
+{
+  stem:
+  "Ketika seseorang mengetik pesan pada laptop, tulisan yang diketik kemudian muncul di layar. Urutan proses IPO yang paling tepat adalah ...",
 
-      {
-        stem:
-          "Pada mesin presensi wajah, kamera menangkap wajah siswa. Sistem kemudian mencocokkannya dengan data yang telah tersimpan. Bagian komputer yang terutama melakukan pengolahan dan pencocokan tersebut adalah ...",
-        opts:[
-          "Monitor",
-          "CPU",
-          "Keyboard",
-          "Speaker",
-          "Printer"
-        ],
-        a:1
-      },
+  opts:[
+    "Keyboard → CPU → Monitor",
+    "Monitor → CPU → Keyboard",
+    "CPU → Monitor → Keyboard",
+    "Keyboard → Monitor → CPU",
+    "Monitor → Keyboard → CPU"
+  ],
 
-      {
-        stem:
-          "Sebuah file tugas disimpan agar dapat dibuka kembali minggu depan. Perangkat yang berfungsi menyimpan file secara jangka panjang adalah ...",
-        opts:[
-          "RAM",
-          "CPU",
-          "SSD/HDD",
-          "Monitor",
-          "Keyboard"
-        ],
-        a:2
-      },
+  a:0
+},
 
-      {
-        stem:
-          "Saat kalkulator komputer menghitung 125 × 8, bagian CPU yang melakukan operasi hitung tersebut adalah ...",
-        opts:[
-          "CU",
-          "ALU",
-          "RAM",
-          "SSD",
-          "Motherboard"
-        ],
-        a:1
-      },
+{
+  stem:
+  "Pada mesin presensi wajah, kamera menangkap wajah siswa. Sistem kemudian mencocokkannya dengan data yang telah tersimpan. Bagian komputer yang terutama melakukan pengolahan dan pencocokan tersebut adalah ...",
 
-      {
-        stem:
-          "Sebuah program sedang menjalankan beberapa instruksi. Bagian CPU yang mengatur dan mengendalikan jalannya instruksi tersebut adalah ...",
-        opts:[
-          "ALU",
-          "CU",
-          "RAM",
-          "SSD",
-          "Monitor"
-        ],
-        a:1
-      },
+  opts:[
+    "Monitor",
+    "CPU",
+    "Keyboard",
+    "Speaker",
+    "Printer"
+  ],
 
-      {
-        stem:
-          "Sebuah program memeriksa kondisi “jika nilai lebih besar dari 75, tampilkan LULUS”. Operasi logika pada kondisi tersebut terutama dilakukan oleh ...",
-        opts:[
-          "ALU",
-          "Monitor",
-          "Keyboard",
-          "Storage",
-          "Speaker"
-        ],
-        a:0
-      },
+  a:1
+},
 
-      {
-        stem:
-          "Sinta sedang mengedit dokumen yang belum disimpan. Ketika listrik mati, perubahan terakhir pada dokumen hilang. Hal ini menunjukkan bahwa data tersebut sebelumnya berada pada ...",
-        opts:[
-          "SSD yang permanen",
-          "RAM yang bersifat sementara",
-          "Monitor",
-          "Keyboard",
-          "Printer"
-        ],
-        a:1
-      },
+{
+  stem:
+  "Sebuah file tugas disimpan agar dapat dibuka kembali minggu depan. Perangkat yang berfungsi menyimpan file secara jangka panjang adalah ...",
 
-      {
-        stem:
-          "Ketika aplikasi dibuka, data program yang tersimpan di SSD perlu dimuat ke RAM sebelum digunakan oleh CPU. Proses tersebut merupakan ...",
-        opts:[
-          "Monitor → RAM",
-          "SSD → RAM",
-          "RAM → SSD",
-          "Keyboard → SSD",
-          "CPU → Monitor"
-        ],
-        a:1
-      },
+  opts:[
+    "RAM",
+    "CPU",
+    "SSD/HDD",
+    "Monitor",
+    "Keyboard"
+  ],
 
-      {
-        stem:
-          "Sebuah komputer menjadi lambat saat banyak aplikasi dibuka. Task Manager menunjukkan CPU 25%, RAM 98%, dan Disk 5%. Komponen yang paling mungkin menjadi kendala adalah ...",
-        opts:[
-          "CPU",
-          "RAM",
-          "Disk",
-          "Monitor",
-          "Keyboard"
-        ],
-        a:1
-      },
+  a:2
+},
 
-      {
-        stem:
-          "Sebuah server membutuhkan waktu lama ketika harus membaca banyak file soal dari media penyimpanan. Komponen yang paling tepat diperiksa terlebih dahulu adalah ...",
-        opts:[
-          "Monitor",
-          "Keyboard",
-          "Storage dan proses I/O",
-          "Speaker",
-          "Mouse"
-        ],
-        a:2
-      },
+{
+  stem:
+  "Saat kalkulator komputer menghitung 125 × 8, bagian CPU yang melakukan operasi hitung tersebut adalah ...",
 
-      {
-        stem:
-          "Komputer menyala, kipas berputar, tetapi tidak muncul tampilan dan lampu Caps Lock tidak merespons. Kesimpulan yang paling masuk akal adalah ...",
-        opts:[
-          "Monitor pasti rusak",
-          "Komputer sudah masuk Windows",
-          "Proses awal sistem atau komponen inti belum berjalan normal",
-          "Keyboard hanya kehabisan baterai",
-          "Harddisk pasti penuh"
-        ],
-        a:2
-      },
+  opts:[
+    "CU",
+    "ALU",
+    "RAM",
+    "SSD",
+    "Motherboard"
+  ],
 
-      {
-        stem:
-          "Komputer kantor memiliki Core i5, RAM 8 GB, dan HDD 1 TB. Booting Windows sangat lama. Upgrade yang paling langsung terasa untuk masalah tersebut adalah ...",
-        opts:[
-          "Tambah RAM menjadi 16 GB",
-          "Ganti HDD dengan SSD",
-          "Ganti monitor",
-          "Ganti keyboard",
-          "Tambah speaker"
-        ],
-        a:1
-      },
+  a:1
+},
 
-      {
-        stem:
-          "Aplikasi pengolah video sering tertutup sendiri ketika banyak layer dan efek dibuka bersamaan. SSD dan CPU sudah memadai. Komponen yang paling perlu diperhatikan adalah ...",
-        opts:[
-          "RAM",
-          "Monitor",
-          "Keyboard",
-          "Speaker",
-          "Mouse"
-        ],
-        a:0
-      },
+{
+  stem:
+  "Sebuah program sedang menjalankan beberapa instruksi. Bagian CPU yang mengatur dan mengendalikan jalannya instruksi tersebut adalah ...",
 
-      {
-        stem:
-          "Sekolah ingin membuat kios informasi yang dikendalikan dengan sentuhan pada layar. Rancangan yang paling sesuai adalah ...",
-        opts:[
-          "Layar sentuh + CPU hemat daya + storage secukupnya + RAM standar",
-          "Monitor biasa + keyboard + mouse + CPU paling mahal",
-          "CPU tinggi + RAM 32 GB tanpa monitor",
-          "Layar sentuh tanpa CPU",
-          "Printer + scanner tanpa monitor"
-        ],
-        a:0
-      },
+  opts:[
+    "ALU",
+    "CU",
+    "RAM",
+    "SSD",
+    "Monitor"
+  ],
 
-      {
-        stem:
-          "Perpustakaan membutuhkan PC hanya untuk mengetik dokumen dan membuka katalog buku di internet. Rancangan yang paling efisien adalah ...",
-        opts:[
-          "CPU kelas tinggi untuk grafis 3D",
-          "VR agar pencarian lebih menarik",
-          "Keyboard/mouse nyaman, monitor nyaman, CPU dan RAM sesuai kebutuhan dasar",
-          "Storage 10 TB",
-          "RAM 64 GB"
-        ],
-        a:2
-      }
+  a:1
+},
 
+{
+  stem:
+  "Sebuah program memeriksa kondisi jika nilai lebih besar dari 75, tampilkan LULUS. Operasi logika pada kondisi tersebut terutama dilakukan oleh ...",
+
+  opts:[
+    "ALU",
+    "Monitor",
+    "Keyboard",
+    "Storage",
+    "Speaker"
+  ],
+
+  a:0
+},
+
+{
+  stem:
+  "Sinta sedang mengedit dokumen yang belum disimpan. Ketika listrik mati, perubahan terakhir pada dokumen hilang. Hal ini menunjukkan bahwa data tersebut sebelumnya berada pada ...",
+
+  opts:[
+    "SSD yang permanen",
+    "RAM yang bersifat sementara",
+    "Monitor",
+    "Keyboard",
+    "Printer"
+  ],
+
+  a:1
+},
+
+{
+  stem:
+  "Ketika aplikasi dibuka, data program yang tersimpan di SSD perlu dimuat ke RAM sebelum digunakan oleh CPU. Proses tersebut merupakan ...",
+
+  opts:[
+    "Monitor → RAM",
+    "SSD → RAM",
+    "RAM → SSD",
+    "Keyboard → SSD",
+    "CPU → Monitor"
+  ],
+
+  a:1
+},
+
+{
+  stem:
+  "Sebuah komputer menjadi lambat saat banyak aplikasi dibuka. Task Manager menunjukkan CPU 25%, RAM 98%, dan Disk 5%. Komponen yang paling mungkin menjadi kendala adalah ...",
+
+  opts:[
+    "CPU",
+    "RAM",
+    "Disk",
+    "Monitor",
+    "Keyboard"
+  ],
+
+  a:1
+},
+
+{
+  stem:
+  "Sebuah server membutuhkan waktu lama ketika harus membaca banyak file soal dari media penyimpanan. Komponen yang paling tepat diperiksa terlebih dahulu adalah ...",
+
+  opts:[
+    "Monitor",
+    "Keyboard",
+    "Storage dan proses I/O",
+    "Speaker",
+    "Mouse"
+  ],
+
+  a:2
+},
+
+{
+  stem:
+  "Komputer menyala, kipas berputar, tetapi tidak muncul tampilan dan lampu Caps Lock tidak merespons. Kesimpulan yang paling masuk akal adalah ...",
+
+  opts:[
+    "Monitor pasti rusak",
+    "Komputer sudah masuk Windows",
+    "Proses awal sistem atau komponen inti belum berjalan normal",
+    "Keyboard hanya kehabisan baterai",
+    "Harddisk pasti penuh"
+  ],
+
+  a:2
+},
+
+{
+  stem:
+  "Komputer kantor memiliki Core i5, RAM 8 GB, dan HDD 1 TB. Booting Windows sangat lama. Upgrade yang paling langsung terasa untuk masalah tersebut adalah ...",
+
+  opts:[
+    "Tambah RAM menjadi 16 GB",
+    "Ganti HDD dengan SSD",
+    "Ganti monitor",
+    "Ganti keyboard",
+    "Tambah speaker"
+  ],
+
+  a:1
+},
+
+{
+  stem:
+  "Aplikasi pengolah video sering tertutup sendiri ketika banyak layer dan efek dibuka bersamaan. SSD dan CPU sudah memadai. Komponen yang paling perlu diperhatikan adalah ...",
+
+  opts:[
+    "RAM",
+    "Monitor",
+    "Keyboard",
+    "Speaker",
+    "Mouse"
+  ],
+
+  a:0
+},
+
+{
+  stem:
+  "Sekolah ingin membuat kios informasi yang dikendalikan dengan sentuhan pada layar. Rancangan yang paling sesuai adalah ...",
+
+  opts:[
+    "Layar sentuh + CPU hemat daya + storage secukupnya + RAM standar",
+    "Monitor biasa + keyboard + mouse + CPU paling mahal",
+    "CPU tinggi + RAM 32 GB tanpa monitor",
+    "Layar sentuh tanpa CPU",
+    "Printer + scanner tanpa monitor"
+  ],
+
+  a:0
+},
+
+{
+  stem:
+  "Perpustakaan membutuhkan PC hanya untuk mengetik dokumen dan membuka katalog buku di internet. Rancangan yang paling efisien adalah ...",
+
+  opts:[
+    "CPU kelas tinggi untuk grafis 3D",
+    "VR agar pencarian lebih menarik",
+    "Keyboard/mouse nyaman, monitor nyaman, CPU dan RAM sesuai kebutuhan dasar",
+    "Storage 10 TB",
+    "RAM 64 GB"
+  ],
+
+  a:2
+}
+
+];
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let state = {
+
+  code:"",
+  name:"",
+  className:"",
+  teacher:"",
+  team:"",
+  role:"",
+
+  xp:0,
+
+  pre:null,
+  post:null,
+
+  m1:0,
+  m2:0,
+  m3:0,
+  boss:0,
+
+  answers:[],
+
+  reflection:{
+    r3:"",
+    r2:"",
+    r1:""
+  },
+
+  essayAnswers:{
+    m1:"",
+    m2:"",
+    m3:"",
+    boss:""
+  },
+
+  preCorrect:0,
+  postCorrect:0
+
+};
+
+let testMode = "pre";
+
+let qIndex = 0;
+
+let selectedQuestions = [];
+
+let timerHandle = null;
+
+let timerSeconds = 0;
+
+let missionType = "";
+
+let missionTimerHandle = null;
+
+let missionSeconds = 0;
+
+let syncQueue = [];
+
+let syncRunning = false;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+const qs =
+selector =>
+document.querySelector(selector);
+
+
+function show(id){
+
+  document
+    .querySelectorAll("section")
+    .forEach(
+      section =>
+        section.classList.add("hidden")
+    );
+
+  qs(id).classList.remove("hidden");
+}
+
+
+function showToast(message){
+
+  const toast =
+    qs("#toast");
+
+  toast.textContent =
+    message;
+
+  toast.classList.add("show");
+
+  clearTimeout(
+    window.__toastTimer
+  );
+
+  window.__toastTimer =
+    setTimeout(
+      () =>
+        toast.classList.remove("show"),
+      2600
+    );
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+function populateStudents(){
+
+  const classKey =
+    qs("#classSelect").value;
+
+  const select =
+    qs("#studentCode");
+
+  select.innerHTML =
+    '<option value="">-- Pilih nama siswa --</option>';
+
+  const roster =
+    CLASS_ROSTERS[classKey] || [];
+
+  roster.forEach(
+    student => {
+
+      const option =
+        document.createElement("option");
+
+      option.value =
+        student.code;
+
+      option.textContent =
+        student.name;
+
+      select.appendChild(option);
+
+    }
+  );
+}
+
+
+qs("#studentCode")
+.addEventListener(
+  "change",
+  () => {
+
+    const classKey =
+      qs("#classSelect").value;
+
+    const code =
+      qs("#studentCode").value;
+
+    const student =
+      (CLASS_ROSTERS[classKey] || [])
+      .find(
+        item =>
+          item.code === code
+      );
+
+    if(student){
+
+      qs("#studentPill").textContent =
+        `${student.name} • ${student.code} • ${student.class}`;
+
+    }
+
+  }
+);
+
+
+function startSession(){
+
+  const classKey =
+    qs("#classSelect").value;
+
+  const code =
+    qs("#studentCode").value;
+
+  const student =
+    (CLASS_ROSTERS[classKey] || [])
+    .find(
+      item =>
+        item.code === code
+    );
+
+  if(!student){
+
+    alert(
+      "Pilih kelas dan nama siswa."
+    );
+
+    return;
+  }
+
+  state = {
+
+    ...state,
+
+    code:
+      student.code,
+
+    name:
+      student.name,
+
+    className:
+      student.class,
+
+    teacher:
+      student.teacher,
+
+    team:
+      qs("#team").value,
+
+    role:
+      qs("#role").value,
+
+    xp:0,
+
+    pre:null,
+
+    post:null,
+
+    m1:0,
+
+    m2:0,
+
+    m3:0,
+
+    boss:0,
+
+    answers:[],
+
+    reflection:{
+      r3:"",
+      r2:"",
+      r1:""
+    },
+
+    essayAnswers:{
+      m1:"",
+      m2:"",
+      m3:"",
+      boss:""
+    },
+
+    preCorrect:0,
+
+    postCorrect:0
+
+  };
+
+  qs("#studentPill").textContent =
+    `${state.name} • ${state.code} • ${state.className}`;
+
+  qs("#dClass").textContent =
+    `${state.className} • ${state.teacher}`;
+
+  qs("#dCode").textContent =
+    `${state.name} (${state.code})`;
+
+  qs("#dTeam").textContent =
+    state.team;
+
+  updateTop();
+
+  show("#dash");
+}
+
+
+function updateTop(){
+
+  qs("#xpTop").textContent =
+    state.xp;
+
+  qs("#dXP").textContent =
+    state.xp;
+
+  qs("#prog").style.width =
+    Math.min(
+      100,
+      state.xp
+    ) + "%";
+}
+
+
+/* =========================================================
+   TEST
+========================================================= */
+
+function shuffle(array){
+
+  const copy =
+    [...array];
+
+  for(
+    let i=copy.length-1;
+    i>0;
+    i--
+  ){
+
+    const j =
+      Math.floor(
+        Math.random() *
+        (i+1)
+      );
+
+    [
+      copy[i],
+      copy[j]
+    ] =
+    [
+      copy[j],
+      copy[i]
     ];
 
+  }
 
-    /* =====================================================
-       STATE
-    ===================================================== */
+  return copy;
+}
 
-    let state = {
 
-      code:"",
-      name:"",
-      className:"",
-      teacher:"",
-      team:"",
-      role:"",
+function shuffledQuestion(question){
 
-      xp:0,
+  return {
 
-      pre:null,
-      post:null,
+    ...question,
 
-      m1:0,
-      m2:0,
-      m3:0,
-      boss:0,
+    opts:
+      shuffle(
+        question.opts.map(
+          (text,index) => ({
+            text,
+            ok:
+              index ===
+              question.a
+          })
+        )
+      )
 
-      answers:[],
+  };
+}
 
-      reflection:{
-        r3:"",
-        r2:"",
-        r1:""
+
+function startPretest(){
+
+  testMode =
+    "pre";
+
+  qIndex =
+    0;
+
+  state.answers =
+    [];
+
+  selectedQuestions =
+    shuffle(
+      questions.map(
+        shuffledQuestion
+      )
+    );
+
+  startTest();
+}
+
+
+function startPosttest(){
+
+  testMode =
+    "post";
+
+  qIndex =
+    0;
+
+  state.answers =
+    [];
+
+  selectedQuestions =
+    shuffle(
+      questions.map(
+        shuffledQuestion
+      )
+    );
+
+  startTest();
+}
+
+
+function startTest(){
+
+  qs("#testTitle").textContent =
+    testMode === "pre"
+      ? "Pre-Test — 15 Soal"
+      : "Post-Test — 15 Soal";
+
+  qs("#finishTestBtn")
+    .classList.add("hidden");
+
+  show("#test");
+
+  startTestTimer(
+    600
+  );
+
+  renderQuestion();
+}
+
+
+function renderQuestion(){
+
+  const question =
+    selectedQuestions[qIndex];
+
+  qs("#qCount").textContent =
+    `Soal ${qIndex+1} dari ${selectedQuestions.length}`;
+
+  qs("#finishTestBtn")
+    .classList.toggle(
+      "hidden",
+      qIndex !==
+      selectedQuestions.length - 1
+    );
+
+  qs("#questionBox").innerHTML = `
+
+    <div class="mission-card">
+
+      <div
+        style="
+          font-weight:800;
+          margin-bottom:12px;
+        "
+      >
+        ${escapeHtml(question.stem)}
+      </div>
+
+      ${
+        question.opts
+        .map(
+          (option,index) => `
+
+            <label class="option">
+
+              <input
+                type="radio"
+                name="q"
+                value="${index}"
+              >
+
+              <span>
+                ${String.fromCharCode(65+index)}.
+                ${escapeHtml(option.text)}
+              </span>
+
+            </label>
+
+          `
+        )
+        .join("")
+      }
+
+    </div>
+
+  `;
+
+}
+
+
+function storeAnswer(){
+
+  const element =
+    document.querySelector(
+      'input[name="q"]:checked'
+    );
+
+  state.answers[qIndex] =
+    element
+      ? selectedQuestions[qIndex]
+        .opts[
+          Number(element.value)
+        ]
+        .ok
+      : null;
+}
+
+
+function prevQ(){
+
+  storeAnswer();
+
+  if(qIndex > 0){
+
+    qIndex--;
+
+    renderQuestion();
+
+  }
+}
+
+
+function nextQ(){
+
+  storeAnswer();
+
+  if(
+    qIndex <
+    selectedQuestions.length - 1
+  ){
+
+    qIndex++;
+
+    renderQuestion();
+
+  }
+}
+
+
+function startTestTimer(seconds){
+
+  clearInterval(
+    timerHandle
+  );
+
+  timerSeconds =
+    seconds;
+
+  updateTimer();
+
+  timerHandle =
+    setInterval(
+      () => {
+
+        timerSeconds--;
+
+        updateTimer();
+
+        if(
+          timerSeconds <= 0
+        ){
+
+          clearInterval(
+            timerHandle
+          );
+
+          finishTest();
+
+        }
+
       },
-
-      essayAnswers:{
-        m1:"",
-        m2:"",
-        m3:"",
-        boss:""
-      },
-
-      preCorrect:0,
-      postCorrect:0
-
-    };
+      1000
+    );
+}
 
 
-    let testMode="pre";
-    let qIndex=0;
-    let selectedQuestions=[];
+function updateTimer(){
 
-    let timerHandle=null;
-    let timerSeconds=0;
+  const minutes =
+    String(
+      Math.floor(
+        timerSeconds / 60
+      )
+    )
+    .padStart(
+      2,
+      "0"
+    );
 
-    let missionType="";
-    let missionTimerHandle=null;
-    let missionSeconds=0;
+  const seconds =
+    String(
+      timerSeconds % 60
+    )
+    .padStart(
+      2,
+      "0"
+    );
 
-    let syncQueue=[];
-    let syncRunning=false;
-
-
-    /* =====================================================
-       BASIC HELPERS
-    ===================================================== */
-
-    const qs =
-      selector =>
-        document.querySelector(selector);
-
-
-    function show(id){
-
-      document
-        .querySelectorAll("section")
-        .forEach(
-          section =>
-            section.classList.add("hidden")
-        );
-
-      qs(id).classList.remove("hidden");
-
-      window.scrollTo({
-        top:0,
-        behavior:"smooth"
-      });
-
-    }
+  qs("#testTimer")
+    .textContent =
+      `${minutes}:${seconds}`;
+}
 
 
-    function showToast(message){
+function finishTest(){
 
-      const toast =
-        qs("#toast");
+  storeAnswer();
 
-      toast.textContent =
-        message;
+  clearInterval(
+    timerHandle
+  );
 
-      toast.classList.add("show");
+  const correct =
+    state.answers.filter(
+      value =>
+        value === true
+    ).length;
 
-      clearTimeout(
-        window.__toastTimer
-      );
-
-      window.__toastTimer =
-        setTimeout(
-          () =>
-            toast.classList.remove("show"),
-          2600
-        );
-
-    }
-
-
-    /* =====================================================
-       STUDENT
-    ===================================================== */
-
-    function populateStudents(){
-
-      const classKey =
-        qs("#classSelect").value;
-
-      const select =
-        qs("#studentCode");
-
-      select.innerHTML =
-        '<option value="">-- Pilih nama siswa --</option>';
-
+  const score =
+    Math.round(
       (
-        CLASS_ROSTERS[classKey] || []
-      ).forEach(
-        student => {
+        correct /
+        questions.length
+      ) * 100
+    );
 
-          const option =
-            document.createElement("option");
+  if(
+    testMode === "pre"
+  ){
 
-          option.value =
-            student.code;
+    state.pre =
+      score;
 
-          option.textContent =
-            student.name;
+    state.preCorrect =
+      correct;
 
-          select.appendChild(
-            option
-          );
+    localSave();
 
-        }
-      );
+    show("#mini");
 
-    }
+    return;
+  }
 
+  state.post =
+    score;
 
-    qs("#studentCode")
-      .addEventListener(
-        "change",
-        () => {
+  state.postCorrect =
+    correct;
 
-          const classKey =
-            qs("#classSelect").value;
+  localSave();
 
-          const code =
-            qs("#studentCode").value;
+  qs("#fPre")
+    .textContent =
+      `${state.pre ?? "-"}/100`;
 
-          const student =
-            (
-              CLASS_ROSTERS[classKey] || []
-            ).find(
-              item =>
-                item.code === code
-            );
+  qs("#fPost")
+    .textContent =
+      `${state.post ?? "-"}/100`;
 
-          if(student){
+  qs("#fPreDetail")
+    .textContent =
+      `${state.preCorrect ?? 0} dari 15 soal benar`;
 
-            qs("#studentPill")
-              .textContent =
-                `${student.name} • ${student.code} • ${student.class}`;
+  qs("#fPostDetail")
+    .textContent =
+      `${state.postCorrect ?? 0} dari 15 soal benar`;
 
-          }
+  qs("#fXP")
+    .textContent =
+      state.xp;
 
-        }
-      );
+  show("#reflection");
+}
 
 
-    function startSession(){
+/* =========================================================
+   MISSIONS
+========================================================= */
 
-      const classKey =
-        qs("#classSelect").value;
+function startMission1(){
 
-      const code =
-        qs("#studentCode").value;
+  startMission(
+    "m1"
+  );
 
-      const student =
-        (
-          CLASS_ROSTERS[classKey] || []
-        ).find(
-          item =>
-            item.code === code
-        );
+}
 
-      if(!student){
 
-        alert(
-          "Pilih kelas dan nama siswa."
-        );
+function startMission2(){
 
-        return;
-      }
+  startMission(
+    "m2"
+  );
 
+}
 
-      state = {
 
-        code:student.code,
+function startMission3(){
 
-        name:student.name,
+  startMission(
+    "m3"
+  );
 
-        className:student.class,
+}
 
-        teacher:student.teacher,
 
-        team:qs("#team").value,
+function startMission(type){
 
-        role:qs("#role").value,
+  missionType =
+    type;
 
-        xp:0,
+  show("#mission");
 
-        pre:null,
+  const configs = {
 
-        post:null,
+    m1:{
 
-        m1:0,
+      title:
+        "Mission 1 — RAM or Storage?",
 
-        m2:0,
+      desc:
+        "16 XP objektif + 9 XP uraian rubrik",
 
-        m3:0,
+      seconds:
+        600,
 
-        boss:0,
+      html:`
 
-        answers:[],
+        <div class="mission-card">
 
-        reflection:{
-          r3:"",
-          r2:"",
-          r1:""
-        },
+          <p>
 
-        essayAnswers:{
-          m1:"",
-          m2:"",
-          m3:"",
-          boss:""
-        },
+            <b>1.</b>
+            Komputer sedang membuka
+            banyak tab browser.
+            Komponen memori kerja
+            sementara adalah ...
 
-        preCorrect:0,
+          </p>
 
-        postCorrect:0
-
-      };
-
-
-      localStorage.setItem(
-        "cm2_active_student",
-        JSON.stringify({
-          code:state.code,
-          name:state.name,
-          className:state.className,
-          teacher:state.teacher,
-          team:state.team,
-          role:state.role
-        })
-      );
-
-
-      setExplorationDone(false);
-
-
-      qs("#studentPill")
-        .textContent =
-          `${state.name} • ${state.code} • ${state.className}`;
-
-
-      qs("#dClass")
-        .textContent =
-          `${state.className} • ${state.teacher}`;
-
-
-      qs("#dCode")
-        .textContent =
-          `${state.name} (${state.code})`;
-
-
-      qs("#dTeam")
-        .textContent =
-          state.team;
-
-
-      updateTop();
-
-      show("#dash");
-
-    }
-
-
-    function updateTop(){
-
-      qs("#xpTop")
-        .textContent =
-          state.xp;
-
-      qs("#dXP")
-        .textContent =
-          state.xp;
-
-      qs("#prog")
-        .style.width =
-          Math.min(
-            100,
-            state.xp
-          ) + "%";
-
-    }
-
-
-    /* =====================================================
-       EXPLORATION PAGE
-    ===================================================== */
-
-    function explorationKey(){
-
-      return (
-        "cm2_exploration_done_" +
-        state.className +
-        "_" +
-        state.code
-      );
-
-    }
-
-
-    function setExplorationDone(value){
-
-      if(
-        !state.className ||
-        !state.code
-      ){
-        return;
-      }
-
-      localStorage.setItem(
-        explorationKey(),
-        value ? "1" : "0"
-      );
-
-      updateExplorationButton();
-
-    }
-
-
-    function isExplorationDone(){
-
-      if(
-        !state.className ||
-        !state.code
-      ){
-        return false;
-      }
-
-      return (
-        localStorage.getItem(
-          explorationKey()
-        ) === "1"
-      );
-
-    }
-
-
-    function updateExplorationButton(){
-
-      const button =
-        qs("#mission1Button");
-
-      if(!button){
-        return;
-      }
-
-      if(isExplorationDone()){
-
-        button.textContent =
-          "🚀 Mulai Mission 1";
-
-        button.classList.remove(
-          "secondary"
-        );
-
-        button.classList.add(
-          "primary"
-        );
-
-      }else{
-
-        button.textContent =
-          "🔒 Selesaikan Eksplorasi Dulu";
-
-        button.classList.remove(
-          "primary"
-        );
-
-        button.classList.add(
-          "secondary"
-        );
-
-      }
-
-    }
-
-
-    function openExploration(){
-
-      if(
-        !state.code ||
-        !state.className
-      ){
-
-        alert(
-          "Silakan mulai sesi siswa terlebih dahulu."
-        );
-
-        return;
-      }
-
-
-      localStorage.setItem(
-        "cm2_return_page",
-        "index.html"
-      );
-
-
-      window.location.href =
-        "exploration.html";
-
-    }
-
-
-    function continueToMission1(){
-
-      if(!isExplorationDone()){
-
-        showToast(
-          "Selesaikan Eksplorasi Perangkat terlebih dahulu."
-        );
-
-        setTimeout(
-          () =>
-            openExploration(),
-          500
-        );
-
-        return;
-      }
-
-      startMission1();
-
-    }
-
-
-    /* =====================================================
-       TEST
-    ===================================================== */
-
-    function shuffle(array){
-
-      const copy =
-        [...array];
-
-      for(
-        let i=copy.length-1;
-        i>0;
-        i--
-      ){
-
-        const j =
-          Math.floor(
-            Math.random() *
-            (i+1)
-          );
-
-        [
-          copy[i],
-          copy[j]
-        ] =
-        [
-          copy[j],
-          copy[i]
-        ];
-
-      }
-
-      return copy;
-
-    }
-
-
-    function shuffledQuestion(question){
-
-      return {
-
-        ...question,
-
-        opts:
-          shuffle(
-            question.opts.map(
-              (text,index) => ({
-                text:text,
-                ok:
-                  index ===
-                  question.a
-              })
-            )
-          )
-
-      };
-
-    }
-
-
-    function startPretest(){
-
-      testMode="pre";
-
-      qIndex=0;
-
-      state.answers=[];
-
-      selectedQuestions =
-        shuffle(
-          questions.map(
-            shuffledQuestion
-          )
-        );
-
-      startTest();
-
-    }
-
-
-    function startPosttest(){
-
-      testMode="post";
-
-      qIndex=0;
-
-      state.answers=[];
-
-      selectedQuestions =
-        shuffle(
-          questions.map(
-            shuffledQuestion
-          )
-        );
-
-      startTest();
-
-    }
-
-
-    function startTest(){
-
-      qs("#testTitle")
-        .textContent =
-          testMode === "pre"
-            ? "Pre-test — 15 Soal"
-            : "Post-test — 15 Soal";
-
-
-      qs("#finishTestBtn")
-        .classList.add(
-          "hidden"
-        );
-
-
-      show("#test");
-
-      startTestTimer(
-        600
-      );
-
-      renderQuestion();
-
-    }
-
-
-    function renderQuestion(){
-
-      const question =
-        selectedQuestions[qIndex];
-
-      qs("#qCount")
-        .textContent =
-          `Soal ${qIndex+1} dari ${selectedQuestions.length}`;
-
-
-      qs("#finishTestBtn")
-        .classList.toggle(
-          "hidden",
-          qIndex !==
-          selectedQuestions.length-1
-        );
-
-
-      qs("#questionBox")
-        .innerHTML = `
-
-          <div class="mission-card">
-
-            <div
-              style="
-                font-weight:800;
-                margin-bottom:12px;
-                line-height:1.7;
-              "
+          <label class="option">
+            <input
+              type="radio"
+              name="m1a"
+              value="0"
             >
-              ${escapeHtml(question.stem)}
+            <span>RAM</span>
+          </label>
+
+          <label class="option">
+            <input
+              type="radio"
+              name="m1a"
+              value="1"
+            >
+            <span>SSD</span>
+          </label>
+
+          <label class="option">
+            <input
+              type="radio"
+              name="m1a"
+              value="2"
+            >
+            <span>Monitor</span>
+          </label>
+
+
+          <p>
+
+            <b>2.</b>
+            Roni menyimpan dokumen
+            agar dapat dibuka minggu depan.
+            Pilihan yang tepat adalah ...
+
+          </p>
+
+          <label class="option">
+            <input
+              type="radio"
+              name="m1b"
+              value="0"
+            >
+            <span>RAM</span>
+          </label>
+
+          <label class="option">
+            <input
+              type="radio"
+              name="m1b"
+              value="1"
+            >
+            <span>SSD/HDD</span>
+          </label>
+
+          <label class="option">
+            <input
+              type="radio"
+              name="m1b"
+              value="2"
+            >
+            <span>CPU</span>
+          </label>
+
+
+          <p>
+            <b>3.</b>
+            Mengapa RAM dan storage
+            tidak sama?
+          </p>
+
+          <textarea
+            id="m1reason"
+            rows="3"
+            placeholder="Tuliskan penjelasanmu"
+          ></textarea>
+
+        </div>
+
+      `
+    },
+
+
+    m2:{
+
+      title:
+        "Mission 2 — ALU or CU?",
+
+      desc:
+        "16 XP objektif + 9 XP uraian rubrik",
+
+      seconds:
+        600,
+
+      html:`
+
+        <div class="mission-card">
+
+          <p>
+
+            <b>1.</b>
+            CPU menghitung 125 × 8.
+            Bagian yang melakukan
+            operasi hitung adalah ...
+
+          </p>
+
+          <label class="option">
+            <input
+              type="radio"
+              name="m2a"
+              value="0"
+            >
+            <span>ALU</span>
+          </label>
+
+          <label class="option">
+            <input
+              type="radio"
+              name="m2a"
+              value="1"
+            >
+            <span>CU</span>
+          </label>
+
+
+          <p>
+
+            <b>2.</b>
+            Bagian CPU yang mengatur
+            jalannya instruksi program
+            adalah ...
+
+          </p>
+
+          <label class="option">
+            <input
+              type="radio"
+              name="m2b"
+              value="0"
+            >
+            <span>ALU</span>
+          </label>
+
+          <label class="option">
+            <input
+              type="radio"
+              name="m2b"
+              value="1"
+            >
+            <span>CU</span>
+          </label>
+
+
+          <p>
+
+            <b>3.</b>
+            Jelaskan perbedaan
+            tugas ALU dan CU.
+
+          </p>
+
+          <textarea
+            id="m2reason"
+            rows="3"
+            placeholder="Tuliskan penjelasanmu"
+          ></textarea>
+
+        </div>
+
+      `
+    },
+
+
+    m3:{
+
+      title:
+        "Mission 3 — Trace the Data",
+
+      desc:
+        "15 XP struktur + 5 XP uraian rubrik",
+
+      seconds:
+        900,
+
+      html:`
+
+        <div class="mission-card">
+
+          <p>
+            Pilih kasus lalu tuliskan alurnya.
+          </p>
+
+          <select id="m3case">
+
+            <option>
+              Mengetik tugas
+            </option>
+
+            <option>
+              Merekam suara
+            </option>
+
+            <option>
+              Membuka foto
+            </option>
+
+            <option>
+              Mencetak dokumen
+            </option>
+
+          </select>
+
+
+          <div
+            class="grid"
+            style="margin-top:12px;"
+          >
+
+            <div>
+
+              <label>
+                Input
+              </label>
+
+              <input
+                id="m3input"
+                placeholder="Contoh: keyboard"
+              >
+
             </div>
 
-            ${
-              question.opts
-                .map(
-                  (option,index) => `
 
-                    <label class="option">
+            <div>
 
-                      <input
-                        type="radio"
-                        name="q"
-                        value="${index}"
-                      >
+              <label>
+                Process
+              </label>
 
-                      <span>
-                        ${String.fromCharCode(65+index)}.
-                        ${escapeHtml(option.text)}
-                      </span>
+              <input
+                id="m3process"
+                placeholder="Contoh: CPU"
+              >
 
-                    </label>
+            </div>
 
-                  `
-                )
-                .join("")
-            }
+
+            <div>
+
+              <label>
+                Output
+              </label>
+
+              <input
+                id="m3output"
+                placeholder="Contoh: monitor"
+              >
+
+            </div>
+
+
+            <div>
+
+              <label>
+                Storage (jika ada)
+              </label>
+
+              <input
+                id="m3storage"
+                placeholder="Contoh: SSD"
+              >
+
+            </div>
 
           </div>
 
-        `;
 
+          <label
+            style="margin-top:14px;"
+          >
+            Mengapa urutan tersebut
+            sesuai IPO?
+          </label>
+
+          <textarea
+            id="m3reason"
+            rows="3"
+            placeholder="Tuliskan alasanmu"
+          ></textarea>
+
+        </div>
+
+      `
     }
 
+  };
 
-    function storeAnswer(){
 
-      const element =
-        document.querySelector(
-          'input[name="q"]:checked'
-        );
+  const config =
+    configs[type];
 
 
-      state.answers[qIndex] =
-        element
-          ? selectedQuestions[qIndex]
-              .opts[
-                Number(
-                  element.value
-                )
-              ].ok
-          : null;
+  qs("#missionTitle")
+    .textContent =
+      config.title;
 
-    }
 
+  qs("#missionDesc")
+    .textContent =
+      config.desc;
 
-    function prevQ(){
 
-      storeAnswer();
+  qs("#missionContent")
+    .innerHTML =
+      config.html;
 
-      if(qIndex>0){
 
-        qIndex--;
+  qs("#missionSubmit")
+    .classList
+    .remove("hidden");
 
-        renderQuestion();
 
-      }
+  qs("#missionNext")
+    .classList
+    .add("hidden");
 
-    }
 
+  startMissionTimer(
+    config.seconds
+  );
 
-    function nextQ(){
+}
 
-      storeAnswer();
 
-      if(
-        qIndex <
-        selectedQuestions.length-1
-      ){
+function startMissionTimer(seconds){
 
-        qIndex++;
+  clearInterval(
+    missionTimerHandle
+  );
 
-        renderQuestion();
+  missionSeconds =
+    seconds;
 
-      }
+  updateMissionTimer();
 
-    }
+  missionTimerHandle =
+    setInterval(
+      () => {
 
+        missionSeconds--;
 
-    function startTestTimer(seconds){
-
-      clearInterval(
-        timerHandle
-      );
-
-      timerSeconds =
-        seconds;
-
-      updateTimer();
-
-      timerHandle =
-        setInterval(
-          () => {
-
-            timerSeconds--;
-
-            updateTimer();
-
-            if(
-              timerSeconds <= 0
-            ){
-
-              clearInterval(
-                timerHandle
-              );
-
-              finishTest();
-
-            }
-
-          },
-          1000
-        );
-
-    }
-
-
-    function updateTimer(){
-
-      const minutes =
-        String(
-          Math.floor(
-            timerSeconds/60
-          )
-        ).padStart(2,"0");
-
-
-      const seconds =
-        String(
-          timerSeconds%60
-        ).padStart(2,"0");
-
-
-      qs("#testTimer")
-        .textContent =
-          `${minutes}:${seconds}`;
-
-    }
-
-
-    function finishTest(){
-
-      storeAnswer();
-
-      clearInterval(
-        timerHandle
-      );
-
-
-      const correct =
-        state.answers
-          .filter(
-            value =>
-              value === true
-          )
-          .length;
-
-
-      const score =
-        Math.round(
-          (
-            correct /
-            questions.length
-          ) * 100
-        );
-
-
-      if(
-        testMode === "pre"
-      ){
-
-        state.pre =
-          score;
-
-        state.preCorrect =
-          correct;
-
-        localSave();
-
-        show("#mini");
-
-        return;
-
-      }
-
-
-      state.post =
-        score;
-
-      state.postCorrect =
-        correct;
-
-      localSave();
-
-
-      qs("#fPre")
-        .textContent =
-          `${state.pre ?? "-"}/100`;
-
-
-      qs("#fPost")
-        .textContent =
-          `${state.post ?? "-"}/100`;
-
-
-      qs("#fPreDetail")
-        .textContent =
-          `${state.preCorrect} dari 15 soal benar`;
-
-
-      qs("#fPostDetail")
-        .textContent =
-          `${state.postCorrect} dari 15 soal benar`;
-
-
-      qs("#fXP")
-        .textContent =
-          state.xp;
-
-
-      show("#reflection");
-
-    }
-
-
-    /* =====================================================
-       MISSIONS
-    ===================================================== */
-
-    function startMission1(){
-
-      if(!isExplorationDone()){
-
-        showToast(
-          "Eksplorasi Perangkat belum selesai."
-        );
-
-        return;
-      }
-
-      startMission("m1");
-
-    }
-
-
-    function startMission2(){
-
-      startMission("m2");
-
-    }
-
-
-    function startMission3(){
-
-      startMission("m3");
-
-    }
-
-
-    function startMission(type){
-
-      missionType =
-        type;
-
-      show("#mission");
-
-
-      const configs = {
-
-
-        m1:{
-
-          title:
-            "Mission 1 — RAM or Storage?",
-
-          desc:
-            "16 XP objektif + 9 XP uraian rubrik",
-
-          hint:
-            "Ingat: RAM adalah memori kerja sementara, sedangkan SSD/HDD digunakan untuk penyimpanan data jangka panjang.",
-
-          seconds:
-            600,
-
-          html:`
-
-            <div class="mission-card">
-
-              <p>
-                <b>1.</b>
-                Komputer sedang membuka
-                banyak tab browser.
-                Komponen memori kerja
-                sementara adalah ...
-              </p>
-
-
-              <label class="option">
-
-                <input
-                  type="radio"
-                  name="m1a"
-                  value="0"
-                >
-
-                <span>
-                  RAM
-                </span>
-
-              </label>
-
-
-              <label class="option">
-
-                <input
-                  type="radio"
-                  name="m1a"
-                  value="1"
-                >
-
-                <span>
-                  SSD
-                </span>
-
-              </label>
-
-
-              <label class="option">
-
-                <input
-                  type="radio"
-                  name="m1a"
-                  value="2"
-                >
-
-                <span>
-                  Monitor
-                </span>
-
-              </label>
-
-
-              <p>
-                <b>2.</b>
-                Roni menyimpan dokumen
-                agar dapat dibuka minggu depan.
-                Pilihan yang tepat adalah ...
-              </p>
-
-
-              <label class="option">
-
-                <input
-                  type="radio"
-                  name="m1b"
-                  value="0"
-                >
-
-                <span>
-                  RAM
-                </span>
-
-              </label>
-
-
-              <label class="option">
-
-                <input
-                  type="radio"
-                  name="m1b"
-                  value="1"
-                >
-
-                <span>
-                  SSD/HDD
-                </span>
-
-              </label>
-
-
-              <label class="option">
-
-                <input
-                  type="radio"
-                  name="m1b"
-                  value="2"
-                >
-
-                <span>
-                  CPU
-                </span>
-
-              </label>
-
-
-              <p>
-                <b>3.</b>
-                Mengapa RAM dan storage
-                tidak sama?
-              </p>
-
-
-              <textarea
-                id="m1reason"
-                rows="4"
-                placeholder="Tuliskan penjelasanmu..."
-              ></textarea>
-
-            </div>
-
-          `
-
-        },
-
-
-        m2:{
-
-          title:
-            "Mission 2 — ALU or CU?",
-
-          desc:
-            "16 XP objektif + 9 XP uraian rubrik",
-
-          hint:
-            "ALU berkaitan dengan operasi hitung dan logika. CU mengatur dan mengendalikan jalannya instruksi.",
-
-          seconds:
-            600,
-
-          html:`
-
-            <div class="mission-card">
-
-              <p>
-                <b>1.</b>
-                CPU menghitung 125 × 8.
-                Bagian yang melakukan
-                operasi hitung adalah ...
-              </p>
-
-
-              <label class="option">
-
-                <input
-                  type="radio"
-                  name="m2a"
-                  value="0"
-                >
-
-                <span>
-                  ALU
-                </span>
-
-              </label>
-
-
-              <label class="option">
-
-                <input
-                  type="radio"
-                  name="m2a"
-                  value="1"
-                >
-
-                <span>
-                  CU
-                </span>
-
-              </label>
-
-
-              <p>
-                <b>2.</b>
-                Bagian CPU yang mengatur
-                jalannya instruksi program
-                adalah ...
-              </p>
-
-
-              <label class="option">
-
-                <input
-                  type="radio"
-                  name="m2b"
-                  value="0"
-                >
-
-                <span>
-                  ALU
-                </span>
-
-              </label>
-
-
-              <label class="option">
-
-                <input
-                  type="radio"
-                  name="m2b"
-                  value="1"
-                >
-
-                <span>
-                  CU
-                </span>
-
-              </label>
-
-
-              <p>
-                <b>3.</b>
-                Jelaskan perbedaan tugas
-                ALU dan CU.
-              </p>
-
-
-              <textarea
-                id="m2reason"
-                rows="4"
-                placeholder="Tuliskan penjelasanmu..."
-              ></textarea>
-
-            </div>
-
-          `
-
-        },
-
-
-        m3:{
-
-          title:
-            "Mission 3 — Trace the Data",
-
-          desc:
-            "15 XP struktur + 5 XP uraian rubrik",
-
-          hint:
-            "Gunakan konsep Input → Process → Output. Storage hanya dicantumkan jika memang digunakan.",
-
-          seconds:
-            900,
-
-          html:`
-
-            <div class="mission-card">
-
-              <p>
-                Pilih satu kasus,
-                lalu tuliskan alurnya.
-              </p>
-
-
-              <select id="m3case">
-
-                <option>
-                  Mengetik tugas
-                </option>
-
-                <option>
-                  Merekam suara
-                </option>
-
-                <option>
-                  Membuka foto
-                </option>
-
-                <option>
-                  Mencetak dokumen
-                </option>
-
-              </select>
-
-
-              <div
-                class="grid"
-                style="margin-top:12px"
-              >
-
-                <div>
-
-                  <label>
-                    Input
-                  </label>
-
-                  <input
-                    id="m3input"
-                    placeholder="Contoh: keyboard"
-                  >
-
-                </div>
-
-
-                <div>
-
-                  <label>
-                    Process
-                  </label>
-
-                  <input
-                    id="m3process"
-                    placeholder="Contoh: CPU"
-                  >
-
-                </div>
-
-
-                <div>
-
-                  <label>
-                    Output
-                  </label>
-
-                  <input
-                    id="m3output"
-                    placeholder="Contoh: monitor"
-                  >
-
-                </div>
-
-
-                <div>
-
-                  <label>
-                    Storage (jika ada)
-                  </label>
-
-                  <input
-                    id="m3storage"
-                    placeholder="SSD/HDD bila diperlukan"
-                  >
-
-                </div>
-
-              </div>
-
-
-              <label
-                style="margin-top:14px"
-              >
-                Mengapa urutan tersebut
-                sesuai IPO?
-              </label>
-
-
-              <textarea
-                id="m3reason"
-                rows="4"
-              ></textarea>
-
-            </div>
-
-          `
-
-        }
-
-      }[type];
-
-
-      qs("#missionTitle")
-        .textContent =
-          config.title;
-
-
-      qs("#missionDesc")
-        .textContent =
-          config.desc;
-
-
-      qs("#missionHint")
-        .textContent =
-          config.hint;
-
-
-      qs("#missionContent")
-        .innerHTML =
-          config.html;
-
-
-      qs("#missionSubmit")
-        .classList.remove(
-          "hidden"
-        );
-
-
-      qs("#missionNext")
-        .classList.add(
-          "hidden"
-        );
-
-
-      startMissionTimer(
-        config.seconds
-      );
-
-    }
-
-
-    function startMissionTimer(seconds){
-
-      clearInterval(
-        missionTimerHandle
-      );
-
-      missionSeconds =
-        seconds;
-
-      updateMissionTimer();
-
-
-      missionTimerHandle =
-        setInterval(
-          () => {
-
-            missionSeconds--;
-
-            updateMissionTimer();
-
-            if(
-              missionSeconds <= 0
-            ){
-
-              clearInterval(
-                missionTimerHandle
-              );
-
-              submitMission();
-
-            }
-
-          },
-          1000
-        );
-
-    }
-
-
-    function updateMissionTimer(){
-
-      const minutes =
-        String(
-          Math.floor(
-            missionSeconds/60
-          )
-        ).padStart(2,"0");
-
-
-      const seconds =
-        String(
-          missionSeconds%60
-        ).padStart(2,"0");
-
-
-      qs("#missionTimer")
-        .textContent =
-          `${minutes}:${seconds}`;
-
-    }
-
-
-    function submitMission(){
-
-      clearInterval(
-        missionTimerHandle
-      );
-
-
-      let score=0;
-
-
-      if(
-        missionType === "m1"
-      ){
+        updateMissionTimer();
 
         if(
-          qs(
-            'input[name="m1a"]:checked'
-          )?.value === "0"
+          missionSeconds <= 0
         ){
 
-          score += 8;
-
-        }
-
-
-        if(
-          qs(
-            'input[name="m1b"]:checked'
-          )?.value === "1"
-        ){
-
-          score += 8;
-
-        }
-
-
-        state.m1 =
-          score;
-
-
-        state.essayAnswers.m1 =
-          qs("#m1reason")
-            .value
-            .trim();
-
-      }
-
-
-      else if(
-        missionType === "m2"
-      ){
-
-        if(
-          qs(
-            'input[name="m2a"]:checked'
-          )?.value === "0"
-        ){
-
-          score += 8;
-
-        }
-
-
-        if(
-          qs(
-            'input[name="m2b"]:checked'
-          )?.value === "1"
-        ){
-
-          score += 8;
-
-        }
-
-
-        state.m2 =
-          score;
-
-
-        state.essayAnswers.m2 =
-          qs("#m2reason")
-            .value
-            .trim();
-
-      }
-
-
-      else{
-
-        const input =
-          qs("#m3input")
-            .value
-            .trim();
-
-
-        const process =
-          qs("#m3process")
-            .value
-            .trim();
-
-
-        const output =
-          qs("#m3output")
-            .value
-            .trim();
-
-
-        const storage =
-          qs("#m3storage")
-            .value
-            .trim();
-
-
-        const reason =
-          qs("#m3reason")
-            .value
-            .trim();
-
-
-        if(input){
-
-          score += 5;
-
-        }
-
-
-        if(process){
-
-          score += 5;
-
-        }
-
-
-        if(output){
-
-          score += 5;
-
-        }
-
-
-        state.m3 =
-          score;
-
-
-        state.essayAnswers.m3 = [
-
-          `Kasus: ${qs("#m3case").value}`,
-
-          `Input: ${input}`,
-
-          `Process: ${process}`,
-
-          `Output: ${output}`,
-
-          `Storage: ${storage}`,
-
-          `Alasan: ${reason}`
-
-        ].join("\n");
-
-      }
-
-
-      state.xp +=
-        score;
-
-
-      updateTop();
-
-      localSave();
-
-
-      qs("#missionSubmit")
-        .classList.add(
-          "hidden"
-        );
-
-
-      qs("#missionNext")
-        .classList.remove(
-          "hidden"
-        );
-
-    }
-
-
-    function nextMission(){
-
-      if(
-        missionType === "m1"
-      ){
-
-        startMission2();
-
-      }
-
-      else if(
-        missionType === "m2"
-      ){
-
-        startMission3();
-
-      }
-
-      else{
-
-        startBoss();
-
-      }
-
-    }
-
-
-    /* =====================================================
-       BOSS
-    ===================================================== */
-
-    function startBoss(){
-
-      show("#boss");
-
-      startBossTimer(
-        600
-      );
-
-    }
-
-
-    function startBossTimer(seconds){
-
-      clearInterval(
-        missionTimerHandle
-      );
-
-      missionSeconds =
-        seconds;
-
-      updateBossTimer();
-
-
-      missionTimerHandle =
-        setInterval(
-          () => {
-
-            missionSeconds--;
-
-            updateBossTimer();
-
-            if(
-              missionSeconds <= 0
-            ){
-
-              clearInterval(
-                missionTimerHandle
-              );
-
-              submitBoss();
-
-            }
-
-          },
-          1000
-        );
-
-    }
-
-
-    function updateBossTimer(){
-
-      const minutes =
-        String(
-          Math.floor(
-            missionSeconds/60
-          )
-        ).padStart(2,"0");
-
-
-      const seconds =
-        String(
-          missionSeconds%60
-        ).padStart(2,"0");
-
-
-      qs("#bossTimer")
-        .textContent =
-          `${minutes}:${seconds}`;
-
-    }
-
-
-    function submitBoss(){
-
-      clearInterval(
-        missionTimerHandle
-      );
-
-
-      const input =
-        qs("#bossInput")
-          .value
-          .trim();
-
-
-      const process =
-        qs("#bossProcess")
-          .value
-          .trim();
-
-
-      const output =
-        qs("#bossOutput")
-          .value
-          .trim();
-
-
-      const cpu =
-        qs("#bossCpu")
-          .value
-          .trim();
-
-
-      const ipo =
-        qs("#bossIpo")
-          .value
-          .trim();
-
-
-      const reason =
-        qs("#bossReason")
-          .value
-          .trim();
-
-
-      let score=0;
-
-
-      if(input){
-        score += 3;
-      }
-
-      if(process){
-        score += 3;
-      }
-
-      if(output){
-        score += 3;
-      }
-
-      if(cpu){
-        score += 2;
-      }
-
-      if(ipo){
-        score += 2;
-      }
-
-
-      state.boss =
-        Math.min(
-          13,
-          score
-        );
-
-
-      state.xp +=
-        state.boss;
-
-
-      state.essayAnswers.boss = [
-
-        `Input: ${input}`,
-
-        `Process: ${process}`,
-
-        `Output: ${output}`,
-
-        `CPU / Memory: ${cpu}`,
-
-        `Alur IPO: ${ipo}`,
-
-        `Alasan: ${reason}`
-
-      ].join("\n");
-
-
-      updateTop();
-
-      localSave();
-
-      startPosttest();
-
-    }
-
-
-    /* =====================================================
-       REFLECTION
-    ===================================================== */
-
-    function finishReflection(){
-
-      state.reflection = {
-
-        r3:
-          qs("#r3")
-            .value
-            .trim(),
-
-        r2:
-          qs("#r2")
-            .value
-            .trim(),
-
-        r1:
-          qs("#r1")
-            .value
-            .trim()
-
-      };
-
-
-      localSave();
-
-
-      qs("#fPre")
-        .textContent =
-          `${state.pre ?? "-"}/100`;
-
-
-      qs("#fPost")
-        .textContent =
-          `${state.post ?? "-"}/100`;
-
-
-      qs("#fPreDetail")
-        .textContent =
-          `${state.preCorrect ?? 0} dari 15 soal benar`;
-
-
-      qs("#fPostDetail")
-        .textContent =
-          `${state.postCorrect ?? 0} dari 15 soal benar`;
-
-
-      qs("#fXP")
-        .textContent =
-          state.xp;
-
-
-      show("#finish");
-
-
-      showToast(
-        "Refleksi berhasil disimpan."
-      );
-
-    }
-
-
-    /* =====================================================
-       DATABASE
-    ===================================================== */
-
-    function buildRecord(){
-
-      return {
-
-        className:
-          state.className,
-
-        teacher:
-          state.teacher,
-
-        code:
-          state.code,
-
-        name:
-          state.name,
-
-        team:
-          state.team,
-
-        role:
-          state.role,
-
-        pre:
-          state.pre,
-
-        m1:
-          state.m1,
-
-        m2:
-          state.m2,
-
-        m3:
-          state.m3,
-
-        boss:
-          state.boss,
-
-        post:
-          state.post,
-
-        xp:
-          state.xp,
-
-        rubric_m1:"",
-        rubric_m2:"",
-        rubric_m3:"",
-        rubric_boss:"",
-
-        answer_m1:
-          state.essayAnswers.m1 || "",
-
-        answer_m2:
-          state.essayAnswers.m2 || "",
-
-        answer_m3:
-          state.essayAnswers.m3 || "",
-
-        answer_boss:
-          state.essayAnswers.boss || "",
-
-        reflection_r3:
-          state.reflection.r3 || "",
-
-        reflection_r2:
-          state.reflection.r2 || "",
-
-        reflection_r1:
-          state.reflection.r1 || "",
-
-        timestamp:
-          new Date().toISOString()
-
-      };
-
-    }
-
-
-    function localSave(){
-
-      if(
-        !state.className ||
-        !state.code
-      ){
-
-        return;
-
-      }
-
-
-      const record =
-        buildRecord();
-
-
-      const records =
-        JSON.parse(
-          localStorage.getItem(
-            "cm2_records"
-          ) || "[]"
-        );
-
-
-      const index =
-        records.findIndex(
-          item =>
-            item.className ===
-              record.className &&
-            item.code ===
-              record.code
-        );
-
-
-      if(index >= 0){
-
-        records[index] =
-          record;
-
-      }else{
-
-        records.push(
-          record
-        );
-
-      }
-
-
-      localStorage.setItem(
-        "cm2_records",
-        JSON.stringify(
-          records
-        )
-      );
-
-
-      queueSync(
-        record
-      );
-
-    }
-
-
-    function queueSync(record){
-
-      syncQueue =
-        syncQueue.filter(
-          item =>
-            !(
-              item.className ===
-                record.className &&
-              item.code ===
-                record.code
-            )
-        );
-
-
-      syncQueue.push(
-        record
-      );
-
-
-      clearTimeout(
-        window.__syncTimer
-      );
-
-
-      window.__syncTimer =
-        setTimeout(
-          flushSyncQueue,
-          450
-        );
-
-    }
-
-
-    async function flushSyncQueue(){
-
-      if(
-        syncRunning ||
-        !syncQueue.length
-      ){
-
-        return;
-
-      }
-
-
-      syncRunning =
-        true;
-
-
-      try{
-
-        while(
-          syncQueue.length
-        ){
-
-          const record =
-            syncQueue.shift();
-
-
-          await fetch(
-            SHEET_WEB_APP_URL,
-            {
-              method:"POST",
-              mode:"no-cors",
-              headers:{
-                "Content-Type":
-                  "text/plain;charset=utf-8"
-              },
-              body:
-                JSON.stringify({
-                  action:"upsert",
-                  record:record
-                })
-            }
+          clearInterval(
+            missionTimerHandle
           );
 
+          submitMission();
+
         }
 
-      }catch(error){
+      },
+      1000
+    );
 
-        console.error(
-          "Google Sheets sync failed:",
-          error
-        );
+}
 
 
-        setTimeout(
-          flushSyncQueue,
-          2500
-        );
+function updateMissionTimer(){
 
-      }finally{
+  const minutes =
+    String(
+      Math.floor(
+        missionSeconds / 60
+      )
+    )
+    .padStart(
+      2,
+      "0"
+    );
 
-        syncRunning =
-          false;
+  const seconds =
+    String(
+      missionSeconds % 60
+    )
+    .padStart(
+      2,
+      "0"
+    );
 
-      }
+  qs("#missionTimer")
+    .textContent =
+      `${minutes}:${seconds}`;
+
+}
+
+
+function submitMission(){
+
+  clearInterval(
+    missionTimerHandle
+  );
+
+  let score =
+    0;
+
+
+  if(
+    missionType === "m1"
+  ){
+
+    if(
+      qs(
+        'input[name="m1a"]:checked'
+      )?.value === "0"
+    ){
+
+      score += 8;
 
     }
 
+    if(
+      qs(
+        'input[name="m1b"]:checked'
+      )?.value === "1"
+    ){
 
-    /* =====================================================
-       ESCAPE
-    ===================================================== */
+      score += 8;
 
-    function escapeHtml(value){
+    }
 
-      return String(
-        value ?? ""
-      ).replace(
-        /[&<>"']/g,
-        character =>
-          ({
-            "&":"&amp;",
-            "<":"&lt;",
-            ">":"&gt;",
-            '"':"&quot;",
-            "'":"&#39;"
-          })[character]
+    state.m1 =
+      score;
+
+    state.essayAnswers.m1 =
+      qs("#m1reason")
+      .value
+      .trim();
+
+  }
+
+
+  else if(
+    missionType === "m2"
+  ){
+
+    if(
+      qs(
+        'input[name="m2a"]:checked'
+      )?.value === "0"
+    ){
+
+      score += 8;
+
+    }
+
+    if(
+      qs(
+        'input[name="m2b"]:checked'
+      )?.value === "1"
+    ){
+
+      score += 8;
+
+    }
+
+    state.m2 =
+      score;
+
+    state.essayAnswers.m2 =
+      qs("#m2reason")
+      .value
+      .trim();
+
+  }
+
+
+  else{
+
+    const input =
+      qs("#m3input")
+      .value
+      .trim();
+
+    const process =
+      qs("#m3process")
+      .value
+      .trim();
+
+    const output =
+      qs("#m3output")
+      .value
+      .trim();
+
+    const storage =
+      qs("#m3storage")
+      .value
+      .trim();
+
+    const reason =
+      qs("#m3reason")
+      .value
+      .trim();
+
+
+    if(input)
+      score += 5;
+
+    if(process)
+      score += 5;
+
+    if(output)
+      score += 5;
+
+
+    state.m3 =
+      score;
+
+
+    state.essayAnswers.m3 =
+      [
+        `Kasus: ${qs("#m3case").value}`,
+        `Input: ${input}`,
+        `Process: ${process}`,
+        `Output: ${output}`,
+        `Storage: ${storage}`,
+        `Alasan: ${reason}`
+      ]
+      .join("\n");
+
+  }
+
+
+  state.xp +=
+    score;
+
+  updateTop();
+
+  localSave();
+
+
+  qs("#missionSubmit")
+    .classList
+    .add("hidden");
+
+
+  qs("#missionNext")
+    .classList
+    .remove("hidden");
+
+}
+
+
+function nextMission(){
+
+  if(
+    missionType === "m1"
+  ){
+
+    startMission2();
+
+  }
+
+  else if(
+    missionType === "m2"
+  ){
+
+    startMission3();
+
+  }
+
+  else{
+
+    startBoss();
+
+  }
+
+}
+
+
+/* =========================================================
+   BOSS
+========================================================= */
+
+function startBoss(){
+
+  show("#boss");
+
+  startBossTimer(
+    600
+  );
+
+}
+
+
+function startBossTimer(seconds){
+
+  clearInterval(
+    missionTimerHandle
+  );
+
+  missionSeconds =
+    seconds;
+
+  updateBossTimer();
+
+  missionTimerHandle =
+    setInterval(
+      () => {
+
+        missionSeconds--;
+
+        updateBossTimer();
+
+        if(
+          missionSeconds <= 0
+        ){
+
+          clearInterval(
+            missionTimerHandle
+          );
+
+          submitBoss();
+
+        }
+
+      },
+      1000
+    );
+
+}
+
+
+function updateBossTimer(){
+
+  const minutes =
+    String(
+      Math.floor(
+        missionSeconds / 60
+      )
+    )
+    .padStart(
+      2,
+      "0"
+    );
+
+  const seconds =
+    String(
+      missionSeconds % 60
+    )
+    .padStart(
+      2,
+      "0"
+    );
+
+  qs("#bossTimer")
+    .textContent =
+      `${minutes}:${seconds}`;
+
+}
+
+
+function submitBoss(){
+
+  clearInterval(
+    missionTimerHandle
+  );
+
+
+  const input =
+    qs("#bossInput")
+    .value
+    .trim();
+
+  const process =
+    qs("#bossProcess")
+    .value
+    .trim();
+
+  const output =
+    qs("#bossOutput")
+    .value
+    .trim();
+
+  const cpu =
+    qs("#bossCpu")
+    .value
+    .trim();
+
+  const ipo =
+    qs("#bossIpo")
+    .value
+    .trim();
+
+  const reason =
+    qs("#bossReason")
+    .value
+    .trim();
+
+
+  let score =
+    0;
+
+
+  if(input)
+    score += 3;
+
+  if(process)
+    score += 3;
+
+  if(output)
+    score += 3;
+
+  if(cpu)
+    score += 2;
+
+  if(ipo)
+    score += 2;
+
+
+  state.boss =
+    Math.min(
+      13,
+      score
+    );
+
+
+  state.xp +=
+    state.boss;
+
+
+  state.essayAnswers.boss =
+    [
+      `Input: ${input}`,
+      `Process: ${process}`,
+      `Output: ${output}`,
+      `CPU / Memory: ${cpu}`,
+      `Alur IPO: ${ipo}`,
+      `Alasan: ${reason}`
+    ]
+    .join("\n");
+
+
+  updateTop();
+
+  localSave();
+
+
+  /* PENTING:
+     setelah Boss langsung masuk POST-TEST
+  */
+
+  startPosttest();
+
+}
+
+
+/* =========================================================
+   REFLECTION
+========================================================= */
+
+function finishReflection(){
+
+  state.reflection = {
+
+    r3:
+      qs("#r3")
+      .value
+      .trim(),
+
+    r2:
+      qs("#r2")
+      .value
+      .trim(),
+
+    r1:
+      qs("#r1")
+      .value
+      .trim()
+
+  };
+
+
+  localSave();
+
+
+  qs("#fPre")
+    .textContent =
+      `${state.pre ?? "-"}/100`;
+
+
+  qs("#fPost")
+    .textContent =
+      `${state.post ?? "-"}/100`;
+
+
+  qs("#fPreDetail")
+    .textContent =
+      `${state.preCorrect ?? 0} dari 15 soal benar`;
+
+
+  qs("#fPostDetail")
+    .textContent =
+      `${state.postCorrect ?? 0} dari 15 soal benar`;
+
+
+  qs("#fXP")
+    .textContent =
+      state.xp;
+
+
+  show("#finish");
+
+
+  showToast(
+    "Refleksi berhasil disimpan."
+  );
+
+}
+
+
+/* =========================================================
+   RECORD
+========================================================= */
+
+function buildRecord(){
+
+  return {
+
+    className:
+      state.className,
+
+    teacher:
+      state.teacher,
+
+    code:
+      state.code,
+
+    name:
+      state.name,
+
+    team:
+      state.team,
+
+    role:
+      state.role,
+
+    pre:
+      state.pre,
+
+    m1:
+      state.m1,
+
+    m2:
+      state.m2,
+
+    m3:
+      state.m3,
+
+    boss:
+      state.boss,
+
+    post:
+      state.post,
+
+    xp:
+      state.xp,
+
+    rubric_m1:"",
+    rubric_m2:"",
+    rubric_m3:"",
+    rubric_boss:"",
+
+    answer_m1:
+      state.essayAnswers.m1 || "",
+
+    answer_m2:
+      state.essayAnswers.m2 || "",
+
+    answer_m3:
+      state.essayAnswers.m3 || "",
+
+    answer_boss:
+      state.essayAnswers.boss || "",
+
+    reflection_r3:
+      state.reflection.r3 || "",
+
+    reflection_r2:
+      state.reflection.r2 || "",
+
+    reflection_r1:
+      state.reflection.r1 || "",
+
+    timestamp:
+      new Date().toISOString()
+
+  };
+
+}
+
+
+function localSave(){
+
+  if(
+    !state.className ||
+    !state.code
+  ){
+
+    return;
+
+  }
+
+
+  const record =
+    buildRecord();
+
+
+  const records =
+    JSON.parse(
+      localStorage.getItem(
+        "cm2_records"
+      ) || "[]"
+    );
+
+
+  const index =
+    records.findIndex(
+      item =>
+        item.className ===
+          record.className &&
+        item.code ===
+          record.code
+    );
+
+
+  if(index >= 0){
+
+    records[index] =
+      record;
+
+  }else{
+
+    records.push(
+      record
+    );
+
+  }
+
+
+  localStorage.setItem(
+    "cm2_records",
+    JSON.stringify(
+      records
+    )
+  );
+
+
+  queueSync(
+    record
+  );
+
+}
+
+
+function queueSync(record){
+
+  syncQueue =
+    syncQueue.filter(
+      item =>
+        !(
+          item.className ===
+            record.className &&
+          item.code ===
+            record.code
+        )
+    );
+
+
+  syncQueue.push(
+    record
+  );
+
+
+  clearTimeout(
+    window.__syncTimer
+  );
+
+
+  window.__syncTimer =
+    setTimeout(
+      flushSyncQueue,
+      450
+    );
+
+}
+
+
+async function flushSyncQueue(){
+
+  if(
+    syncRunning ||
+    !syncQueue.length
+  ){
+
+    return;
+
+  }
+
+
+  syncRunning =
+    true;
+
+
+  try{
+
+    while(
+      syncQueue.length
+    ){
+
+      const record =
+        syncQueue.shift();
+
+
+      await fetch(
+        SHEET_WEB_APP_URL,
+        {
+          method:"POST",
+
+          mode:"no-cors",
+
+          headers:{
+            "Content-Type":
+              "text/plain;charset=utf-8"
+          },
+
+          body:
+            JSON.stringify(
+              {
+                action:"upsert",
+                record:record
+              }
+            )
+        }
       );
 
     }
 
+  }
 
-    /* =====================================================
-       INITIALIZE
-    ===================================================== */
+  catch(error){
 
-    function restoreActiveStudent(){
-
-      const raw =
-        localStorage.getItem(
-          "cm2_active_student"
-        );
+    console.error(
+      "Google Sheets sync failed:",
+      error
+    );
 
 
-      if(!raw){
+    if(
+      syncQueue.length
+    ){
 
-        populateStudents();
-
-        updateExplorationButton();
-
-        return;
-
-      }
-
-
-      try{
-
-        const student =
-          JSON.parse(raw);
-
-
-        state.code =
-          student.code || "";
-
-        state.name =
-          student.name || "";
-
-        state.className =
-          student.className || "";
-
-        state.teacher =
-          student.teacher || "";
-
-        state.team =
-          student.team || "";
-
-        state.role =
-          student.role || "";
-
-
-        if(state.code){
-
-          qs("#studentPill")
-            .textContent =
-              `${state.name} • ${state.code} • ${state.className}`;
-
-
-          qs("#dClass")
-            .textContent =
-              `${state.className} • ${state.teacher}`;
-
-
-          qs("#dCode")
-            .textContent =
-              `${state.name} (${state.code})`;
-
-
-          qs("#dTeam")
-            .textContent =
-              state.team;
-
-        }
-
-      }catch(error){
-
-        console.warn(
-          "Gagal memulihkan sesi:",
-          error
-        );
-
-      }
-
-
-      populateStudents();
-
-      updateExplorationButton();
+      setTimeout(
+        flushSyncQueue,
+        2500
+      );
 
     }
 
+  }
 
-    restoreActiveStudent();
+  finally{
 
-  </script>
+    syncRunning =
+      false;
+
+  }
+
+}
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+function escapeHtml(value){
+
+  return String(
+    value ?? ""
+  )
+  .replace(
+    /[&<>"']/g,
+    character =>
+      ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
+      })[
+        character
+      ]
+  );
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+populateStudents();
+
+</script>
 
 </body>
 </html>
