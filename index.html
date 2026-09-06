@@ -2412,6 +2412,46 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         .trim();
     }
 
+    function buildRecord(){
+      return {
+        className:state.className,
+        teacher:state.teacher,
+        code:state.code,
+        name:state.name,
+        team:state.team,
+        role:state.role,
+        pre:state.pre,
+        m1:state.m1,
+        m2:state.m2,
+        m3:state.m3,
+        boss:state.boss,
+        post:state.post,
+        xp:state.xp,
+        rubric_m1:"",
+        rubric_m2:"",
+        rubric_m3:"",
+        rubric_boss:"",
+        answer_m1:state.essayAnswers?.m1 || "",
+        answer_m2:state.essayAnswers?.m2 || "",
+        answer_m3:state.essayAnswers?.m3 || "",
+        answer_boss:state.essayAnswers?.boss || "",
+        m1_choice_a:missionChoiceText("m1","a",state.missionChoices?.m1?.a),
+        m1_choice_b:missionChoiceText("m1","b",state.missionChoices?.m1?.b),
+        m1_key_a:missionKeyText("m1","a"),
+        m1_key_b:missionKeyText("m1","b"),
+        m2_choice_a:missionChoiceText("m2","a",state.missionChoices?.m2?.a),
+        m2_choice_b:missionChoiceText("m2","b",state.missionChoices?.m2?.b),
+        m2_key_a:missionKeyText("m2","a"),
+        m2_key_b:missionKeyText("m2","b"),
+        reflection_r3:state.reflection?.r3 || "",
+        reflection_r2:state.reflection?.r2 || "",
+        reflection_r1:state.reflection?.r1 || "",
+        pre_answers:formatTestAnswersForSheet(state.preAnswers),
+        post_answers:formatTestAnswersForSheet(state.postAnswers),
+        timestamp:new Date().toISOString()
+      };
+    }
+
     function finishReflection(){
       const r3 = normalizeReflectionText(qs("#r3")?.value);
       const r2 = normalizeReflectionText(qs("#r2")?.value);
@@ -2438,6 +2478,9 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
        * - Refleksi 3–2–1
        */
       const finalRecord = buildRecord();
+
+      /* Simpan record final ke local cache + queue terlebih dahulu. */
+      localSave();
 
       /*
        * Simpan snapshot lokal terlebih dahulu.
