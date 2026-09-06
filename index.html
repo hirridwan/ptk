@@ -988,8 +988,6 @@
       postCorrect:0
     };
 
-    const clone = obj => JSON.parse(JSON.stringify(obj));
-
     let state = clone(DEFAULT_STATE);
     let testMode = "pre";
     let qIndex = 0;
@@ -1011,6 +1009,7 @@
     let reflectionDraft = {r3:"",r2:"",r1:""};
 
     const qs = selector => document.querySelector(selector);
+    const clone = obj => JSON.parse(JSON.stringify(obj));
 
     function safeNumber(value,fallback=0){
       const n = Number(value);
@@ -1361,7 +1360,41 @@
       }
     });
 
-    function startSession(){
+    function jsonp(url,params={},timeout=10000){
+      return new Promise((resolve,reject)=>{
+        const callback="cm2_cb_"+Date.now()+"_"+Math.random().toString(36).slice(2);
+        const script=document.createElement("script");
+        const query=new URLSearchParams({...params,callback});
+        let finished=false;
+
+        const finish=(fn,value)=>{
+          if(finished)return;
+          finished=true;
+          clearTimeout(timer);
+          delete window[callback];
+          script.remove();
+          fn(value);
+        };
+
+        window[callback]=data=>finish(resolve,data);
+        script.onerror=()=>finish(reject,new Error("Google Sheets request gagal."));
+        document.head.appendChild(script);
+        const timer=setTimeout(()=>finish(reject,new Error("Google Sheets request timeout.")),timeout);
+        script.src=url+"?"+query.toString();
+      });
+    }
+
+    async function reserveAttempt(student){
+      return jsonp(SHEET_WEB_APP_URL,{
+        action:"reserve",
+        className:student.class,
+        code:student.code,
+        name:student.name,
+        teacher:student.teacher
+      });
+    }
+
+    async function startSession(){
       const classKey = qs("#classSelect").value;
       const code = qs("#studentCode").value;
 
@@ -1377,10 +1410,26 @@
         return;
       }
 
-      clearCompletionMarker();
-      clearActiveSession();
-      clearInterval(timerHandle);
-      clearInterval(missionTimerHandle);
+      const button = document.querySelector('#login button[onclick="startSession()"]');
+      if(button) button.disabled = true;
+
+      try{
+        const remote = await reserveAttempt(student);
+
+        if(!remote || !remote.ok){
+          alert("Sistem tidak dapat memeriksa status siswa. Pastikan Google Apps Script sudah di-deploy ulang.");
+          return;
+        }
+
+        if(remote.exists){
+          alert("Siswa ini sudah mengikuti Computer Mission. Satu siswa hanya dapat mengikuti satu kali. Hapus data siswa tersebut dari Google Sheets untuk mengizinkan percobaan baru.");
+          return;
+        }
+
+        clearCompletionMarker();
+        clearActiveSession();
+        clearInterval(timerHandle);
+        clearInterval(missionTimerHandle);
 
       state = {
         ...clone(DEFAULT_STATE),
@@ -1420,6 +1469,12 @@
       show("#dash",false);
       updateTop();
       saveActiveSession();
+      }catch(error){
+        console.error("Start session failed:",error);
+        alert("Tidak bisa memulai karena koneksi ke Google Sheets gagal. Coba lagi.");
+      }finally{
+        if(button) button.disabled = false;
+      }
     }
 
     function updateTop(){
@@ -2099,12 +2154,18 @@
       if(qs("#r1")) qs("#r1").value = reflectionDraft.r1||"";
     }
 
+    function normalizeReflectionText(value){
+      return String(value ?? "")
+        .replace(/\r\n?/g,"\n")
+        .trim();
+    }
+
     function finishReflection(){
       captureReflectionDraft();
 
-      const r3 = reflectionDraft.r3.trim();
-      const r2 = reflectionDraft.r2.trim();
-      const r1 = reflectionDraft.r1.trim();
+      const r3 = normalizeReflectionText(reflectionDraft.r3);
+      const r2 = normalizeReflectionText(reflectionDraft.r2);
+      const r1 = normalizeReflectionText(reflectionDraft.r1);
 
       if(!r3 || !r2 || !r1){
         showToast("Semua bagian refleksi 3–2–1 wajib diisi.");

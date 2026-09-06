@@ -101,6 +101,93 @@ function RESET_DATA_SISWA() {
 function doGet(e) {
   const params = (e && e.parameter) || {};
 
+  /* Cek satu kali percobaan siswa. Data di Google Sheets menjadi sumber utama. */
+  if (params.action === "check") {
+    const className = String(params.className || "").trim();
+    const code = String(params.code || "").trim();
+    const sheet = getSheet_();
+    const row = findRow_(sheet, className, code);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        ok: true,
+        exists: row > 0
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  /* Buat penanda percobaan saat siswa mulai.
+     Lock mencegah dua perangkat memulai siswa yang sama bersamaan. */
+  if (params.action === "reserve") {
+    const className = String(params.className || "").trim();
+    const code = String(params.code || "").trim();
+    const name = String(params.name || "").trim();
+    const teacher = String(params.teacher || "").trim();
+
+    if (!className || !code || !name) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ ok:false, error:"Kelas, kode, dan nama wajib." }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    const lock = LockService.getScriptLock();
+    lock.waitLock(20000);
+
+    try {
+      const sheet = getSheet_();
+      const existingRow = findRow_(sheet, className, code);
+
+      if (existingRow > 0) {
+        return ContentService
+          .createTextOutput(JSON.stringify({ ok:true, exists:true }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const record = {
+        className,
+        teacher,
+        code,
+        name,
+        team:"",
+        role:"",
+        pre:"",
+        m1:"",
+        rubric_m1:"",
+        m2:"",
+        rubric_m2:"",
+        m3:"",
+        rubric_m3:"",
+        boss:"",
+        rubric_boss:"",
+        post:"",
+        xp:"",
+        answer_m1:"",
+        answer_m2:"",
+        answer_m3:"",
+        answer_boss:"",
+        reflection_r3:"",
+        reflection_r2:"",
+        reflection_r1:"",
+        timestamp:new Date().toISOString()
+      };
+
+      const row = HEADERS.map(header => {
+        if (["N-Gain", "Kategori N-Gain", "Ketuntasan", "Total XP"].includes(header)) return "";
+        const field = FIELD[header];
+        return field ? (record[field] ?? "") : "";
+      });
+
+      sheet.getRange(Math.max(sheet.getLastRow()+1,2), 1, 1, HEADERS.length).setValues([row]);
+      refresh_();
+
+      return ContentService
+        .createTextOutput(JSON.stringify({ ok:true, exists:false, created:true }))
+        .setMimeType(ContentService.MimeType.JSON);
+    } finally {
+      lock.releaseLock();
+    }
+  }
+
   if (params.action === "records") {
     const payload = getRecordsPayload_();
 
