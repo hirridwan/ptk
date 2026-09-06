@@ -945,7 +945,20 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
 
   <script>
     const SHEET_WEB_APP_URL =
-      "https://script.google.com/macros/s/AKfycbxLQrxic-n42_GNiRuoZxMQM6zoXszP4_10CHg65ib_1nYYmQYzAbHIaVfqc1psasBlFA/exec";
+      "https://script.google.com/macros/s/AKfycbzm6WwtkeNIMsrwGmr1JjP15roFThJIHl8-2XgQLwDQtzxktgs0d0J6xM_vW5YVnjm2tQ/exec";
+
+/*
+ * Endpoint cadangan dari deployment Apps Script yang sebelumnya dipakai.
+ * Dipakai hanya untuk sinkronisasi data, sehingga apabila deployment utama
+ * masih versi lama, data Pre-Test/Post-Test tetap dikirim ke deployment terbaru.
+ */
+const SHEET_WEB_APP_URL_FALLBACK =
+      "https://script.google.com/macros/s/AKfycbzm6WwtkeNIMsrwGmr1JjP15roFThJIHl8-2XgQLwDQtzxktgs0d0J6xM_vW5YVnjm2tQ/exec";
+
+const SHEET_SYNC_URLS = [
+  SHEET_WEB_APP_URL,
+  SHEET_WEB_APP_URL_FALLBACK
+].filter((url,index,array) => url && array.indexOf(url) === index);
 
     const SESSION_KEY = "cm2_active_session_final";
     const COMPLETED_KEY = "cm2_completed_final";
@@ -1395,21 +1408,23 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         while(syncQueue.length){
           const record = syncQueue[0];
 
-          await fetch(
-            SHEET_WEB_APP_URL,
-            {
-              method:"POST",
-              mode:"no-cors",
-              keepalive:true,
-              headers:{
-                "Content-Type":"text/plain;charset=utf-8"
-              },
-              body:JSON.stringify({
-                action:"upsert",
-                record
-              })
-            }
-          );
+          for(const url of SHEET_SYNC_URLS){
+            await fetch(
+              url,
+              {
+                method:"POST",
+                mode:"no-cors",
+                keepalive:true,
+                headers:{
+                  "Content-Type":"text/plain;charset=utf-8"
+                },
+                body:JSON.stringify({
+                  action:"upsert",
+                  record
+                })
+              }
+            );
+          }
 
           syncQueue.shift();
 
@@ -1438,36 +1453,77 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
     async function syncRecordNow(record){
       if(!record || !record.className || !record.code) return false;
 
-      // Hapus antrean lama untuk siswa yang sama agar record lama
-      // tidak datang belakangan dan menimpa jawaban terbaru.
+      /*
+       * Buat salinan record khusus pengiriman.
+       * Pre-Test dan Post-Test HARUS berupa teks, bukan array kosong.
+       */
+      const payloadRecord = {
+        ...record,
+        pre_answers:
+          String(record.pre_answers||"").trim()
+            ? String(record.pre_answers)
+            : String(state.preAnswersText||"").trim()
+              ? String(state.preAnswersText)
+              : getTestAnswerLogForRecord("pre"),
+        post_answers:
+          String(record.post_answers||"").trim()
+            ? String(record.post_answers)
+            : String(state.postAnswersText||"").trim()
+              ? String(state.postAnswersText)
+              : getTestAnswerLogForRecord("post")
+      };
+
+      /*
+       * Hapus antrean lama siswa ini agar data lama tidak datang
+       * belakangan lalu menimpa data terbaru.
+       */
       syncQueue = syncQueue.filter(item => !(
-        item.className===record.className &&
-        item.code===record.code
+        item.className===payloadRecord.className &&
+        item.code===payloadRecord.code
       ));
 
-      try{
-        await fetch(SHEET_WEB_APP_URL,{
-          method:"POST",
-          mode:"no-cors",
-          keepalive:true,
-          headers:{"Content-Type":"text/plain;charset=utf-8"},
-          body:JSON.stringify({action:"upsert",record})
-        });
+      let sent = false;
 
-        // Pastikan antrean tetap bersih setelah pengiriman langsung.
+      /*
+       * Kirim ke semua deployment yang terdaftar.
+       * Ini mengatasi kasus URL index.html menunjuk ke deployment lama,
+       * sementara Code.gs terbaru berada pada deployment lain.
+       */
+      for(const url of SHEET_SYNC_URLS){
         try{
-          localStorage.setItem(
-            "cm2_sync_queue_final",
-            JSON.stringify(syncQueue)
-          );
-        }catch(error){}
+          await fetch(url,{
+            method:"POST",
+            mode:"no-cors",
+            keepalive:true,
+            headers:{
+              "Content-Type":"text/plain;charset=utf-8"
+            },
+            body:JSON.stringify({
+              action:"upsert",
+              record:payloadRecord
+            })
+          });
 
-        return true;
-      }catch(error){
-        console.error("Immediate Google Sheets sync failed:",error);
-        return false;
+          sent = true;
+        }catch(error){
+          console.error(
+            "Google Sheets sync failed:",
+            url,
+            error
+          );
+        }
       }
+
+      try{
+        localStorage.setItem(
+          "cm2_sync_queue_final",
+          JSON.stringify(syncQueue)
+        );
+      }catch(error){}
+
+      return sent;
     }
+
 
     function restoreSyncQueue(){
       try{
@@ -2006,6 +2062,15 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       const answerLog = buildTestAnswerLog();
       const answerText = formatTestAnswersForSheet(answerLog);
 
+      if(!answerText && selectedQuestions.length){
+        console.error("Test answer log kosong:", {
+          testMode,
+          qIndex,
+          selectedQuestions,
+          answerChoices:state.answerChoices
+        });
+      }
+
       if(testMode==="pre"){
         state.pre = score;
         state.preCorrect = correct;
@@ -2015,6 +2080,7 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         const record = buildRecord();
         saveRecordLocalOnly(record);
         queueSync(record);
+        saveActiveSession();
 
         // Kirim langsung dan tunggu selesai agar jawaban Pre-Test
         // benar-benar tersimpan sebelum berpindah tahap.
@@ -2034,6 +2100,7 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       const record = buildRecord();
       saveRecordLocalOnly(record);
       queueSync(record);
+      saveActiveSession();
 
       // Tunggu pengiriman Post-Test selesai sebelum membuka refleksi.
       await syncRecordNow(record);
