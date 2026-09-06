@@ -1351,6 +1351,13 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
 
       syncQueue.push(record);
 
+      try{
+        localStorage.setItem(
+          "cm2_sync_queue_final",
+          JSON.stringify(syncQueue)
+        );
+      }catch(error){}
+
       clearTimeout(window.__syncTimer);
       window.__syncTimer = setTimeout(
         flushSyncQueue,
@@ -1372,6 +1379,7 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
             {
               method:"POST",
               mode:"no-cors",
+              keepalive:true,
               headers:{
                 "Content-Type":"text/plain;charset=utf-8"
               },
@@ -1383,6 +1391,13 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
           );
 
           syncQueue.shift();
+
+          try{
+            localStorage.setItem(
+              "cm2_sync_queue_final",
+              JSON.stringify(syncQueue)
+            );
+          }catch(error){}
         }
       }catch(error){
         console.error(
@@ -1412,6 +1427,18 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       }catch(error){
         console.error("Immediate Google Sheets sync failed:",error);
         return false;
+      }
+    }
+
+    function restoreSyncQueue(){
+      try{
+        const raw = localStorage.getItem("cm2_sync_queue_final");
+        const parsed = raw ? JSON.parse(raw) : [];
+        if(Array.isArray(parsed)){
+          syncQueue = parsed;
+        }
+      }catch(error){
+        syncQueue = [];
       }
     }
 
@@ -1912,19 +1939,25 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       const score =
         Math.round(correct/questions.length*100);
 
+      const answerLog = buildTestAnswerLog();
+
       if(testMode==="pre"){
         state.pre = score;
         state.preCorrect = correct;
-        state.preAnswers = buildTestAnswerLog();
+        state.preAnswers = answerLog;
+
         localSave();
-        show("#mini");
+
+        currentScreen = "#mini";
+        show("#mini",false);
         saveActiveSession();
         return;
       }
 
       state.post = score;
       state.postCorrect = correct;
-      state.postAnswers = buildTestAnswerLog();
+      state.postAnswers = answerLog;
+
       localSave();
 
       qs("#fPre").textContent = `${state.pre??"-"}/100`;
@@ -1935,7 +1968,9 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         `${state.postCorrect??0} dari 15 soal benar`;
       qs("#fXP").textContent = state.xp;
 
-      show("#reflection");
+      currentScreen = "#reflection";
+      show("#reflection",false);
+      restoreReflectionDraft();
       saveActiveSession();
     }
 
@@ -2045,19 +2080,39 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
 
     function captureMissionDraft(){
       if(missionType==="m1"){
+        const a = qs('input[name="m1a"]:checked')?.value||"";
+        const b = qs('input[name="m1b"]:checked')?.value||"";
+
         missionDrafts.m1 = {
-          a:qs('input[name="m1a"]:checked')?.value||"",
-          b:qs('input[name="m1b"]:checked')?.value||"",
+          a,
+          b,
           reason:qs("#m1reason")?.value||""
         };
+
+        state.missionChoices = state.missionChoices || {
+          m1:{a:"",b:""},
+          m2:{a:"",b:""}
+        };
+
+        state.missionChoices.m1 = {a,b};
       }
 
       if(missionType==="m2"){
+        const a = qs('input[name="m2a"]:checked')?.value||"";
+        const b = qs('input[name="m2b"]:checked')?.value||"";
+
         missionDrafts.m2 = {
-          a:qs('input[name="m2a"]:checked')?.value||"",
-          b:qs('input[name="m2b"]:checked')?.value||"",
+          a,
+          b,
           reason:qs("#m2reason")?.value||""
         };
+
+        state.missionChoices = state.missionChoices || {
+          m1:{a:"",b:""},
+          m2:{a:"",b:""}
+        };
+
+        state.missionChoices.m2 = {a,b};
       }
 
       if(missionType==="m3"){
@@ -2358,19 +2413,78 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
     }
 
     function finishReflection(){
-      captureReflectionDraft();
-
-      const r3 = normalizeReflectionText(reflectionDraft.r3);
-      const r2 = normalizeReflectionText(reflectionDraft.r2);
-      const r1 = normalizeReflectionText(reflectionDraft.r1);
+      const r3 = normalizeReflectionText(qs("#r3")?.value);
+      const r2 = normalizeReflectionText(qs("#r2")?.value);
+      const r1 = normalizeReflectionText(qs("#r1")?.value);
 
       if(!r3 || !r2 || !r1){
         showToast("Semua bagian refleksi 3–2–1 wajib diisi.");
         return;
       }
 
+      clearInterval(timerHandle);
+      clearInterval(missionTimerHandle);
+
+      reflectionDraft = {r3,r2,r1};
       state.reflection = {r3,r2,r1};
 
+      /*
+       * Bangun SATU record final setelah semua data terisi.
+       * Record ini memuat:
+       * - Pre-Test + pilihan/jawaban siswa
+       * - seluruh pilihan misi + kunci
+       * - Mission/Boss
+       * - Post-Test + pilihan/jawaban siswa
+       * - Refleksi 3–2–1
+       */
+      const finalRecord = buildRecord();
+
+      /*
+       * Simpan snapshot lokal terlebih dahulu.
+       */
+      try{
+        const records = JSON.parse(
+          localStorage.getItem("cm2_records") || "[]"
+        );
+        const list = Array.isArray(records) ? records : [];
+        const index = list.findIndex(
+          item =>
+            item.className===finalRecord.className &&
+            item.code===finalRecord.code
+        );
+
+        if(index>=0) list[index] = finalRecord;
+        else list.push(finalRecord);
+
+        localStorage.setItem(
+          "cm2_records",
+          JSON.stringify(list)
+        );
+      }catch(error){
+        console.error("Final local record save failed:",error);
+      }
+
+      /*
+       * Tandai selesai SEBELUM pindah halaman.
+       * pagehide/beforeunload tidak boleh membuat active session baru.
+       */
+      markCompletionForNextLoad();
+      clearActiveSession();
+
+      /*
+       * Kirim record final langsung ke Google Sheets.
+       * Tidak menunggu response untuk pindah ke Finish.
+       */
+      syncRecordNow(finalRecord).then(()=>{
+        console.log("Final record synced.");
+      }).catch(error=>{
+        console.error("Final sync failed:",error);
+        queueSync(finalRecord);
+      });
+
+      /*
+       * Render Finish SEKARANG.
+       */
       qs("#fPre").textContent = `${state.pre??"-"}/100`;
       qs("#fPost").textContent = `${state.post??"-"}/100`;
       qs("#fPreDetail").textContent =
@@ -2378,31 +2492,6 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       qs("#fPostDetail").textContent =
         `${state.postCorrect??0} dari 15 soal benar`;
       qs("#fXP").textContent = state.xp;
-
-      /*
-       * Simpan data terlebih dahulu.
-       * Jangan menunggu request Google Sheets agar tombol tidak
-       * terlihat macet ketika koneksi sedang lambat.
-       */
-      const finalRecord = buildRecord();
-      localSave();
-
-      /*
-       * Kirim ulang record final di background.
-       * Halaman tetap langsung berpindah ke Finish.
-       */
-      syncRecordNow(finalRecord).catch(error => {
-        console.error("Final sync failed:", error);
-      });
-
-      /*
-       * Mulai sekarang quest dianggap BENAR-BENAR SELESAI.
-       * pagehide/beforeunload tidak boleh membuat session aktif baru.
-       */
-      markCompletionForNextLoad();
-      clearActiveSession();
-      clearInterval(timerHandle);
-      clearInterval(missionTimerHandle);
 
       currentScreen = "#finish";
       show("#finish",false);
@@ -2795,6 +2884,8 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
     window.addEventListener("load", initializeStudentDropdown);
 
     initializeStudentDropdown();
+    restoreSyncQueue();
+    flushSyncQueue();
     restoreSessionOnLoad();
     initializeStudentDropdown();
     updateJourneyProgress();
