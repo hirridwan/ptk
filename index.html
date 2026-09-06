@@ -22,9 +22,13 @@
   --shadow:0 22px 60px rgba(0,0,0,.35);
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
-html{scroll-behavior:smooth}
+html{
+  scroll-behavior:smooth;
+}
 
 body{
   margin:0;
@@ -82,6 +86,11 @@ button{
   display:none!important;
 }
 
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
 .topbar{
   position:sticky;
   top:0;
@@ -128,6 +137,11 @@ button{
   border:1px solid var(--line);
   font-size:13px;
 }
+
+
+/* =========================================================
+   GLOBAL JOURNEY PROGRESS
+========================================================= */
 
 .global-progress{
   position:sticky;
@@ -190,6 +204,11 @@ button{
   transition:width .45s ease;
 }
 
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
 .wrap{
   max-width:1120px;
   margin:28px auto;
@@ -210,8 +229,13 @@ button{
   animation:screenIn .5s ease both;
 }
 
-.center{text-align:center}
-.muted{color:var(--muted)}
+.center{
+  text-align:center;
+}
+
+.muted{
+  color:var(--muted);
+}
 
 .footer-note{
   font-size:12px;
@@ -219,7 +243,11 @@ button{
   line-height:1.6;
 }
 
-h1,h2,h3{margin-top:0}
+h1,
+h2,
+h3{
+  margin-top:0;
+}
 
 h1{
   font-size:clamp(34px,6vw,58px);
@@ -249,6 +277,11 @@ h2{
   gap:22px;
   align-items:stretch;
 }
+
+
+/* =========================================================
+   HERO
+========================================================= */
 
 .hero-kicker{
   display:inline-flex;
@@ -348,6 +381,11 @@ h2{
   animation:pulseGlow 3s ease-in-out infinite;
 }
 
+
+/* =========================================================
+   FORM
+========================================================= */
+
 label{
   display:block;
   font-weight:800;
@@ -379,6 +417,11 @@ textarea:focus{
 select option{
   color:#111;
 }
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
 
 .actions{
   display:flex;
@@ -425,6 +468,11 @@ select option{
   background:transparent;
   border:1px solid var(--line);
 }
+
+
+/* =========================================================
+   CARDS
+========================================================= */
 
 .mission-card,
 .kpi{
@@ -480,6 +528,11 @@ select option{
   margin-top:4px;
 }
 
+
+/* =========================================================
+   TIMER
+========================================================= */
+
 .timer{
   padding:8px 12px;
   border-radius:12px;
@@ -503,6 +556,11 @@ select option{
   animation:pulseGlow 1s ease-in-out infinite;
 }
 
+
+/* =========================================================
+   XP
+========================================================= */
+
 .progress{
   height:10px;
   border:1px solid var(--line);
@@ -524,6 +582,11 @@ select option{
     );
   animation:progressGlow 2.4s ease-in-out infinite;
 }
+
+
+/* =========================================================
+   QUESTION PROGRESS
+========================================================= */
 
 .question-progress-box{
   margin-top:14px;
@@ -562,6 +625,11 @@ select option{
   transition:width .3s ease;
 }
 
+
+/* =========================================================
+   NOTICE
+========================================================= */
+
 .notice{
   margin-top:16px;
   padding:14px;
@@ -582,6 +650,11 @@ select option{
   line-height:1.5;
   margin-bottom:16px;
 }
+
+
+/* =========================================================
+   FINISH
+========================================================= */
 
 .big{
   font-size:42px;
@@ -622,53 +695,95 @@ select option{
   transform:none;
 }
 
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
 @keyframes floatOrb{
-  from{transform:translate3d(0,-18px,0) scale(.94)}
-  to{transform:translate3d(0,20px,0) scale(1.06)}
+  from{
+    transform:translate3d(0,-18px,0) scale(.94);
+  }
+  to{
+    transform:translate3d(0,20px,0) scale(1.06);
+  }
 }
 
 @keyframes screenIn{
-  from{opacity:0;transform:translateY(14px) scale(.995)}
-  to{opacity:1;transform:none}
+  from{
+    opacity:0;
+    transform:translateY(14px) scale(.995);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
 }
 
 @keyframes titleShift{
-  0%,100%{background-position:0% 50%}
-  50%{background-position:100% 50%}
+  0%,100%{
+    background-position:0% 50%;
+  }
+  50%{
+    background-position:100% 50%;
+  }
 }
 
 @keyframes scanline{
-  0%{top:-8%;opacity:0}
-  12%{opacity:1}
-  88%{opacity:1}
-  100%{top:108%;opacity:0}
+  0%{
+    top:-8%;
+    opacity:0;
+  }
+  12%{
+    opacity:1;
+  }
+  88%{
+    opacity:1;
+  }
+  100%{
+    top:108%;
+    opacity:0;
+  }
 }
 
 @keyframes pulseGlow{
   0%,100%{
     transform:scale(1);
-    box-shadow:0 0 0 rgba(73,215,255,0)
+    box-shadow:0 0 0 rgba(73,215,255,0);
   }
   50%{
     transform:scale(1.04);
-    box-shadow:0 0 24px rgba(73,215,255,.24)
+    box-shadow:0 0 24px rgba(73,215,255,.24);
   }
 }
 
 @keyframes floatIcon{
-  0%,100%{transform:translateY(0) rotate(0deg)}
-  50%{transform:translateY(-7px) rotate(2deg)}
+  0%,100%{
+    transform:translateY(0) rotate(0deg);
+  }
+  50%{
+    transform:translateY(-7px) rotate(2deg);
+  }
 }
 
 @keyframes borderPulse{
-  0%,100%{border-color:var(--line)}
-  50%{border-color:rgba(73,215,255,.32)}
+  0%,100%{
+    border-color:var(--line);
+  }
+  50%{
+    border-color:rgba(73,215,255,.32);
+  }
 }
 
 @keyframes progressGlow{
-  0%,100%{filter:brightness(1)}
-  50%{filter:brightness(1.22)}
+  0%,100%{
+    filter:brightness(1);
+  }
+  50%{
+    filter:brightness(1.22);
+  }
 }
+
 
 @media(max-width:820px){
 
@@ -699,6 +814,7 @@ select option{
   .global-progress-stage{
     max-width:48%;
   }
+
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -721,9 +837,13 @@ select option{
 <div class="topbar">
 
   <div class="brand">
-    <div class="brand-icon">🧠</div>
+
+    <div class="brand-icon">
+      🧠
+    </div>
 
     <div>
+
       <div>
         COMPUTER MISSION
         <span style="opacity:.55">2.0</span>
@@ -736,22 +856,29 @@ select option{
       ">
         STUDENT MODE // X SERIES
       </div>
+
     </div>
+
   </div>
 
   <div class="topstats">
 
-    <span class="pill" id="studentPill">
+    <span
+      class="pill"
+      id="studentPill"
+    >
       Belum mulai
     </span>
 
     <span class="pill">
-      ⚡ XP <b id="xpTop">0</b>
+      ⚡ XP
+      <b id="xpTop">0</b>
     </span>
 
   </div>
 
 </div>
+
 
 <div class="global-progress">
 
@@ -773,16 +900,27 @@ select option{
     </div>
 
     <div class="global-progress-bar">
+
       <span id="globalJourneyBar"></span>
+
     </div>
 
   </div>
 
 </div>
 
+
 <div class="wrap">
 
-<section id="login" class="panel">
+
+<!-- ======================================================
+     LOGIN
+====================================================== -->
+
+<section
+  id="login"
+  class="panel"
+>
 
   <div class="hero">
 
@@ -793,7 +931,8 @@ select option{
       </span>
 
       <h1 class="game-title">
-        Where Does<br>My Data Go?
+        Where Does<br>
+        My Data Go?
       </h1>
 
       <p style="line-height:1.7;">
@@ -813,7 +952,9 @@ select option{
 
         <div>
 
-          <label>Kelas</label>
+          <label>
+            Kelas
+          </label>
 
           <select
             id="classSelect"
@@ -840,11 +981,16 @@ select option{
 
         </div>
 
+
         <div>
 
-          <label>Nama siswa</label>
+          <label>
+            Nama siswa
+          </label>
 
-          <select id="studentCode">
+          <select
+            id="studentCode"
+          >
 
             <option value="">
               -- Pilih nama siswa --
@@ -854,26 +1000,35 @@ select option{
 
         </div>
 
+
         <div>
 
-          <label>Tim</label>
+          <label>
+            Tim
+          </label>
 
           <select id="team">
+
             <option>Tim 1</option>
             <option>Tim 2</option>
             <option>Tim 3</option>
             <option>Tim 4</option>
             <option>Tim 5</option>
             <option>Tim 6</option>
+
           </select>
 
         </div>
 
+
         <div>
 
-          <label>Peran</label>
+          <label>
+            Peran
+          </label>
 
           <select id="role">
+
             <option>Leader</option>
             <option>Reader</option>
             <option>Recorder</option>
@@ -881,11 +1036,13 @@ select option{
             <option>Checker</option>
             <option>Time Keeper</option>
             <option>Anggota Pendukung</option>
+
           </select>
 
         </div>
 
       </div>
+
 
       <div
         class="actions"
@@ -903,8 +1060,13 @@ select option{
 
     </div>
 
+
     <div class="scan-card">
-      <div class="scan-grid">🖥️</div>
+
+      <div class="scan-grid">
+        🖥️
+      </div>
+
     </div>
 
   </div>
@@ -912,7 +1074,14 @@ select option{
 </section>
 
 
-<section id="dash" class="panel hidden">
+<!-- ======================================================
+     DASHBOARD
+====================================================== -->
+
+<section
+  id="dash"
+  class="panel hidden"
+>
 
   <div class="grid3">
 
@@ -938,17 +1107,24 @@ select option{
 
   </div>
 
+
   <div style="margin-top:18px;">
 
-    <div class="footer-note" style="margin-bottom:6px;">
+    <div
+      class="footer-note"
+      style="margin-bottom:6px;"
+    >
       XP Aktivitas
     </div>
 
     <div class="progress">
+
       <span id="prog"></span>
+
     </div>
 
   </div>
+
 
   <div
     class="section-label"
@@ -965,58 +1141,139 @@ select option{
 
   </div>
 
+
   <div class="grid3">
 
     <div class="mission-card">
-      <span class="badge">1</span>
-      <h3>Pre-Test</h3>
-      <p>15 soal individu. Semua soal wajib dijawab.</p>
+
+      <span class="badge">
+        1
+      </span>
+
+      <h3>
+        Pre-Test
+      </h3>
+
+      <p>
+        15 soal individu.
+        Semua soal wajib dijawab.
+      </p>
+
     </div>
 
-    <div class="mission-card">
-      <span class="badge">2</span>
-      <h3>Mini Lesson</h3>
-      <p>IPO, CPU, RAM, Storage.</p>
-    </div>
 
     <div class="mission-card">
-      <span class="badge">3</span>
-      <h3>Mission 1</h3>
-      <p>RAM or Storage.</p>
+
+      <span class="badge">
+        2
+      </span>
+
+      <h3>
+        Mini Lesson
+      </h3>
+
+      <p>
+        IPO, CPU, RAM, Storage.
+      </p>
+
     </div>
 
-    <div class="mission-card">
-      <span class="badge">4</span>
-      <h3>Mission 2</h3>
-      <p>ALU or CU.</p>
-    </div>
 
     <div class="mission-card">
-      <span class="badge">5</span>
-      <h3>Mission 3</h3>
-      <p>Trace the Data.</p>
+
+      <span class="badge">
+        3
+      </span>
+
+      <h3>
+        Mission 1
+      </h3>
+
+      <p>
+        RAM or Storage.
+      </p>
+
     </div>
 
-    <div class="mission-card">
-      <span class="badge">6</span>
-      <h3>Boss Mission</h3>
-      <p>Solve the Computer Case.</p>
-    </div>
 
     <div class="mission-card">
-      <span class="badge">7</span>
-      <h3>Post-Test</h3>
-      <p>15 soal individu.</p>
+
+      <span class="badge">
+        4
+      </span>
+
+      <h3>
+        Mission 2
+      </h3>
+
+      <p>
+        ALU or CU.
+      </p>
+
+    </div>
+
+
+    <div class="mission-card">
+
+      <span class="badge">
+        5
+      </span>
+
+      <h3>
+        Mission 3
+      </h3>
+
+      <p>
+        Trace the Data.
+      </p>
+
+    </div>
+
+
+    <div class="mission-card">
+
+      <span class="badge">
+        6
+      </span>
+
+      <h3>
+        Boss Mission
+      </h3>
+
+      <p>
+        Solve the Computer Case.
+      </p>
+
+    </div>
+
+
+    <div class="mission-card">
+
+      <span class="badge">
+        7
+      </span>
+
+      <h3>
+        Post-Test
+      </h3>
+
+      <p>
+        15 soal individu.
+      </p>
+
     </div>
 
   </div>
+
 
   <div
     class="mission-card"
     style="margin-top:18px;"
   >
 
-    <h3>Aturan Permainan</h3>
+    <h3>
+      Aturan Permainan
+    </h3>
 
     <p class="muted">
 
@@ -1056,6 +1313,7 @@ select option{
 
   </div>
 
+
   <div
     class="actions"
     style="margin-top:18px;"
@@ -1073,7 +1331,14 @@ select option{
 </section>
 
 
-<section id="test" class="panel hidden">
+<!-- ======================================================
+     TEST
+====================================================== -->
+
+<section
+  id="test"
+  class="panel hidden"
+>
 
   <div style="
     display:flex;
@@ -1088,50 +1353,71 @@ select option{
         Pre-Test — 15 Soal
       </h2>
 
-      <div id="qCount" class="muted"></div>
+      <div
+        id="qCount"
+        class="muted"
+      ></div>
 
       <div class="footer-note">
+
         Semua soal wajib dijawab.
         Nilai = jumlah benar ÷ 15 × 100
+
       </div>
 
     </div>
 
-    <div id="testTimer" class="timer">
+
+    <div
+      id="testTimer"
+      class="timer"
+    >
       10:00
     </div>
 
   </div>
 
+
   <div class="question-progress-box">
 
     <div class="question-progress-head">
-      <span>Kemajuan soal</span>
+
+      <span>
+        Kemajuan soal
+      </span>
 
       <b id="questionProgressPercent">
         0%
       </b>
+
     </div>
 
     <div class="question-progress-bar">
+
       <span id="questionProgressBar"></span>
+
     </div>
 
   </div>
+
 
   <div
     class="required-note"
     style="margin-top:14px;"
   >
+
     Semua 15 soal wajib dijawab.
     Kamu dapat kembali ke soal sebelumnya
     dan jawaban akan tetap tersimpan.
+
   </div>
+
 
   <div
     id="questionBox"
     style="margin-top:16px;"
   ></div>
+
 
   <div
     class="actions"
@@ -1145,6 +1431,7 @@ select option{
       Sebelumnya
     </button>
 
+
     <button
       class="btn primary"
       id="nextTestBtn"
@@ -1152,6 +1439,7 @@ select option{
     >
       Berikutnya
     </button>
+
 
     <button
       class="btn good hidden"
@@ -1166,89 +1454,135 @@ select option{
 </section>
 
 
-<section id="mini" class="panel hidden">
+<!-- ======================================================
+     MINI LESSON
+====================================================== -->
 
-  <h2>Mini Lesson</h2>
+<section
+  id="mini"
+  class="panel hidden"
+>
+
+  <h2>
+    Mini Lesson
+  </h2>
+
 
   <p class="muted">
+
     Baca bagian ini sebelum masuk ke Mission 1.
+
   </p>
+
 
   <div class="grid">
 
     <div class="mission-card">
 
-      <h3>1. Input → Process → Output</h3>
+      <h3>
+        1. Input → Process → Output
+      </h3>
 
       <p>
+
         <b>Input</b> adalah data yang masuk ke komputer.
         <b>Process</b> adalah pengolahan data.
         <b>Output</b> adalah hasil yang keluar.
+
       </p>
 
       <p class="footer-note">
-        Contoh: Keyboard → CPU → Monitor.
+
+        Contoh:
+        Keyboard → CPU → Monitor.
+
       </p>
 
     </div>
 
+
     <div class="mission-card">
 
-      <h3>2. CPU</h3>
+      <h3>
+        2. CPU
+      </h3>
 
       <p>
+
         CPU adalah pusat pengolahan komputer.
         <b>ALU</b> melakukan operasi aritmetika dan logika.
         <b>CU</b> mengatur dan mengendalikan jalannya instruksi.
+
       </p>
 
     </div>
 
+
     <div class="mission-card">
 
-      <h3>3. RAM dan Storage</h3>
+      <h3>
+        3. RAM dan Storage
+      </h3>
 
       <p>
+
         <b>RAM</b> adalah memori kerja sementara.
         <b>SSD/HDD</b> menyimpan file dan data
         agar tetap tersedia setelah komputer dimatikan.
+
       </p>
 
     </div>
 
+
     <div class="mission-card">
 
-      <h3>4. Cara Menjawab Misi</h3>
+      <h3>
+        4. Cara Menjawab Misi
+      </h3>
 
       <p>
+
         Baca kasus dengan teliti.
         Tentukan komponen yang tepat.
         Untuk uraian, jelaskan alasanmu,
         bukan hanya menyebutkan jawabannya.
+
       </p>
 
     </div>
 
   </div>
+
 
   <div
     class="mission-card"
     style="margin-top:18px;"
   >
 
-    <h3>Petunjuk Sebelum Mission 1</h3>
+    <h3>
+      Petunjuk Sebelum Mission 1
+    </h3>
+
 
     <p class="muted">
+
       Mission 1 membahas perbedaan RAM dan Storage.
       Pilih jawaban objektif terlebih dahulu,
       kemudian jelaskan alasanmu pada bagian uraian.
+
     </p>
 
+
     <p class="muted">
-      Semua bagian Mission 1 wajib diisi sebelum dapat dikirim.
+
+      Semua bagian Mission 1 wajib diisi
+      sebelum dapat dikirim.
+
     </p>
 
   </div>
+
 
   <div
     class="actions"
@@ -1267,7 +1601,14 @@ select option{
 </section>
 
 
-<section id="mission" class="panel hidden">
+<!-- ======================================================
+     MISSION
+====================================================== -->
+
+<section
+  id="mission"
+  class="panel hidden"
+>
 
   <div style="
     display:flex;
@@ -1289,6 +1630,7 @@ select option{
 
     </div>
 
+
     <div
       id="missionTimer"
       class="timer"
@@ -1297,6 +1639,7 @@ select option{
     </div>
 
   </div>
+
 
   <div
     class="mission-card"
@@ -1314,10 +1657,12 @@ select option{
 
   </div>
 
+
   <div
     id="missionContent"
     style="margin-top:18px;"
   ></div>
+
 
   <div
     class="actions"
@@ -1332,6 +1677,7 @@ select option{
       Kirim Jawaban
     </button>
 
+
     <button
       id="missionNext"
       class="btn good hidden"
@@ -1345,7 +1691,14 @@ select option{
 </section>
 
 
-<section id="boss" class="panel hidden">
+<!-- ======================================================
+     BOSS
+====================================================== -->
+
+<section
+  id="boss"
+  class="panel hidden"
+>
 
   <div style="
     display:flex;
@@ -1356,14 +1709,19 @@ select option{
 
     <div>
 
-      <h2>👑 Boss Mission</h2>
+      <h2>
+        👑 Boss Mission
+      </h2>
 
       <div class="muted">
+
         13 XP penyelesaian +
         17 XP uraian rubrik guru
+
       </div>
 
     </div>
+
 
     <div
       id="bossTimer"
@@ -1373,6 +1731,7 @@ select option{
     </div>
 
   </div>
+
 
   <div
     class="mission-card"
@@ -1391,6 +1750,7 @@ select option{
 
     </p>
 
+
     <div class="required-note">
 
       Semua enam bagian Boss Mission wajib diisi
@@ -1398,12 +1758,15 @@ select option{
 
     </div>
 
+
     <div
       class="mission-card"
       style="margin-top:12px;"
     >
 
-      <h3>Petunjuk Boss Mission</h3>
+      <h3>
+        Petunjuk Boss Mission
+      </h3>
 
       <p class="muted">
 
@@ -1425,11 +1788,14 @@ select option{
 
     </div>
 
+
     <div class="grid">
 
       <div>
 
-        <label>Input yang terlibat</label>
+        <label>
+          Input yang terlibat
+        </label>
 
         <input
           id="bossInput"
@@ -1438,9 +1804,12 @@ select option{
 
       </div>
 
+
       <div>
 
-        <label>Process</label>
+        <label>
+          Process
+        </label>
 
         <input
           id="bossProcess"
@@ -1449,9 +1818,12 @@ select option{
 
       </div>
 
+
       <div>
 
-        <label>Output</label>
+        <label>
+          Output
+        </label>
 
         <input
           id="bossOutput"
@@ -1460,9 +1832,12 @@ select option{
 
       </div>
 
+
       <div>
 
-        <label>Memory / CPU</label>
+        <label>
+          Memory / CPU
+        </label>
 
         <input
           id="bossCpu"
@@ -1473,9 +1848,13 @@ select option{
 
     </div>
 
+
     <label style="margin-top:14px;">
+
       Gambarkan / uraikan alur IPO
+
     </label>
+
 
     <textarea
       id="bossIpo"
@@ -1483,9 +1862,14 @@ select option{
       placeholder="Input → Process → Output"
     ></textarea>
 
+
     <label style="margin-top:14px;">
-      Mengapa komponen tersebut ditempatkan pada tahap itu?
+
+      Mengapa komponen tersebut ditempatkan
+      pada tahap itu?
+
     </label>
+
 
     <textarea
       id="bossReason"
@@ -1494,6 +1878,7 @@ select option{
     ></textarea>
 
   </div>
+
 
   <div
     class="actions"
@@ -1512,14 +1897,27 @@ select option{
 </section>
 
 
-<section id="reflection" class="panel hidden">
+<!-- ======================================================
+     REFLECTION
+====================================================== -->
 
-  <h2>Refleksi 3–2–1</h2>
+<section
+  id="reflection"
+  class="panel hidden"
+>
+
+  <h2>
+    Refleksi 3–2–1
+  </h2>
+
 
   <p class="muted">
+
     Tulis refleksimu setelah seluruh rangkaian misi selesai.
     Semua bagian refleksi wajib diisi.
+
   </p>
+
 
   <div class="required-note">
 
@@ -1528,11 +1926,14 @@ select option{
 
   </div>
 
+
   <div class="grid">
 
     <div>
 
-      <label>3 hal yang saya pahami</label>
+      <label>
+        3 hal yang saya pahami
+      </label>
 
       <textarea
         id="r3"
@@ -1542,9 +1943,12 @@ select option{
 
     </div>
 
+
     <div>
 
-      <label>2 hal yang membantu saya</label>
+      <label>
+        2 hal yang membantu saya
+      </label>
 
       <textarea
         id="r2"
@@ -1556,15 +1960,20 @@ select option{
 
   </div>
 
+
   <label style="margin-top:14px;">
+
     1 hal yang masih membingungkan
+
   </label>
+
 
   <textarea
     id="r1"
     rows="3"
     placeholder="Tuliskan satu hal..."
   ></textarea>
+
 
   <div
     class="actions"
@@ -1583,19 +1992,30 @@ select option{
 </section>
 
 
-<section id="finish" class="panel hidden">
+<!-- ======================================================
+     FINISH
+====================================================== -->
+
+<section
+  id="finish"
+  class="panel hidden"
+>
 
   <div class="big center">
     🎉 Misi Selesai!
   </div>
 
+
   <p
     class="muted"
     style="text-align:center;"
   >
+
     Seluruh rangkaian permainan telah selesai.
     Data tersimpan ke Google Sheets.
+
   </p>
+
 
   <div
     class="mission-card"
@@ -1614,6 +2034,7 @@ select option{
 
     </div>
 
+
     <div
       class="global-progress-bar"
       style="margin-top:10px;"
@@ -1626,13 +2047,20 @@ select option{
 
     </div>
 
-    <div class="footer-note" style="margin-top:8px;">
+
+    <div
+      class="footer-note"
+      style="margin-top:8px;"
+    >
+
       Quest utama:
       Pre-Test → Mini Lesson → Mission 1 →
       Mission 2 → Mission 3 → Boss Mission → Post-Test
+
     </div>
 
   </div>
+
 
   <div
     class="grid3"
@@ -1641,7 +2069,9 @@ select option{
 
     <div class="kpi">
 
-      <small>Pre-Test</small>
+      <small>
+        Pre-Test
+      </small>
 
       <div
         id="fPre"
@@ -1657,9 +2087,12 @@ select option{
 
     </div>
 
+
     <div class="kpi">
 
-      <small>Post-Test</small>
+      <small>
+        Post-Test
+      </small>
 
       <div
         id="fPost"
@@ -1675,9 +2108,12 @@ select option{
 
     </div>
 
+
     <div class="kpi">
 
-      <small>Total XP</small>
+      <small>
+        Total XP
+      </small>
 
       <div
         id="fXP"
@@ -1694,12 +2130,16 @@ select option{
 
   </div>
 
+
   <div
     class="mission-card"
     style="margin-top:18px;"
   >
 
-    <b>Catatan:</b>
+    <b>
+      Catatan:
+    </b>
+
 
     <p class="muted">
 
@@ -1716,18 +2156,50 @@ select option{
 
 </div>
 
-<div id="toast" class="toast"></div>
+
+<div
+  id="toast"
+  class="toast"
+></div>
+
 
 <script src="students.js"></script>
+
 
 <script>
 
 /* =========================================================
-   GOOGLE SHEETS
+   KONFIGURASI
 ========================================================= */
 
 const SHEET_WEB_APP_URL =
 "https://script.google.com/macros/s/AKfycbx_H6HUvj4CZYRBTakW3qEBdeX1KzxaCOzxb_4RYCd5t2EAOQy8Ubcvuk-rCvVDNhTX/exec";
+
+
+/*
+ * Session sekarang memakai beberapa lapis penyimpanan.
+ *
+ * 1. localStorage
+ * 2. sessionStorage
+ * 3. URL hash sebagai backup halaman
+ *
+ * Jadi refresh tidak membuat siswa kembali ke login.
+ */
+
+const SESSION_KEY =
+  "cm2_active_session_v6";
+
+const SESSION_BACKUP_KEY =
+  "cm2_student_session_v6";
+
+const SCREEN_KEY =
+  "cm2_current_screen_v6";
+
+const LEGACY_KEYS = [
+  "cm2_active_session",
+  "cm2_student_session",
+  "cm2_current_screen"
+];
 
 
 /* =========================================================
@@ -1737,7 +2209,9 @@ const SHEET_WEB_APP_URL =
 const questions = [
 
 {
-  stem:"Ketika seseorang mengetik pesan pada laptop, tulisan yang diketik kemudian muncul di layar. Urutan proses IPO yang paling tepat adalah ...",
+  stem:
+  "Ketika seseorang mengetik pesan pada laptop, tulisan yang diketik kemudian muncul di layar. Urutan proses IPO yang paling tepat adalah ...",
+
   opts:[
     "Keyboard → CPU → Monitor",
     "Monitor → CPU → Keyboard",
@@ -1745,11 +2219,14 @@ const questions = [
     "Keyboard → Monitor → CPU",
     "Monitor → Keyboard → CPU"
   ],
+
   a:0
 },
 
 {
-  stem:"Pada mesin presensi wajah, kamera menangkap wajah siswa. Sistem kemudian mencocokkannya dengan data yang telah tersimpan. Bagian komputer yang terutama melakukan pengolahan dan pencocokan tersebut adalah ...",
+  stem:
+  "Pada mesin presensi wajah, kamera menangkap wajah siswa. Sistem kemudian mencocokkannya dengan data yang telah tersimpan. Bagian komputer yang terutama melakukan pengolahan dan pencocokan tersebut adalah ...",
+
   opts:[
     "Monitor",
     "CPU",
@@ -1757,11 +2234,14 @@ const questions = [
     "Speaker",
     "Printer"
   ],
+
   a:1
 },
 
 {
-  stem:"Sebuah file tugas disimpan agar dapat dibuka kembali minggu depan. Perangkat yang berfungsi menyimpan file secara jangka panjang adalah ...",
+  stem:
+  "Sebuah file tugas disimpan agar dapat dibuka kembali minggu depan. Perangkat yang berfungsi menyimpan file secara jangka panjang adalah ...",
+
   opts:[
     "RAM",
     "CPU",
@@ -1769,11 +2249,14 @@ const questions = [
     "Monitor",
     "Keyboard"
   ],
+
   a:2
 },
 
 {
-  stem:"Saat kalkulator komputer menghitung 125 × 8, bagian CPU yang melakukan operasi hitung tersebut adalah ...",
+  stem:
+  "Saat kalkulator komputer menghitung 125 × 8, bagian CPU yang melakukan operasi hitung tersebut adalah ...",
+
   opts:[
     "CU",
     "ALU",
@@ -1781,11 +2264,14 @@ const questions = [
     "SSD",
     "Motherboard"
   ],
+
   a:1
 },
 
 {
-  stem:"Sebuah program sedang menjalankan beberapa instruksi. Bagian CPU yang mengatur dan mengendalikan jalannya instruksi tersebut adalah ...",
+  stem:
+  "Sebuah program sedang menjalankan beberapa instruksi. Bagian CPU yang mengatur dan mengendalikan jalannya instruksi tersebut adalah ...",
+
   opts:[
     "ALU",
     "CU",
@@ -1793,11 +2279,14 @@ const questions = [
     "SSD",
     "Monitor"
   ],
+
   a:1
 },
 
 {
-  stem:"Sebuah program memeriksa kondisi jika nilai lebih besar dari 75, tampilkan LULUS. Operasi logika pada kondisi tersebut terutama dilakukan oleh ...",
+  stem:
+  "Sebuah program memeriksa kondisi jika nilai lebih besar dari 75, tampilkan LULUS. Operasi logika pada kondisi tersebut terutama dilakukan oleh ...",
+
   opts:[
     "ALU",
     "Monitor",
@@ -1805,11 +2294,14 @@ const questions = [
     "Storage",
     "Speaker"
   ],
+
   a:0
 },
 
 {
-  stem:"Sinta sedang mengedit dokumen yang belum disimpan. Ketika listrik mati, perubahan terakhir pada dokumen hilang. Hal ini menunjukkan bahwa data tersebut sebelumnya berada pada ...",
+  stem:
+  "Sinta sedang mengedit dokumen yang belum disimpan. Ketika listrik mati, perubahan terakhir pada dokumen hilang. Hal ini menunjukkan bahwa data tersebut sebelumnya berada pada ...",
+
   opts:[
     "SSD yang permanen",
     "RAM yang bersifat sementara",
@@ -1817,11 +2309,14 @@ const questions = [
     "Keyboard",
     "Printer"
   ],
+
   a:1
 },
 
 {
-  stem:"Ketika aplikasi dibuka, data program yang tersimpan di SSD perlu dimuat ke RAM sebelum digunakan oleh CPU. Proses tersebut merupakan ...",
+  stem:
+  "Ketika aplikasi dibuka, data program yang tersimpan di SSD perlu dimuat ke RAM sebelum digunakan oleh CPU. Proses tersebut merupakan ...",
+
   opts:[
     "Monitor → RAM",
     "SSD → RAM",
@@ -1829,11 +2324,14 @@ const questions = [
     "Keyboard → SSD",
     "CPU → Monitor"
   ],
+
   a:1
 },
 
 {
-  stem:"Sebuah komputer menjadi lambat saat banyak aplikasi dibuka. Task Manager menunjukkan CPU 25%, RAM 98%, dan Disk 5%. Komponen yang paling mungkin menjadi kendala adalah ...",
+  stem:
+  "Sebuah komputer menjadi lambat saat banyak aplikasi dibuka. Task Manager menunjukkan CPU 25%, RAM 98%, dan Disk 5%. Komponen yang paling mungkin menjadi kendala adalah ...",
+
   opts:[
     "CPU",
     "RAM",
@@ -1841,11 +2339,14 @@ const questions = [
     "Monitor",
     "Keyboard"
   ],
+
   a:1
 },
 
 {
-  stem:"Sebuah server membutuhkan waktu lama ketika harus membaca banyak file soal dari media penyimpanan. Komponen yang paling tepat diperiksa terlebih dahulu adalah ...",
+  stem:
+  "Sebuah server membutuhkan waktu lama ketika harus membaca banyak file soal dari media penyimpanan. Komponen yang paling tepat diperiksa terlebih dahulu adalah ...",
+
   opts:[
     "Monitor",
     "Keyboard",
@@ -1853,11 +2354,14 @@ const questions = [
     "Speaker",
     "Mouse"
   ],
+
   a:2
 },
 
 {
-  stem:"Komputer menyala, kipas berputar, tetapi tidak muncul tampilan dan lampu Caps Lock tidak merespons. Kesimpulan yang paling masuk akal adalah ...",
+  stem:
+  "Komputer menyala, kipas berputar, tetapi tidak muncul tampilan dan lampu Caps Lock tidak merespons. Kesimpulan yang paling masuk akal adalah ...",
+
   opts:[
     "Monitor pasti rusak",
     "Komputer sudah masuk Windows",
@@ -1865,11 +2369,14 @@ const questions = [
     "Keyboard hanya kehabisan baterai",
     "Harddisk pasti penuh"
   ],
+
   a:2
 },
 
 {
-  stem:"Komputer kantor memiliki Core i5, RAM 8 GB, dan HDD 1 TB. Booting Windows sangat lama. Upgrade yang paling langsung terasa untuk masalah tersebut adalah ...",
+  stem:
+  "Komputer kantor memiliki Core i5, RAM 8 GB, dan HDD 1 TB. Booting Windows sangat lama. Upgrade yang paling langsung terasa untuk masalah tersebut adalah ...",
+
   opts:[
     "Tambah RAM menjadi 16 GB",
     "Ganti HDD dengan SSD",
@@ -1877,11 +2384,14 @@ const questions = [
     "Ganti keyboard",
     "Tambah speaker"
   ],
+
   a:1
 },
 
 {
-  stem:"Aplikasi pengolah video sering tertutup sendiri ketika banyak layer dan efek dibuka bersamaan. SSD dan CPU sudah memadai. Komponen yang paling perlu diperhatikan adalah ...",
+  stem:
+  "Aplikasi pengolah video sering tertutup sendiri ketika banyak layer dan efek dibuka bersamaan. SSD dan CPU sudah memadai. Komponen yang paling perlu diperhatikan adalah ...",
+
   opts:[
     "RAM",
     "Monitor",
@@ -1889,11 +2399,14 @@ const questions = [
     "Speaker",
     "Mouse"
   ],
+
   a:0
 },
 
 {
-  stem:"Sekolah ingin membuat kios informasi yang dikendalikan dengan sentuhan pada layar. Rancangan yang paling sesuai adalah ...",
+  stem:
+  "Sekolah ingin membuat kios informasi yang dikendalikan dengan sentuhan pada layar. Rancangan yang paling sesuai adalah ...",
+
   opts:[
     "Layar sentuh + CPU hemat daya + storage secukupnya + RAM standar",
     "Monitor biasa + keyboard + mouse + CPU paling mahal",
@@ -1901,11 +2414,14 @@ const questions = [
     "Layar sentuh tanpa CPU",
     "Printer + scanner tanpa monitor"
   ],
+
   a:0
 },
 
 {
-  stem:"Perpustakaan membutuhkan PC hanya untuk mengetik dokumen dan membuka katalog buku di internet. Rancangan yang paling efisien adalah ...",
+  stem:
+  "Perpustakaan membutuhkan PC hanya untuk mengetik dokumen dan membuka katalog buku di internet. Rancangan yang paling efisien adalah ...",
+
   opts:[
     "CPU kelas tinggi untuk grafis 3D",
     "VR agar pencarian lebih menarik",
@@ -1913,6 +2429,7 @@ const questions = [
     "Storage 10 TB",
     "RAM 64 GB"
   ],
+
   a:2
 }
 
@@ -1924,40 +2441,49 @@ const questions = [
 ========================================================= */
 
 const DEFAULT_STATE = {
+
   code:"",
   name:"",
   className:"",
   teacher:"",
   team:"",
   role:"",
+
   xp:0,
+
   pre:null,
   post:null,
+
   m1:0,
   m2:0,
   m3:0,
   boss:0,
+
   answers:[],
   answerChoices:[],
+
   reflection:{
     r3:"",
     r2:"",
     r1:""
   },
+
   essayAnswers:{
     m1:"",
     m2:"",
     m3:"",
     boss:""
   },
+
   preCorrect:0,
   postCorrect:0
+
 };
 
+
 let state =
-  JSON.parse(
-    JSON.stringify(DEFAULT_STATE)
-  );
+  clone(DEFAULT_STATE);
+
 
 let missionDrafts = {
 
@@ -1993,25 +2519,54 @@ let missionDrafts = {
 
 };
 
+
 let reflectionDraft = {
+
   r3:"",
   r2:"",
   r1:""
+
 };
 
-let currentScreen = "#login";
-let testMode = "pre";
-let qIndex = 0;
-let selectedQuestions = [];
-let testEndAt = 0;
-let missionType = "";
-let missionEndAt = 0;
 
-let timerHandle = null;
-let missionTimerHandle = null;
+let currentScreen =
+  "#login";
 
-let syncQueue = [];
-let syncRunning = false;
+let testMode =
+  "pre";
+
+let qIndex =
+  0;
+
+let selectedQuestions =
+  [];
+
+let testEndAt =
+  0;
+
+let missionType =
+  "";
+
+let missionEndAt =
+  0;
+
+let timerHandle =
+  null;
+
+let missionTimerHandle =
+  null;
+
+let syncQueue =
+  [];
+
+let syncRunning =
+  false;
+
+let appReady =
+  false;
+
+let restoringSession =
+  false;
 
 
 /* =========================================================
@@ -2019,8 +2574,25 @@ let syncRunning = false;
 ========================================================= */
 
 const qs =
-selector =>
-document.querySelector(selector);
+  selector =>
+    document.querySelector(selector);
+
+
+function clone(obj){
+
+  try{
+
+    return JSON.parse(
+      JSON.stringify(obj)
+    );
+
+  }catch(error){
+
+    return obj;
+
+  }
+
+}
 
 
 function safeNumber(
@@ -2038,27 +2610,79 @@ function safeNumber(
 }
 
 
-function clone(obj){
+function getStorage(){
 
-  return JSON.parse(
-    JSON.stringify(obj)
-  );
+  try{
+
+    return window.localStorage;
+
+  }catch(error){
+
+    return null;
+
+  }
+
+}
+
+
+function getSessionStorage(){
+
+  try{
+
+    return window.sessionStorage;
+
+  }catch(error){
+
+    return null;
+
+  }
 
 }
 
 
 /* =========================================================
-   SCREEN HASH
+   HASH
 ========================================================= */
 
-function setScreenHash(screen){
+function getHashScreen(){
+
+  const hash =
+    location.hash;
+
+  const allowed = [
+
+    "#login",
+    "#dash",
+    "#test",
+    "#mini",
+    "#mission",
+    "#boss",
+    "#reflection",
+    "#finish"
+
+  ];
+
+  return allowed.includes(hash)
+    ? hash
+    : "";
+
+}
+
+
+function setScreenHash(
+  screen
+){
+
+  /*
+   * Hash TIDAK dijadikan sumber utama state.
+   * Hash hanya backup halaman terakhir.
+   */
 
   try{
 
-    const current =
-      location.hash;
-
-    if(current !== screen){
+    if(
+      location.hash !== screen
+    ){
 
       history.replaceState(
         null,
@@ -2073,78 +2697,9 @@ function setScreenHash(screen){
   }catch(error){
 
     console.error(
-      "Hash save error:",
+      "Hash update error:",
       error
     );
-
-  }
-
-}
-
-
-function getHashScreen(){
-
-  const hash =
-    location.hash;
-
-  const allowed = [
-    "#login",
-    "#dash",
-    "#test",
-    "#mini",
-    "#mission",
-    "#boss",
-    "#reflection",
-    "#finish"
-  ];
-
-  return allowed.includes(hash)
-    ? hash
-    : "";
-
-}
-
-
-/* =========================================================
-   SHOW
-========================================================= */
-
-function show(
-  id,
-  save=true,
-  updateHash=true
-){
-
-  document
-    .querySelectorAll("section")
-    .forEach(
-      section =>
-        section.classList.add("hidden")
-    );
-
-  const target =
-    qs(id);
-
-  if(!target){
-    return;
-  }
-
-  target.classList.remove("hidden");
-
-  currentScreen =
-    id;
-
-  if(updateHash){
-
-    setScreenHash(id);
-
-  }
-
-  updateJourneyProgress();
-
-  if(save){
-
-    saveActiveSession();
 
   }
 
@@ -2155,7 +2710,9 @@ function show(
    TOAST
 ========================================================= */
 
-function showToast(message){
+function showToast(
+  message
+){
 
   const toast =
     qs("#toast");
@@ -2167,7 +2724,9 @@ function showToast(message){
   toast.textContent =
     message;
 
-  toast.classList.add("show");
+  toast.classList.add(
+    "show"
+  );
 
   clearTimeout(
     window.__toastTimer
@@ -2176,7 +2735,9 @@ function showToast(message){
   window.__toastTimer =
     setTimeout(
       () =>
-        toast.classList.remove("show"),
+        toast.classList.remove(
+          "show"
+        ),
       2600
     );
 
@@ -2192,7 +2753,10 @@ function getJourneyProgress(){
   const step =
     100 / 7;
 
-  if(currentScreen === "#login"){
+
+  if(
+    currentScreen === "#login"
+  ){
 
     return {
       percent:0,
@@ -2201,13 +2765,20 @@ function getJourneyProgress(){
 
   }
 
-  if(currentScreen === "#dash"){
 
-    if(state.pre !== null){
+  if(
+    currentScreen === "#dash"
+  ){
+
+    if(
+      state.pre !== null &&
+      state.pre !== undefined
+    ){
 
       return {
         percent:step,
-        label:"Pre-Test selesai • Siap masuk Mini Lesson"
+        label:
+          "Pre-Test selesai • Siap masuk Mini Lesson"
       };
 
     }
@@ -2219,9 +2790,14 @@ function getJourneyProgress(){
 
   }
 
-  if(currentScreen === "#test"){
 
-    if(testMode === "pre"){
+  if(
+    currentScreen === "#test"
+  ){
+
+    if(
+      testMode === "pre"
+    ){
 
       return {
         percent:0,
@@ -2237,7 +2813,10 @@ function getJourneyProgress(){
 
   }
 
-  if(currentScreen === "#mini"){
+
+  if(
+    currentScreen === "#mini"
+  ){
 
     return {
       percent:step,
@@ -2246,34 +2825,47 @@ function getJourneyProgress(){
 
   }
 
-  if(currentScreen === "#mission"){
 
-    if(missionType === "m1"){
+  if(
+    currentScreen === "#mission"
+  ){
+
+    if(
+      missionType === "m1"
+    ){
 
       return {
         percent:step * 2,
-        label:"Mission 1 — RAM or Storage"
+        label:
+          "Mission 1 — RAM or Storage"
       };
 
     }
 
-    if(missionType === "m2"){
+    if(
+      missionType === "m2"
+    ){
 
       return {
         percent:step * 3,
-        label:"Mission 2 — ALU or CU"
+        label:
+          "Mission 2 — ALU or CU"
       };
 
     }
 
     return {
       percent:step * 4,
-      label:"Mission 3 — Trace the Data"
+      label:
+        "Mission 3 — Trace the Data"
     };
 
   }
 
-  if(currentScreen === "#boss"){
+
+  if(
+    currentScreen === "#boss"
+  ){
 
     return {
       percent:step * 5,
@@ -2282,16 +2874,23 @@ function getJourneyProgress(){
 
   }
 
-  if(currentScreen === "#reflection"){
+
+  if(
+    currentScreen === "#reflection"
+  ){
 
     return {
       percent:100,
-      label:"Post-Test selesai • Refleksi 3–2–1"
+      label:
+        "Post-Test selesai • Refleksi 3–2–1"
     };
 
   }
 
-  if(currentScreen === "#finish"){
+
+  if(
+    currentScreen === "#finish"
+  ){
 
     return {
       percent:100,
@@ -2299,6 +2898,7 @@ function getJourneyProgress(){
     };
 
   }
+
 
   return {
     percent:0,
@@ -2324,11 +2924,13 @@ function updateJourneyProgress(){
       )
     );
 
+
   const bar =
     qs("#globalJourneyBar");
 
   const stage =
     qs("#globalJourneyStage");
+
 
   if(bar){
 
@@ -2337,6 +2939,7 @@ function updateJourneyProgress(){
 
   }
 
+
   if(stage){
 
     stage.textContent =
@@ -2344,11 +2947,13 @@ function updateJourneyProgress(){
 
   }
 
+
   const finishPercent =
     qs("#finishJourneyPercent");
 
   const finishBar =
     qs("#finishJourneyBar");
+
 
   if(finishPercent){
 
@@ -2356,6 +2961,7 @@ function updateJourneyProgress(){
       "100%";
 
   }
+
 
   if(finishBar){
 
@@ -2368,16 +2974,91 @@ function updateJourneyProgress(){
 
 
 /* =========================================================
-   ACTIVE SESSION
+   SCREEN
+========================================================= */
+
+function show(
+  id,
+  save=true,
+  updateHash=true
+){
+
+  const target =
+    qs(id);
+
+  if(!target){
+    return false;
+  }
+
+
+  document
+    .querySelectorAll("section")
+    .forEach(
+      section =>
+        section.classList.add(
+          "hidden"
+        )
+    );
+
+
+  target.classList.remove(
+    "hidden"
+  );
+
+
+  currentScreen =
+    id;
+
+
+  updateJourneyProgress();
+
+
+  if(
+    updateHash
+  ){
+
+    setScreenHash(
+      id
+    );
+
+  }
+
+
+  if(
+    save &&
+    appReady &&
+    !restoringSession
+  ){
+
+    saveActiveSession();
+
+  }
+
+
+  return true;
+
+}
+
+
+/* =========================================================
+   SESSION SERIALIZATION
 ========================================================= */
 
 function buildActiveSession(){
 
   return {
 
-    version:5,
+    app:
+      "Computer Mission 2.0",
 
-    state:clone(state),
+    version:
+      6,
+
+    savedAt:
+      Date.now(),
+
+    state:
+      clone(state),
 
     missionDrafts:
       clone(missionDrafts),
@@ -2398,21 +3079,65 @@ function buildActiveSession(){
       clone(selectedQuestions),
 
     testEndAt:
-      testEndAt,
+      safeNumber(
+        testEndAt,
+        0
+      ),
 
     missionType:
       missionType,
 
     missionEndAt:
-      missionEndAt,
-
-    savedAt:
-      Date.now()
+      safeNumber(
+        missionEndAt,
+        0
+      )
 
   };
 
 }
 
+
+function sessionIsValid(
+  session
+){
+
+  if(!session){
+    return false;
+  }
+
+  if(
+    !session.state
+  ){
+
+    return false;
+
+  }
+
+  if(
+    !session.state.code
+  ){
+
+    return false;
+
+  }
+
+  if(
+    !session.state.className
+  ){
+
+    return false;
+
+  }
+
+  return true;
+
+}
+
+
+/* =========================================================
+   ROBUST SESSION SAVE
+========================================================= */
 
 function saveActiveSession(){
 
@@ -2421,72 +3146,204 @@ function saveActiveSession(){
     !state.code
   ){
 
-    return;
+    return false;
 
   }
+
 
   const session =
     buildActiveSession();
 
+
+  let raw = "";
+
+
   try{
 
-    const raw =
-      JSON.stringify(session);
-
-    /*
-     * Tiga backup penyimpanan.
-     */
-
-    localStorage.setItem(
-      "cm2_active_session",
-      raw
-    );
-
-    localStorage.setItem(
-      "cm2_student_session",
-      raw
-    );
-
-    localStorage.setItem(
-      "cm2_current_screen",
-      currentScreen
-    );
-
-    /*
-     * URL hash juga menyimpan halaman aktif.
-     */
-
-    setScreenHash(
-      currentScreen
-    );
+    raw =
+      JSON.stringify(
+        session
+      );
 
   }catch(error){
 
     console.error(
-      "Failed saving active session:",
+      "Session JSON error:",
       error
     );
+
+    return false;
+
+  }
+
+
+  let saved =
+    false;
+
+
+  /*
+   * PRIMARY: localStorage
+   */
+
+  const local =
+    getStorage();
+
+
+  if(local){
+
+    try{
+
+      local.setItem(
+        SESSION_KEY,
+        raw
+      );
+
+      local.setItem(
+        SESSION_BACKUP_KEY,
+        raw
+      );
+
+      local.setItem(
+        SCREEN_KEY,
+        currentScreen
+      );
+
+      saved = true;
+
+    }catch(error){
+
+      console.error(
+        "localStorage save failed:",
+        error
+      );
+
+    }
+
+  }
+
+
+  /*
+   * SECONDARY: sessionStorage
+   *
+   * Tetap hidup ketika halaman
+   * direfresh pada tab yang sama.
+   */
+
+  const session =
+    getSessionStorage();
+
+
+  if(session){
+
+    try{
+
+      session.setItem(
+        SESSION_KEY,
+        raw
+      );
+
+      session.setItem(
+        SESSION_BACKUP_KEY,
+        raw
+      );
+
+      session.setItem(
+        SCREEN_KEY,
+        currentScreen
+      );
+
+      saved = true;
+
+    }catch(error){
+
+      console.error(
+        "sessionStorage save failed:",
+        error
+      );
+
+    }
+
+  }
+
+
+  /*
+   * BACKUP URL
+   */
+
+  setScreenHash(
+    currentScreen
+  );
+
+
+  return saved;
+
+}
+
+
+/* =========================================================
+   SESSION LOAD
+========================================================= */
+
+function parseSessionRaw(
+  raw
+){
+
+  if(!raw){
+    return null;
+  }
+
+  try{
+
+    const parsed =
+      JSON.parse(
+        raw
+      );
+
+    return sessionIsValid(
+      parsed
+    )
+      ? parsed
+      : null;
+
+  }catch(error){
+
+    return null;
 
   }
 
 }
 
 
-function loadActiveSession(){
+function loadFromStorage(
+  storage
+){
 
-  const candidates = [
-    "cm2_active_session",
-    "cm2_student_session"
+  if(!storage){
+    return [];
+  }
+
+
+  const keys = [
+
+    SESSION_KEY,
+    SESSION_BACKUP_KEY,
+
+    ...LEGACY_KEYS
+
   ];
 
+
+  const result = [];
+
+
   for(
-    const key of candidates
+    const key of keys
   ){
 
     try{
 
       const raw =
-        localStorage.getItem(
+        storage.getItem(
           key
         );
 
@@ -2495,23 +3352,22 @@ function loadActiveSession(){
       }
 
       const parsed =
-        JSON.parse(raw);
+        parseSessionRaw(
+          raw
+        );
 
-      if(
-        parsed &&
-        parsed.state &&
-        parsed.state.code &&
-        parsed.state.className
-      ){
+      if(parsed){
 
-        return parsed;
+        result.push(
+          parsed
+        );
 
       }
 
     }catch(error){
 
       console.error(
-        "Read session error:",
+        "Storage read error:",
         error
       );
 
@@ -2519,44 +3375,264 @@ function loadActiveSession(){
 
   }
 
-  return null;
+
+  return result;
 
 }
 
 
+function loadActiveSession(){
+
+  const candidates = [];
+
+
+  /*
+   * localStorage
+   */
+
+  candidates.push(
+    ...loadFromStorage(
+      getStorage()
+    )
+  );
+
+
+  /*
+   * sessionStorage
+   */
+
+  candidates.push(
+    ...loadFromStorage(
+      getSessionStorage()
+    )
+  );
+
+
+  if(
+    !candidates.length
+  ){
+
+    return null;
+
+  }
+
+
+  /*
+   * Pilih session TERBARU.
+   */
+
+  candidates.sort(
+    (a,b) =>
+      safeNumber(
+        b.savedAt,
+        0
+      ) -
+      safeNumber(
+        a.savedAt,
+        0
+      )
+  );
+
+
+  return candidates[0] ||
+    null;
+
+}
+
+
+/* =========================================================
+   CLEAR SESSION
+========================================================= */
+
 function clearActiveSession(){
+
+  const storages = [
+
+    getStorage(),
+    getSessionStorage()
+
+  ];
+
+
+  storages.forEach(
+    storage => {
+
+      if(!storage){
+        return;
+      }
+
+      const keys = [
+
+        SESSION_KEY,
+        SESSION_BACKUP_KEY,
+        SCREEN_KEY,
+
+        ...LEGACY_KEYS
+
+      ];
+
+
+      keys.forEach(
+        key => {
+
+          try{
+
+            storage.removeItem(
+              key
+            );
+
+          }catch(error){}
+
+        }
+      );
+
+    }
+  );
+
 
   try{
 
-    localStorage.removeItem(
-      "cm2_active_session"
-    );
+    if(
+      location.hash
+    ){
 
-    localStorage.removeItem(
-      "cm2_student_session"
-    );
+      history.replaceState(
+        null,
+        "",
+        location.pathname +
+        location.search
+      );
 
-    localStorage.removeItem(
-      "cm2_current_screen"
-    );
+    }
 
   }catch(error){}
 
 }
 
 
-function currentRemainingSeconds(endAt){
+/* =========================================================
+   RESTORE STATE OBJECTS
+========================================================= */
 
-  if(!endAt){
-    return 0;
-  }
+function mergeState(
+  savedState
+){
 
-  return Math.max(
-    0,
-    Math.ceil(
-      (endAt - Date.now()) / 1000
-    )
+  const merged =
+    clone(
+      DEFAULT_STATE
+    );
+
+
+  Object.assign(
+    merged,
+    savedState || {}
   );
+
+
+  merged.answers =
+    Array.isArray(
+      merged.answers
+    )
+      ? merged.answers
+      : [];
+
+
+  merged.answerChoices =
+    Array.isArray(
+      merged.answerChoices
+    )
+      ? merged.answerChoices
+      : [];
+
+
+  merged.reflection =
+    {
+      ...clone(
+        DEFAULT_STATE.reflection
+      ),
+      ...(merged.reflection || {})
+    };
+
+
+  merged.essayAnswers =
+    {
+      ...clone(
+        DEFAULT_STATE.essayAnswers
+      ),
+      ...(merged.essayAnswers || {})
+    };
+
+
+  return merged;
+
+}
+
+
+function restoreDraftObjects(
+  saved
+){
+
+  missionDrafts =
+    {
+      ...clone(
+        missionDrafts
+      ),
+      ...(
+        saved.missionDrafts || {}
+      )
+    };
+
+
+  missionDrafts.m1 =
+    {
+      a:"",
+      b:"",
+      reason:"",
+      ...(missionDrafts.m1 || {})
+    };
+
+
+  missionDrafts.m2 =
+    {
+      a:"",
+      b:"",
+      reason:"",
+      ...(missionDrafts.m2 || {})
+    };
+
+
+  missionDrafts.m3 =
+    {
+      case:"Mengetik tugas",
+      input:"",
+      process:"",
+      output:"",
+      storage:"",
+      reason:"",
+      ...(missionDrafts.m3 || {})
+    };
+
+
+  missionDrafts.boss =
+    {
+      input:"",
+      process:"",
+      output:"",
+      cpu:"",
+      ipo:"",
+      reason:"",
+      ...(missionDrafts.boss || {})
+    };
+
+
+  reflectionDraft =
+    {
+      ...clone(
+        reflectionDraft
+      ),
+      ...(saved.reflectionDraft || {})
+    };
 
 }
 
@@ -2568,20 +3644,33 @@ function currentRemainingSeconds(endAt){
 function populateStudents(){
 
   const classKey =
-    qs("#classSelect").value;
+    qs("#classSelect")?.value;
+
 
   const select =
     qs("#studentCode");
+
 
   if(!select){
     return;
   }
 
+
   select.innerHTML =
-    '<option value="">-- Pilih nama siswa --</option>';
+    `
+      <option value="">
+        -- Pilih nama siswa --
+      </option>
+    `;
+
 
   const roster =
-    CLASS_ROSTERS[classKey] || [];
+    (
+      typeof CLASS_ROSTERS !== "undefined"
+        ? CLASS_ROSTERS[classKey]
+        : []
+    ) || [];
+
 
   roster.forEach(
     student => {
@@ -2618,12 +3707,21 @@ qs("#studentCode")
     const code =
       qs("#studentCode").value;
 
+
+    const roster =
+      (
+        typeof CLASS_ROSTERS !== "undefined"
+          ? CLASS_ROSTERS[classKey]
+          : []
+      ) || [];
+
+
     const student =
-      (CLASS_ROSTERS[classKey] || [])
-      .find(
+      roster.find(
         item =>
           item.code === code
       );
+
 
     if(student){
 
@@ -2636,75 +3734,13 @@ qs("#studentCode")
 );
 
 
-function startSession(){
+function resetFreshSession(){
 
-  const classKey =
-    qs("#classSelect").value;
-
-  const code =
-    qs("#studentCode").value;
-
-  const student =
-    (CLASS_ROSTERS[classKey] || [])
-    .find(
-      item =>
-        item.code === code
+  state =
+    clone(
+      DEFAULT_STATE
     );
 
-  if(!student){
-
-    alert(
-      "Pilih kelas dan nama siswa."
-    );
-
-    return;
-
-  }
-
-  clearInterval(timerHandle);
-  clearInterval(missionTimerHandle);
-
-  clearActiveSession();
-
-  state = {
-
-    code:student.code,
-    name:student.name,
-    className:student.class,
-    teacher:student.teacher,
-    team:qs("#team").value,
-    role:qs("#role").value,
-
-    xp:0,
-
-    pre:null,
-    post:null,
-
-    m1:0,
-    m2:0,
-    m3:0,
-    boss:0,
-
-    answers:[],
-    answerChoices:[],
-
-    reflection:{
-      r3:"",
-      r2:"",
-      r1:""
-    },
-
-    essayAnswers:{
-      m1:"",
-      m2:"",
-      m3:"",
-      boss:""
-    },
-
-    preCorrect:0,
-    postCorrect:0
-
-  };
 
   missionDrafts = {
 
@@ -2740,14 +3776,18 @@ function startSession(){
 
   };
 
+
   reflectionDraft = {
+
     r3:"",
     r2:"",
     r1:""
+
   };
 
+
   currentScreen =
-    "#dash";
+    "#login";
 
   testMode =
     "pre";
@@ -2767,25 +3807,121 @@ function startSession(){
   missionEndAt =
     0;
 
+}
+
+
+function startSession(){
+
+  const classKey =
+    qs("#classSelect").value;
+
+  const code =
+    qs("#studentCode").value;
+
+
+  const roster =
+    (
+      typeof CLASS_ROSTERS !== "undefined"
+        ? CLASS_ROSTERS[classKey]
+        : []
+    ) || [];
+
+
+  const student =
+    roster.find(
+      item =>
+        item.code === code
+    );
+
+
+  if(!student){
+
+    alert(
+      "Pilih kelas dan nama siswa."
+    );
+
+    return;
+
+  }
+
+
+  clearInterval(
+    timerHandle
+  );
+
+  clearInterval(
+    missionTimerHandle
+  );
+
+
+  clearActiveSession();
+
+
+  resetFreshSession();
+
+
+  state = {
+
+    ...clone(
+      DEFAULT_STATE
+    ),
+
+    code:
+      student.code,
+
+    name:
+      student.name,
+
+    className:
+      student.class,
+
+    teacher:
+      student.teacher,
+
+    team:
+      qs("#team").value,
+
+    role:
+      qs("#role").value
+
+  };
+
+
   qs("#studentPill").textContent =
     `${state.name} • ${state.code} • ${state.className}`;
+
 
   qs("#dClass").textContent =
     `${state.className} • ${state.teacher}`;
 
+
   qs("#dCode").textContent =
     `${state.name} (${state.code})`;
+
 
   qs("#dTeam").textContent =
     state.team;
 
+
+  currentScreen =
+    "#dash";
+
+
+  appReady =
+    true;
+
+
   show(
     "#dash",
-    true,
+    false,
     true
   );
 
+
   updateTop();
+
+
+  saveActiveSession();
 
 }
 
@@ -2802,11 +3938,13 @@ function updateTop(){
   qs("#dXP").textContent =
     state.xp;
 
+
   qs("#prog").style.width =
     Math.min(
       100,
       state.xp
     ) + "%";
+
 
   updateJourneyProgress();
 
@@ -2817,10 +3955,13 @@ function updateTop(){
    TEST
 ========================================================= */
 
-function shuffle(array){
+function shuffle(
+  array
+){
 
   const copy =
     [...array];
+
 
   for(
     let i=copy.length-1;
@@ -2830,8 +3971,10 @@ function shuffle(array){
 
     const j =
       Math.floor(
-        Math.random() * (i+1)
+        Math.random() *
+        (i+1)
       );
+
 
     [
       copy[i],
@@ -2844,12 +3987,15 @@ function shuffle(array){
 
   }
 
+
   return copy;
 
 }
 
 
-function shuffledQuestion(question){
+function shuffledQuestion(
+  question
+){
 
   return {
 
@@ -2860,7 +4006,9 @@ function shuffledQuestion(question){
         question.opts.map(
           (text,index) => ({
             text,
-            ok:index === question.a
+            ok:
+              index ===
+              question.a
           })
         )
       )
@@ -2899,7 +4047,9 @@ function startPretest(){
     createTestQuestions();
 
   testEndAt =
-    Date.now() + 600000;
+    Date.now() +
+    600000;
+
 
   startTest();
 
@@ -2924,7 +4074,9 @@ function startPosttest(){
     createTestQuestions();
 
   testEndAt =
-    Date.now() + 600000;
+    Date.now() +
+    600000;
+
 
   startTest();
 
@@ -2938,17 +4090,21 @@ function startTest(){
       ? "Pre-Test — 15 Soal"
       : "Post-Test — 15 Soal";
 
+
   show(
     "#test",
     true,
     true
   );
 
+
   startTestTimer(
     600
   );
 
+
   renderQuestion();
+
 
   saveActiveSession();
 
@@ -2960,24 +4116,31 @@ function renderQuestion(){
   const question =
     selectedQuestions[qIndex];
 
+
   if(!question){
     return;
   }
 
+
   qs("#qCount").textContent =
     `Soal ${qIndex+1} dari ${selectedQuestions.length}`;
+
 
   qs("#finishTestBtn")
     .classList.toggle(
       "hidden",
-      qIndex !== selectedQuestions.length - 1
+      qIndex !==
+      selectedQuestions.length - 1
     );
+
 
   qs("#nextTestBtn")
     .classList.toggle(
       "hidden",
-      qIndex === selectedQuestions.length - 1
+      qIndex ===
+      selectedQuestions.length - 1
     );
+
 
   qs("#questionBox").innerHTML = `
 
@@ -3025,8 +4188,10 @@ function renderQuestion(){
 
   `;
 
+
   const previousChoice =
     state.answerChoices[qIndex];
+
 
   if(
     previousChoice !== null &&
@@ -3039,6 +4204,7 @@ function renderQuestion(){
         `input[name="q"][value="${previousChoice}"]`
       );
 
+
     if(radio){
 
       radio.checked =
@@ -3047,6 +4213,7 @@ function renderQuestion(){
     }
 
   }
+
 
   updateQuestionProgress();
 
@@ -3059,6 +4226,7 @@ function updateQuestionProgress(){
     selectedQuestions.length ||
     questions.length;
 
+
   const answered =
     state.answerChoices.filter(
       value =>
@@ -3067,12 +4235,16 @@ function updateQuestionProgress(){
         value !== ""
     ).length;
 
+
   const percent =
     total
       ? Math.round(
-          answered / total * 100
+          answered /
+          total *
+          100
         )
       : 0;
+
 
   const bar =
     qs("#questionProgressBar");
@@ -3080,12 +4252,14 @@ function updateQuestionProgress(){
   const text =
     qs("#questionProgressPercent");
 
+
   if(bar){
 
     bar.style.width =
       percent + "%";
 
   }
+
 
   if(text){
 
@@ -3104,6 +4278,7 @@ function storeAnswer(){
       'input[name="q"]:checked'
     );
 
+
   if(!element){
 
     state.answers[qIndex] =
@@ -3119,8 +4294,10 @@ function storeAnswer(){
         element.value
       );
 
+
     state.answerChoices[qIndex] =
       choice;
+
 
     state.answers[qIndex] =
       selectedQuestions[qIndex]
@@ -3128,6 +4305,7 @@ function storeAnswer(){
         .ok;
 
   }
+
 
   updateQuestionProgress();
 
@@ -3140,7 +4318,10 @@ function prevQ(){
 
   storeAnswer();
 
-  if(qIndex > 0){
+
+  if(
+    qIndex > 0
+  ){
 
     qIndex--;
 
@@ -3160,6 +4341,7 @@ function nextQ(){
       'input[name="q"]:checked'
     );
 
+
   if(!element){
 
     showToast(
@@ -3170,7 +4352,9 @@ function nextQ(){
 
   }
 
+
   storeAnswer();
+
 
   if(
     qIndex <
@@ -3188,11 +4372,14 @@ function nextQ(){
 }
 
 
-function startTestTimer(seconds){
+function startTestTimer(
+  seconds
+){
 
   clearInterval(
     timerHandle
   );
+
 
   if(
     !testEndAt ||
@@ -3210,7 +4397,9 @@ function startTestTimer(seconds){
 
   }
 
+
   updateTimer();
+
 
   timerHandle =
     setInterval(
@@ -3221,7 +4410,9 @@ function startTestTimer(seconds){
             testEndAt
           );
 
+
         updateTimer();
+
 
         if(
           remaining <= 0
@@ -3231,13 +4422,16 @@ function startTestTimer(seconds){
             timerHandle
           );
 
+
           finishTest(
             true
           );
 
+
           return;
 
         }
+
 
         saveActiveSession();
 
@@ -3255,6 +4449,7 @@ function updateTimer(){
       testEndAt
     );
 
+
   const minutes =
     String(
       Math.floor(
@@ -3265,6 +4460,7 @@ function updateTimer(){
       "0"
     );
 
+
   const seconds =
     String(
       remaining % 60
@@ -3273,20 +4469,25 @@ function updateTimer(){
       "0"
     );
 
+
   const timer =
     qs("#testTimer");
+
 
   if(!timer){
     return;
   }
 
+
   timer.textContent =
     `${minutes}:${seconds}`;
+
 
   timer.classList.remove(
     "warning",
     "danger"
   );
+
 
   if(
     remaining <= 60
@@ -3315,8 +4516,10 @@ function finishTest(
 
   storeAnswer();
 
+
   const unanswered =
     [];
+
 
   for(
     let i=0;
@@ -3336,6 +4539,7 @@ function finishTest(
     }
 
   }
+
 
   if(
     unanswered.length
@@ -3362,18 +4566,22 @@ function finishTest(
 
   }
 
+
   clearInterval(
     timerHandle
   );
 
+
   testEndAt =
     0;
+
 
   const correct =
     state.answers.filter(
       value =>
         value === true
     ).length;
+
 
   const score =
     Math.round(
@@ -3382,6 +4590,7 @@ function finishTest(
         questions.length
       ) * 100
     );
+
 
   if(
     testMode === "pre"
@@ -3393,7 +4602,9 @@ function finishTest(
     state.preCorrect =
       correct;
 
+
     localSave();
+
 
     show(
       "#mini",
@@ -3401,9 +4612,14 @@ function finishTest(
       true
     );
 
+
+    saveActiveSession();
+
+
     return;
 
   }
+
 
   state.post =
     score;
@@ -3411,7 +4627,9 @@ function finishTest(
   state.postCorrect =
     correct;
 
+
   localSave();
+
 
   qs("#fPre").textContent =
     `${state.pre ?? "-"}/100`;
@@ -3428,11 +4646,15 @@ function finishTest(
   qs("#fXP").textContent =
     state.xp;
 
+
   show(
     "#reflection",
     true,
     true
   );
+
+
+  saveActiveSession();
 
 }
 
@@ -3493,12 +4715,11 @@ function startMission(
           <p>
 
             <b>1.</b>
-            Komputer sedang membuka
-            banyak tab browser.
-            Komponen memori kerja
-            sementara adalah ...
+            Komputer sedang membuka banyak tab browser.
+            Komponen memori kerja sementara adalah ...
 
           </p>
+
 
           <label class="option">
 
@@ -3509,9 +4730,12 @@ function startMission(
               onchange="captureMissionDraft()"
             >
 
-            <span>RAM</span>
+            <span>
+              RAM
+            </span>
 
           </label>
+
 
           <label class="option">
 
@@ -3522,9 +4746,12 @@ function startMission(
               onchange="captureMissionDraft()"
             >
 
-            <span>SSD</span>
+            <span>
+              SSD
+            </span>
 
           </label>
+
 
           <label class="option">
 
@@ -3535,18 +4762,21 @@ function startMission(
               onchange="captureMissionDraft()"
             >
 
-            <span>Monitor</span>
+            <span>
+              Monitor
+            </span>
 
           </label>
+
 
           <p>
 
             <b>2.</b>
-            Roni menyimpan dokumen
-            agar dapat dibuka minggu depan.
-            Pilihan yang tepat adalah ...
+            Roni menyimpan dokumen agar dapat dibuka
+            minggu depan. Pilihan yang tepat adalah ...
 
           </p>
+
 
           <label class="option">
 
@@ -3557,9 +4787,12 @@ function startMission(
               onchange="captureMissionDraft()"
             >
 
-            <span>RAM</span>
+            <span>
+              RAM
+            </span>
 
           </label>
+
 
           <label class="option">
 
@@ -3570,9 +4803,12 @@ function startMission(
               onchange="captureMissionDraft()"
             >
 
-            <span>SSD/HDD</span>
+            <span>
+              SSD/HDD
+            </span>
 
           </label>
+
 
           <label class="option">
 
@@ -3583,17 +4819,20 @@ function startMission(
               onchange="captureMissionDraft()"
             >
 
-            <span>CPU</span>
+            <span>
+              CPU
+            </span>
 
           </label>
+
 
           <p>
 
             <b>3.</b>
-            Mengapa RAM dan storage
-            tidak sama?
+            Mengapa RAM dan storage tidak sama?
 
           </p>
+
 
           <textarea
             id="m1reason"
@@ -3605,7 +4844,9 @@ function startMission(
         </div>
 
       `
+
     },
+
 
     m2:{
 
@@ -3626,10 +4867,10 @@ function startMission(
 
             <b>1.</b>
             CPU menghitung 125 × 8.
-            Bagian yang melakukan
-            operasi hitung adalah ...
+            Bagian yang melakukan operasi hitung adalah ...
 
           </p>
+
 
           <label class="option">
 
@@ -3640,9 +4881,12 @@ function startMission(
               onchange="captureMissionDraft()"
             >
 
-            <span>ALU</span>
+            <span>
+              ALU
+            </span>
 
           </label>
+
 
           <label class="option">
 
@@ -3653,18 +4897,21 @@ function startMission(
               onchange="captureMissionDraft()"
             >
 
-            <span>CU</span>
+            <span>
+              CU
+            </span>
 
           </label>
+
 
           <p>
 
             <b>2.</b>
-            Bagian CPU yang mengatur
-            jalannya instruksi program
-            adalah ...
+            Bagian CPU yang mengatur jalannya
+            instruksi program adalah ...
 
           </p>
+
 
           <label class="option">
 
@@ -3675,9 +4922,12 @@ function startMission(
               onchange="captureMissionDraft()"
             >
 
-            <span>ALU</span>
+            <span>
+              ALU
+            </span>
 
           </label>
+
 
           <label class="option">
 
@@ -3688,17 +4938,20 @@ function startMission(
               onchange="captureMissionDraft()"
             >
 
-            <span>CU</span>
+            <span>
+              CU
+            </span>
 
           </label>
+
 
           <p>
 
             <b>3.</b>
-            Jelaskan perbedaan
-            tugas ALU dan CU.
+            Jelaskan perbedaan tugas ALU dan CU.
 
           </p>
+
 
           <textarea
             id="m2reason"
@@ -3710,7 +4963,9 @@ function startMission(
         </div>
 
       `
+
     },
+
 
     m3:{
 
@@ -3730,6 +4985,7 @@ function startMission(
           <p>
             Pilih kasus lalu tuliskan alurnya.
           </p>
+
 
           <select
             id="m3case"
@@ -3754,6 +5010,7 @@ function startMission(
 
           </select>
 
+
           <div
             class="grid"
             style="margin-top:12px;"
@@ -3773,6 +5030,7 @@ function startMission(
 
             </div>
 
+
             <div>
 
               <label>
@@ -3787,6 +5045,7 @@ function startMission(
 
             </div>
 
+
             <div>
 
               <label>
@@ -3800,6 +5059,7 @@ function startMission(
               >
 
             </div>
+
 
             <div>
 
@@ -3817,12 +5077,15 @@ function startMission(
 
           </div>
 
+
           <label
             style="margin-top:14px;"
           >
-            Mengapa urutan tersebut
-            sesuai IPO?
+
+            Mengapa urutan tersebut sesuai IPO?
+
           </label>
+
 
           <textarea
             id="m3reason"
@@ -3834,12 +5097,15 @@ function startMission(
         </div>
 
       `
+
     }
 
   };
 
+
   const config =
     configs[type];
+
 
   if(!config){
 
@@ -3851,35 +5117,48 @@ function startMission(
 
   }
 
+
   missionType =
     type;
 
+
   show(
     "#mission",
-    true,
+    !restoring,
     true
   );
+
 
   qs("#missionTitle").textContent =
     config.title;
 
+
   qs("#missionDesc").textContent =
     config.desc;
+
 
   qs("#missionContent").innerHTML =
     config.html;
 
+
   qs("#missionSubmit")
     .classList
-    .remove("hidden");
+    .remove(
+      "hidden"
+    );
+
 
   qs("#missionNext")
     .classList
-    .add("hidden");
+    .add(
+      "hidden"
+    );
+
 
   restoreMissionDraft(
     type
   );
+
 
   if(restoring){
 
@@ -3888,7 +5167,15 @@ function startMission(
         missionEndAt
       );
 
-    if(remaining <= 0){
+
+    if(
+      remaining <= 0
+    ){
+
+      /*
+       * Hanya jika deadline benar-benar
+       * sudah habis, mulai timer baru.
+       */
 
       missionEndAt =
         Date.now() +
@@ -3898,6 +5185,7 @@ function startMission(
         config.seconds;
 
     }
+
 
     startMissionTimer(
       remaining
@@ -3909,11 +5197,16 @@ function startMission(
       Date.now() +
       config.seconds * 1000;
 
+
     startMissionTimer(
       config.seconds
     );
 
   }
+
+
+  updateJourneyProgress();
+
 
   saveActiveSession();
 
@@ -3922,9 +5215,14 @@ function startMission(
 
 function captureMissionDraft(){
 
-  if(!missionType){
+  if(
+    !missionType
+  ){
+
     return;
+
   }
+
 
   if(
     missionType === "m1"
@@ -3949,6 +5247,7 @@ function captureMissionDraft(){
 
   }
 
+
   if(
     missionType === "m2"
   ){
@@ -3971,6 +5270,7 @@ function captureMissionDraft(){
     };
 
   }
+
 
   if(
     missionType === "m3"
@@ -4000,49 +5300,68 @@ function captureMissionDraft(){
 
   }
 
+
   saveActiveSession();
 
 }
 
 
-function restoreMissionDraft(type){
+function restoreMissionDraft(
+  type
+){
 
   const draft =
     missionDrafts[type];
+
 
   if(!draft){
     return;
   }
 
-  if(type === "m1"){
 
-    if(draft.a !== ""){
+  if(
+    type === "m1"
+  ){
+
+    if(
+      draft.a !== ""
+    ){
 
       const el =
         qs(
           `input[name="m1a"][value="${draft.a}"]`
         );
 
+
       if(el){
-        el.checked = true;
+        el.checked =
+          true;
       }
 
     }
 
-    if(draft.b !== ""){
+
+    if(
+      draft.b !== ""
+    ){
 
       const el =
         qs(
           `input[name="m1b"][value="${draft.b}"]`
         );
 
+
       if(el){
-        el.checked = true;
+        el.checked =
+          true;
       }
 
     }
 
-    if(qs("#m1reason")){
+
+    if(
+      qs("#m1reason")
+    ){
 
       qs("#m1reason").value =
         draft.reason || "";
@@ -4051,35 +5370,50 @@ function restoreMissionDraft(type){
 
   }
 
-  if(type === "m2"){
 
-    if(draft.a !== ""){
+  if(
+    type === "m2"
+  ){
+
+    if(
+      draft.a !== ""
+    ){
 
       const el =
         qs(
           `input[name="m2a"][value="${draft.a}"]`
         );
 
+
       if(el){
-        el.checked = true;
+        el.checked =
+          true;
       }
 
     }
 
-    if(draft.b !== ""){
+
+    if(
+      draft.b !== ""
+    ){
 
       const el =
         qs(
           `input[name="m2b"][value="${draft.b}"]`
         );
 
+
       if(el){
-        el.checked = true;
+        el.checked =
+          true;
       }
 
     }
 
-    if(qs("#m2reason")){
+
+    if(
+      qs("#m2reason")
+    ){
 
       qs("#m2reason").value =
         draft.reason || "";
@@ -4088,9 +5422,14 @@ function restoreMissionDraft(type){
 
   }
 
-  if(type === "m3"){
 
-    if(qs("#m3case")){
+  if(
+    type === "m3"
+  ){
+
+    if(
+      qs("#m3case")
+    ){
 
       qs("#m3case").value =
         draft.case ||
@@ -4098,35 +5437,50 @@ function restoreMissionDraft(type){
 
     }
 
-    if(qs("#m3input")){
+
+    if(
+      qs("#m3input")
+    ){
 
       qs("#m3input").value =
         draft.input || "";
 
     }
 
-    if(qs("#m3process")){
+
+    if(
+      qs("#m3process")
+    ){
 
       qs("#m3process").value =
         draft.process || "";
 
     }
 
-    if(qs("#m3output")){
+
+    if(
+      qs("#m3output")
+    ){
 
       qs("#m3output").value =
         draft.output || "";
 
     }
 
-    if(qs("#m3storage")){
+
+    if(
+      qs("#m3storage")
+    ){
 
       qs("#m3storage").value =
         draft.storage || "";
 
     }
 
-    if(qs("#m3reason")){
+
+    if(
+      qs("#m3reason")
+    ){
 
       qs("#m3reason").value =
         draft.reason || "";
@@ -4146,11 +5500,13 @@ function startMissionTimer(
     missionTimerHandle
   );
 
+
   let requested =
     safeNumber(
       seconds,
       600
     );
+
 
   if(
     requested <= 0
@@ -4160,6 +5516,7 @@ function startMissionTimer(
       600;
 
   }
+
 
   if(
     !missionEndAt ||
@@ -4174,7 +5531,9 @@ function startMissionTimer(
 
   }
 
+
   updateMissionTimer();
+
 
   missionTimerHandle =
     setInterval(
@@ -4185,7 +5544,9 @@ function startMissionTimer(
             missionEndAt
           );
 
+
         updateMissionTimer();
+
 
         if(
           remaining <= 0
@@ -4195,11 +5556,13 @@ function startMissionTimer(
             missionTimerHandle
           );
 
+
           forceSubmitMission();
 
           return;
 
         }
+
 
         saveActiveSession();
 
@@ -4217,6 +5580,7 @@ function updateMissionTimer(){
       missionEndAt
     );
 
+
   const minutes =
     String(
       Math.floor(
@@ -4227,6 +5591,7 @@ function updateMissionTimer(){
       "0"
     );
 
+
   const seconds =
     String(
       remaining % 60
@@ -4235,20 +5600,25 @@ function updateMissionTimer(){
       "0"
     );
 
+
   const timer =
     qs("#missionTimer");
+
 
   if(!timer){
     return;
   }
 
+
   timer.textContent =
     `${minutes}:${seconds}`;
+
 
   timer.classList.remove(
     "warning",
     "danger"
   );
+
 
   if(
     remaining <= 60
@@ -4275,9 +5645,11 @@ function submitMission(){
 
   captureMissionDraft();
 
+
   clearInterval(
     missionTimerHandle
   );
+
 
   if(
     missionType === "m1"
@@ -4285,6 +5657,7 @@ function submitMission(){
 
     const draft =
       missionDrafts.m1;
+
 
     if(
       draft.a === "" ||
@@ -4298,6 +5671,7 @@ function submitMission(){
         "Semua bagian Mission 1 wajib diisi."
       );
 
+
       startMissionTimer(
         Math.max(
           1,
@@ -4307,36 +5681,45 @@ function submitMission(){
         )
       );
 
+
       return;
 
     }
 
+
     let score =
       0;
+
 
     if(
       draft.a === "0"
     ){
 
-      score += 8;
+      score +=
+        8;
 
     }
+
 
     if(
       draft.b === "1"
     ){
 
-      score += 8;
+      score +=
+        8;
 
     }
 
+
     state.m1 =
       score;
+
 
     state.essayAnswers.m1 =
       draft.reason.trim();
 
   }
+
 
   else if(
     missionType === "m2"
@@ -4344,6 +5727,7 @@ function submitMission(){
 
     const draft =
       missionDrafts.m2;
+
 
     if(
       draft.a === "" ||
@@ -4357,6 +5741,7 @@ function submitMission(){
         "Semua bagian Mission 2 wajib diisi."
       );
 
+
       startMissionTimer(
         Math.max(
           1,
@@ -4366,41 +5751,51 @@ function submitMission(){
         )
       );
 
+
       return;
 
     }
 
+
     let score =
       0;
+
 
     if(
       draft.a === "0"
     ){
 
-      score += 8;
+      score +=
+        8;
 
     }
+
 
     if(
       draft.b === "1"
     ){
 
-      score += 8;
+      score +=
+        8;
 
     }
 
+
     state.m2 =
       score;
+
 
     state.essayAnswers.m2 =
       draft.reason.trim();
 
   }
 
+
   else{
 
     const draft =
       missionDrafts.m3;
+
 
     if(
       !String(
@@ -4424,6 +5819,7 @@ function submitMission(){
         "Semua bagian Mission 3 wajib diisi."
       );
 
+
       startMissionTimer(
         Math.max(
           1,
@@ -4433,25 +5829,30 @@ function submitMission(){
         )
       );
 
+
       return;
 
     }
 
+
     state.m3 =
       15;
 
-    state.essayAnswers.m3 = [
 
-      `Kasus: ${draft.case}`,
-      `Input: ${draft.input}`,
-      `Process: ${draft.process}`,
-      `Output: ${draft.output}`,
-      `Storage: ${draft.storage}`,
-      `Alasan: ${draft.reason}`
-
-    ].join("\n");
+    state.essayAnswers.m3 =
+      [
+        `Kasus: ${draft.case}`,
+        `Input: ${draft.input}`,
+        `Process: ${draft.process}`,
+        `Output: ${draft.output}`,
+        `Storage: ${draft.storage}`,
+        `Alasan: ${draft.reason}`
+      ].join(
+        "\n"
+      );
 
   }
+
 
   const missionScore =
     missionType === "m1"
@@ -4460,23 +5861,34 @@ function submitMission(){
         ? state.m2
         : state.m3;
 
+
   state.xp +=
     missionScore;
 
+
   updateTop();
+
 
   localSave();
 
+
   qs("#missionSubmit")
     .classList
-    .add("hidden");
+    .add(
+      "hidden"
+    );
+
 
   qs("#missionNext")
     .classList
-    .remove("hidden");
+    .remove(
+      "hidden"
+    );
+
 
   missionEndAt =
     0;
+
 
   saveActiveSession();
 
@@ -4487,8 +5899,10 @@ function forceSubmitMission(){
 
   captureMissionDraft();
 
+
   let missionScore =
     0;
+
 
   if(
     missionType === "m1"
@@ -4496,6 +5910,7 @@ function forceSubmitMission(){
 
     state.essayAnswers.m1 =
       missionDrafts.m1.reason || "";
+
 
     state.m1 =
       (
@@ -4509,10 +5924,12 @@ function forceSubmitMission(){
           : 0
       );
 
+
     missionScore =
       state.m1;
 
   }
+
 
   if(
     missionType === "m2"
@@ -4520,6 +5937,7 @@ function forceSubmitMission(){
 
     state.essayAnswers.m2 =
       missionDrafts.m2.reason || "";
+
 
     state.m2 =
       (
@@ -4533,10 +5951,12 @@ function forceSubmitMission(){
           : 0
       );
 
+
     missionScore =
       state.m2;
 
   }
+
 
   if(
     missionType === "m3"
@@ -4559,41 +5979,60 @@ function forceSubmitMission(){
           : 0
       );
 
-    state.essayAnswers.m3 = [
 
-      `Kasus: ${missionDrafts.m3.case}`,
-      `Input: ${missionDrafts.m3.input}`,
-      `Process: ${missionDrafts.m3.process}`,
-      `Output: ${missionDrafts.m3.output}`,
-      `Storage: ${missionDrafts.m3.storage}`,
-      `Alasan: ${missionDrafts.m3.reason}`
+    state.essayAnswers.m3 =
+      [
+        `Kasus: ${missionDrafts.m3.case}`,
+        `Input: ${missionDrafts.m3.input}`,
+        `Process: ${missionDrafts.m3.process}`,
+        `Output: ${missionDrafts.m3.output}`,
+        `Storage: ${missionDrafts.m3.storage}`,
+        `Alasan: ${missionDrafts.m3.reason}`
+      ].join(
+        "\n"
+      );
 
-    ].join("\n");
 
     missionScore =
       state.m3;
 
   }
 
+
+  /*
+   * Hanya satu kali menambah XP.
+   */
+
   state.xp +=
     missionScore;
 
+
   updateTop();
+
 
   localSave();
 
+
   qs("#missionSubmit")
     .classList
-    .add("hidden");
+    .add(
+      "hidden"
+    );
+
 
   qs("#missionNext")
     .classList
-    .remove("hidden");
+    .remove(
+      "hidden"
+    );
+
 
   missionEndAt =
     0;
 
+
   saveActiveSession();
+
 
   showToast(
     "Waktu habis. Jawaban yang sudah diisi disimpan."
@@ -4611,6 +6050,7 @@ function nextMission(){
     startMission2();
 
   }
+
   else if(
     missionType === "m2"
   ){
@@ -4618,6 +6058,7 @@ function nextMission(){
     startMission3();
 
   }
+
   else{
 
     startBoss();
@@ -4639,7 +6080,9 @@ function startBoss(){
     true
   );
 
+
   restoreBossDraft();
+
 
   if(
     !missionEndAt ||
@@ -4654,11 +6097,13 @@ function startBoss(){
 
   }
 
+
   startBossTimer(
     currentRemainingSeconds(
       missionEndAt
     )
   );
+
 
   saveActiveSession();
 
@@ -4689,6 +6134,7 @@ function captureBossDraft(){
 
   };
 
+
   saveActiveSession();
 
 }
@@ -4699,46 +6145,65 @@ function restoreBossDraft(){
   const draft =
     missionDrafts.boss;
 
+
   if(!draft){
     return;
   }
 
-  if(qs("#bossInput")){
+
+  if(
+    qs("#bossInput")
+  ){
 
     qs("#bossInput").value =
       draft.input || "";
 
   }
 
-  if(qs("#bossProcess")){
+
+  if(
+    qs("#bossProcess")
+  ){
 
     qs("#bossProcess").value =
       draft.process || "";
 
   }
 
-  if(qs("#bossOutput")){
+
+  if(
+    qs("#bossOutput")
+  ){
 
     qs("#bossOutput").value =
       draft.output || "";
 
   }
 
-  if(qs("#bossCpu")){
+
+  if(
+    qs("#bossCpu")
+  ){
 
     qs("#bossCpu").value =
       draft.cpu || "";
 
   }
 
-  if(qs("#bossIpo")){
+
+  if(
+    qs("#bossIpo")
+  ){
 
     qs("#bossIpo").value =
       draft.ipo || "";
 
   }
 
-  if(qs("#bossReason")){
+
+  if(
+    qs("#bossReason")
+  ){
 
     qs("#bossReason").value =
       draft.reason || "";
@@ -4756,11 +6221,13 @@ function startBossTimer(
     missionTimerHandle
   );
 
+
   let requested =
     safeNumber(
       seconds,
       600
     );
+
 
   if(
     requested <= 0
@@ -4770,6 +6237,7 @@ function startBossTimer(
       600;
 
   }
+
 
   if(
     !missionEndAt ||
@@ -4784,7 +6252,9 @@ function startBossTimer(
 
   }
 
+
   updateBossTimer();
+
 
   missionTimerHandle =
     setInterval(
@@ -4795,9 +6265,17 @@ function startBossTimer(
             missionEndAt
           );
 
+
         updateBossTimer();
 
+
+        /*
+         * Simpan jawaban tanpa
+         * mengubah deadline.
+         */
+
         captureBossDraft();
+
 
         if(
           remaining <= 0
@@ -4806,6 +6284,7 @@ function startBossTimer(
           clearInterval(
             missionTimerHandle
           );
+
 
           forceSubmitBoss();
 
@@ -4827,6 +6306,7 @@ function updateBossTimer(){
       missionEndAt
     );
 
+
   const minutes =
     String(
       Math.floor(
@@ -4837,6 +6317,7 @@ function updateBossTimer(){
       "0"
     );
 
+
   const seconds =
     String(
       remaining % 60
@@ -4845,20 +6326,25 @@ function updateBossTimer(){
       "0"
     );
 
+
   const timer =
     qs("#bossTimer");
+
 
   if(!timer){
     return;
   }
 
+
   timer.textContent =
     `${minutes}:${seconds}`;
+
 
   timer.classList.remove(
     "warning",
     "danger"
   );
+
 
   if(
     remaining <= 60
@@ -4885,12 +6371,15 @@ function submitBoss(){
 
   captureBossDraft();
 
+
   clearInterval(
     missionTimerHandle
   );
 
+
   const draft =
     missionDrafts.boss;
+
 
   if(
     !String(
@@ -4917,6 +6406,7 @@ function submitBoss(){
       "Semua bagian Boss Mission wajib diisi."
     );
 
+
     startBossTimer(
       Math.max(
         1,
@@ -4926,35 +6416,45 @@ function submitBoss(){
       )
     );
 
+
     return;
 
   }
 
+
   state.boss =
     13;
+
 
   state.xp +=
     13;
 
-  state.essayAnswers.boss = [
 
-    `Input: ${draft.input}`,
-    `Process: ${draft.process}`,
-    `Output: ${draft.output}`,
-    `CPU / Memory: ${draft.cpu}`,
-    `Alur IPO: ${draft.ipo}`,
-    `Alasan: ${draft.reason}`
+  state.essayAnswers.boss =
+    [
+      `Input: ${draft.input}`,
+      `Process: ${draft.process}`,
+      `Output: ${draft.output}`,
+      `CPU / Memory: ${draft.cpu}`,
+      `Alur IPO: ${draft.ipo}`,
+      `Alasan: ${draft.reason}`
+    ].join(
+      "\n"
+    );
 
-  ].join("\n");
 
   updateTop();
 
+
   localSave();
+
 
   missionEndAt =
     0;
 
+
   startPosttest();
+
 
 }
 
@@ -4963,8 +6463,10 @@ function forceSubmitBoss(){
 
   captureBossDraft();
 
+
   const draft =
     missionDrafts.boss;
+
 
   state.boss =
     (
@@ -5003,26 +6505,33 @@ function forceSubmitBoss(){
         : 0
     );
 
+
   state.xp +=
     state.boss;
 
-  state.essayAnswers.boss = [
 
-    `Input: ${draft.input}`,
-    `Process: ${draft.process}`,
-    `Output: ${draft.output}`,
-    `CPU / Memory: ${draft.cpu}`,
-    `Alur IPO: ${draft.ipo}`,
-    `Alasan: ${draft.reason}`
+  state.essayAnswers.boss =
+    [
+      `Input: ${draft.input}`,
+      `Process: ${draft.process}`,
+      `Output: ${draft.output}`,
+      `CPU / Memory: ${draft.cpu}`,
+      `Alur IPO: ${draft.ipo}`,
+      `Alasan: ${draft.reason}`
+    ].join(
+      "\n"
+    );
 
-  ].join("\n");
 
   localSave();
 
+
   updateTop();
+
 
   missionEndAt =
     0;
+
 
   startPosttest();
 
@@ -5048,6 +6557,7 @@ function captureReflectionDraft(){
 
   };
 
+
   saveActiveSession();
 
 }
@@ -5055,21 +6565,29 @@ function captureReflectionDraft(){
 
 function restoreReflectionDraft(){
 
-  if(qs("#r3")){
+  if(
+    qs("#r3")
+  ){
 
     qs("#r3").value =
       reflectionDraft.r3 || "";
 
   }
 
-  if(qs("#r2")){
+
+  if(
+    qs("#r2")
+  ){
 
     qs("#r2").value =
       reflectionDraft.r2 || "";
 
   }
 
-  if(qs("#r1")){
+
+  if(
+    qs("#r1")
+  ){
 
     qs("#r1").value =
       reflectionDraft.r1 || "";
@@ -5083,20 +6601,24 @@ function finishReflection(){
 
   captureReflectionDraft();
 
+
   const r3 =
     String(
       reflectionDraft.r3 || ""
     ).trim();
+
 
   const r2 =
     String(
       reflectionDraft.r2 || ""
     ).trim();
 
+
   const r1 =
     String(
       reflectionDraft.r1 || ""
     ).trim();
+
 
   if(
     !r3 ||
@@ -5112,36 +6634,53 @@ function finishReflection(){
 
   }
 
+
   state.reflection = {
 
-    r3:r3,
-    r2:r2,
-    r1:r1
+    r3:
+      r3,
+
+    r2:
+      r2,
+
+    r1:
+      r1
 
   };
 
+
   localSave();
+
 
   qs("#fPre").textContent =
     `${state.pre ?? "-"}/100`;
 
+
   qs("#fPost").textContent =
     `${state.post ?? "-"}/100`;
+
 
   qs("#fPreDetail").textContent =
     `${state.preCorrect ?? 0} dari 15 soal benar`;
 
+
   qs("#fPostDetail").textContent =
     `${state.postCorrect ?? 0} dari 15 soal benar`;
 
+
   qs("#fXP").textContent =
     state.xp;
+
 
   show(
     "#finish",
     true,
     true
   );
+
+
+  saveActiveSession();
+
 
   showToast(
     "Refleksi berhasil disimpan."
@@ -5197,10 +6736,17 @@ function buildRecord(){
     xp:
       state.xp,
 
-    rubric_m1:"",
-    rubric_m2:"",
-    rubric_m3:"",
-    rubric_boss:"",
+    rubric_m1:
+      "",
+
+    rubric_m2:
+      "",
+
+    rubric_m3:
+      "",
+
+    rubric_boss:
+      "",
 
     answer_m1:
       state.essayAnswers.m1 || "",
@@ -5242,33 +6788,49 @@ function localSave(){
 
   }
 
+
   const record =
     buildRecord();
 
-  let records = [];
+
+  let records =
+    [];
+
+
+  const local =
+    getStorage();
+
 
   try{
 
-    records =
-      JSON.parse(
-        localStorage.getItem(
-          "cm2_records"
-        ) || "[]"
-      );
+    if(local){
+
+      records =
+        JSON.parse(
+          local.getItem(
+            "cm2_records"
+          ) || "[]"
+        );
+
+    }
+
 
     if(
       !Array.isArray(records)
     ){
 
-      records = [];
+      records =
+        [];
 
     }
 
   }catch(error){
 
-    records = [];
+    records =
+      [];
 
   }
+
 
   const index =
     records.findIndex(
@@ -5279,7 +6841,10 @@ function localSave(){
           record.code
     );
 
-  if(index >= 0){
+
+  if(
+    index >= 0
+  ){
 
     records[index] =
       record;
@@ -5292,18 +6857,34 @@ function localSave(){
 
   }
 
-  try{
 
-    localStorage.setItem(
-      "cm2_records",
-      JSON.stringify(records)
-    );
+  if(local){
 
-  }catch(error){}
+    try{
+
+      local.setItem(
+        "cm2_records",
+        JSON.stringify(
+          records
+        )
+      );
+
+    }catch(error){
+
+      console.error(
+        "Records local save failed:",
+        error
+      );
+
+    }
+
+  }
+
 
   queueSync(
     record
   );
+
 
   saveActiveSession();
 
@@ -5314,7 +6895,9 @@ function localSave(){
    GOOGLE SYNC
 ========================================================= */
 
-function queueSync(record){
+function queueSync(
+  record
+){
 
   syncQueue =
     syncQueue.filter(
@@ -5327,24 +6910,46 @@ function queueSync(record){
         )
     );
 
+
   syncQueue.push(
     record
   );
 
-  try{
 
-    localStorage.setItem(
-      "cm2_sync_queue",
-      JSON.stringify(
-        syncQueue
-      )
-    );
+  const storages = [
 
-  }catch(error){}
+    getStorage(),
+    getSessionStorage()
+
+  ];
+
+
+  storages.forEach(
+    storage => {
+
+      if(!storage){
+        return;
+      }
+
+      try{
+
+        storage.setItem(
+          "cm2_sync_queue_v6",
+          JSON.stringify(
+            syncQueue
+          )
+        );
+
+      }catch(error){}
+
+    }
+  );
+
 
   clearTimeout(
     window.__syncTimer
   );
+
 
   window.__syncTimer =
     setTimeout(
@@ -5366,8 +6971,10 @@ async function flushSyncQueue(){
 
   }
 
+
   syncRunning =
     true;
+
 
   try{
 
@@ -5378,36 +6985,67 @@ async function flushSyncQueue(){
       const record =
         syncQueue[0];
 
+
       await fetch(
         SHEET_WEB_APP_URL,
         {
-          method:"POST",
-          mode:"no-cors",
+
+          method:
+            "POST",
+
+          mode:
+            "no-cors",
+
           headers:{
             "Content-Type":
               "text/plain;charset=utf-8"
           },
+
           body:
             JSON.stringify({
-              action:"upsert",
+              action:
+                "upsert",
+
               record:
                 record
+
             })
+
         }
       );
 
+
       syncQueue.shift();
 
-      try{
 
-        localStorage.setItem(
-          "cm2_sync_queue",
-          JSON.stringify(
-            syncQueue
-          )
-        );
+      const storages = [
 
-      }catch(error){}
+        getStorage(),
+        getSessionStorage()
+
+      ];
+
+
+      storages.forEach(
+        storage => {
+
+          if(!storage){
+            return;
+          }
+
+          try{
+
+            storage.setItem(
+              "cm2_sync_queue_v6",
+              JSON.stringify(
+                syncQueue
+              )
+            );
+
+          }catch(error){}
+
+        }
+      );
 
     }
 
@@ -5418,16 +7056,6 @@ async function flushSyncQueue(){
       error
     );
 
-    try{
-
-      localStorage.setItem(
-        "cm2_sync_queue",
-        JSON.stringify(
-          syncQueue
-        )
-      );
-
-    }catch(error){}
 
     setTimeout(
       flushSyncQueue,
@@ -5444,75 +7072,117 @@ async function flushSyncQueue(){
 }
 
 
+function restoreSyncQueue(){
+
+  const storages = [
+
+    getStorage(),
+    getSessionStorage()
+
+  ];
+
+
+  for(
+    const storage of storages
+  ){
+
+    if(!storage){
+      continue;
+    }
+
+
+    try{
+
+      const raw =
+        storage.getItem(
+          "cm2_sync_queue_v6"
+        );
+
+
+      if(
+        raw
+      ){
+
+        const parsed =
+          JSON.parse(
+            raw
+          );
+
+
+        if(
+          Array.isArray(parsed) &&
+          parsed.length
+        ){
+
+          syncQueue =
+            parsed;
+
+          return;
+
+        }
+
+      }
+
+    }catch(error){}
+
+  }
+
+}
+
+
 /* =========================================================
    RESTORE ACTIVE SESSION
 ========================================================= */
 
 function restoreActiveSession(){
 
+  restoringSession =
+    true;
+
+
   const saved =
     loadActiveSession();
 
+
   if(!saved){
+
+    restoringSession =
+      false;
 
     return false;
 
   }
 
+
   try{
 
-    state = {
+    /*
+     * Restore state
+     */
 
-      ...clone(
-        DEFAULT_STATE
-      ),
+    state =
+      mergeState(
+        saved.state
+      );
 
-      ...saved.state
 
-    };
+    /*
+     * Restore drafts
+     */
 
-    state.answers =
-      Array.isArray(
-        state.answers
-      )
-        ? state.answers
-        : [];
+    restoreDraftObjects(
+      saved
+    );
 
-    state.answerChoices =
-      Array.isArray(
-        state.answerChoices
-      )
-        ? state.answerChoices
-        : [];
 
-    state.reflection =
-      saved.state.reflection ||
-      {
-        r3:"",
-        r2:"",
-        r1:""
-      };
-
-    state.essayAnswers =
-      saved.state.essayAnswers ||
-      {
-        m1:"",
-        m2:"",
-        m3:"",
-        boss:""
-      };
-
-    missionDrafts =
-      saved.missionDrafts ||
-      missionDrafts;
-
-    reflectionDraft =
-      saved.reflectionDraft ||
-      reflectionDraft;
+    /*
+     * Restore test
+     */
 
     testMode =
       saved.testMode ||
       "pre";
+
 
     qIndex =
       Math.max(
@@ -5523,6 +7193,7 @@ function restoreActiveSession(){
         )
       );
 
+
     selectedQuestions =
       Array.isArray(
         saved.selectedQuestions
@@ -5530,15 +7201,22 @@ function restoreActiveSession(){
         ? saved.selectedQuestions
         : [];
 
+
     testEndAt =
       safeNumber(
         saved.testEndAt,
         0
       );
 
+
+    /*
+     * Restore mission
+     */
+
     missionType =
       saved.missionType ||
       "";
+
 
     missionEndAt =
       safeNumber(
@@ -5548,51 +7226,124 @@ function restoreActiveSession(){
 
 
     /*
+     * Restore screen.
+     *
      * PRIORITAS:
      *
-     * 1. hash URL
-     * 2. currentScreen tersimpan
-     * 3. backup localStorage
-     * 4. dashboard
+     * 1. saved.currentScreen
+     * 2. backup localStorage/sessionStorage
+     * 3. hash
      */
 
-    const hashScreen =
-      getHashScreen();
-
-    const savedScreen =
-      saved.currentScreen ||
-      localStorage.getItem(
-        "cm2_current_screen"
-      ) ||
-      "#dash";
-
     let targetScreen =
-      hashScreen ||
-      savedScreen;
+      saved.currentScreen ||
+      "";
+
+
+    if(!targetScreen){
+
+      const storages = [
+
+        getStorage(),
+        getSessionStorage()
+
+      ];
+
+
+      for(
+        const storage of storages
+      ){
+
+        if(!storage){
+          continue;
+        }
+
+
+        try{
+
+          const backupScreen =
+            storage.getItem(
+              SCREEN_KEY
+            );
+
+
+          if(
+            backupScreen
+          ){
+
+            targetScreen =
+              backupScreen;
+
+            break;
+
+          }
+
+        }catch(error){}
+
+      }
+
+    }
+
+
+    if(!targetScreen){
+
+      targetScreen =
+        getHashScreen();
+
+    }
+
+
+    if(
+      ![
+        "#dash",
+        "#test",
+        "#mini",
+        "#mission",
+        "#boss",
+        "#reflection",
+        "#finish"
+      ].includes(
+        targetScreen
+      )
+    ){
+
+      targetScreen =
+        "#dash";
+
+    }
 
 
     /*
-     * Pulihkan informasi siswa.
+     * Restore student info
      */
 
     qs("#studentPill").textContent =
       `${state.name} • ${state.code} • ${state.className}`;
 
+
     qs("#dClass").textContent =
       `${state.className} • ${state.teacher}`;
+
 
     qs("#dCode").textContent =
       `${state.name} (${state.code})`;
 
+
     qs("#dTeam").textContent =
       state.team;
 
-    updateTop();
+
+    /*
+     * Tandai aplikasi sudah punya session.
+     */
+
+    appReady =
+      true;
 
 
-    /* =====================================================
-       FINISH
-    ===================================================== */
+    /*
+     * Restore berdasarkan halaman.
+     */
 
     if(
       targetScreen === "#finish"
@@ -5600,14 +7351,17 @@ function restoreActiveSession(){
 
       showFinishScreen();
 
+      updateTop();
+
+      restoringSession =
+        false;
+
+      saveActiveSession();
+
       return true;
 
     }
 
-
-    /* =====================================================
-       REFLECTION
-    ===================================================== */
 
     if(
       targetScreen === "#reflection"
@@ -5619,16 +7373,21 @@ function restoreActiveSession(){
         true
       );
 
+
       restoreReflectionDraft();
+
+      updateTop();
+
+      restoringSession =
+        false;
+
+
+      saveActiveSession();
 
       return true;
 
     }
 
-
-    /* =====================================================
-       BOSS
-    ===================================================== */
 
     if(
       targetScreen === "#boss"
@@ -5640,12 +7399,24 @@ function restoreActiveSession(){
         true
       );
 
+
       restoreBossDraft();
+
 
       let remaining =
         currentRemainingSeconds(
           missionEndAt
         );
+
+
+      /*
+       * Kalau timer masih hidup,
+       * PAKAI timer lama.
+       *
+       * Kalau benar-benar habis,
+       * mulai timer baru hanya agar halaman
+       * tidak rusak.
+       */
 
       if(
         remaining <= 0
@@ -5660,9 +7431,18 @@ function restoreActiveSession(){
 
       }
 
+
+      restoringSession =
+        false;
+
+
       startBossTimer(
         remaining
       );
+
+
+      updateTop();
+
 
       saveActiveSession();
 
@@ -5671,40 +7451,52 @@ function restoreActiveSession(){
     }
 
 
-    /* =====================================================
-       MISSION
-    ===================================================== */
-
     if(
       targetScreen === "#mission"
     ){
 
-      /*
-       * Mission tidak boleh jatuh ke login.
-       */
-
       if(
-        missionType &&
-        ["m1","m2","m3"].includes(
+        [
+          "m1",
+          "m2",
+          "m3"
+        ].includes(
           missionType
         )
       ){
+
+        restoringSession =
+          false;
+
+
+        /*
+         * startMission akan membangun ulang
+         * HTML lalu memasukkan draft lama.
+         */
 
         startMission(
           missionType,
           true
         );
 
+
+        updateTop();
+
         return true;
 
       }
 
+
+      /*
+       * Kalau target mission tetapi tipe mission rusak,
+       * jangan ke login.
+       */
+
+      targetScreen =
+        "#dash";
+
     }
 
-
-    /* =====================================================
-       TEST
-    ===================================================== */
 
     if(
       targetScreen === "#test"
@@ -5721,33 +7513,51 @@ function restoreActiveSession(){
           true
         );
 
+
         qs("#testTitle").textContent =
           testMode === "pre"
             ? "Pre-Test — 15 Soal"
             : "Post-Test — 15 Soal";
 
+
         renderQuestion();
+
 
         let remaining =
           currentRemainingSeconds(
             testEndAt
           );
 
+
         if(
           remaining <= 0
         ){
+
+          restoringSession =
+            false;
+
 
           finishTest(
             true
           );
 
+
           return true;
 
         }
 
+
+        restoringSession =
+          false;
+
+
         startTestTimer(
           remaining
         );
+
+
+        updateTop();
+
 
         saveActiveSession();
 
@@ -5755,12 +7565,17 @@ function restoreActiveSession(){
 
       }
 
+
+      /*
+       * Data test tidak lengkap.
+       * Kembali ke dashboard, bukan login.
+       */
+
+      targetScreen =
+        "#dash";
+
     }
 
-
-    /* =====================================================
-       MINI
-    ===================================================== */
 
     if(
       targetScreen === "#mini"
@@ -5772,14 +7587,20 @@ function restoreActiveSession(){
         true
       );
 
+
+      updateTop();
+
+
+      restoringSession =
+        false;
+
+
+      saveActiveSession();
+
       return true;
 
     }
 
-
-    /* =====================================================
-       DASHBOARD
-    ===================================================== */
 
     if(
       targetScreen === "#dash"
@@ -5791,6 +7612,16 @@ function restoreActiveSession(){
         true
       );
 
+
+      updateTop();
+
+
+      restoringSession =
+        false;
+
+
+      saveActiveSession();
+
       return true;
 
     }
@@ -5798,8 +7629,7 @@ function restoreActiveSession(){
 
     /*
      * FALLBACK:
-     * sesi siswa valid → dashboard,
-     * TIDAK kembali ke login.
+     * session valid = jangan pernah ke login.
      */
 
     show(
@@ -5808,23 +7638,43 @@ function restoreActiveSession(){
       true
     );
 
+
+    updateTop();
+
+
+    restoringSession =
+      false;
+
+
+    saveActiveSession();
+
     return true;
 
   }catch(error){
 
     console.error(
-      "Restore session error:",
+      "RESTORE SESSION ERROR:",
       error
     );
 
+
     /*
-     * Jangan hapus session.
+     * Sangat penting:
+     * jangan hapus session jika restore gagal.
      */
+
+    restoringSession =
+      false;
+
 
     if(
       state.code &&
       state.className
     ){
+
+      appReady =
+        true;
+
 
       show(
         "#dash",
@@ -5832,9 +7682,13 @@ function restoreActiveSession(){
         true
       );
 
+
+      saveActiveSession();
+
       return true;
 
     }
+
 
     return false;
 
@@ -5852,26 +7706,35 @@ function showFinishScreen(){
   qs("#fPre").textContent =
     `${state.pre ?? "-"}/100`;
 
+
   qs("#fPost").textContent =
     `${state.post ?? "-"}/100`;
+
 
   qs("#fPreDetail").textContent =
     `${state.preCorrect ?? 0} dari 15 soal benar`;
 
+
   qs("#fPostDetail").textContent =
     `${state.postCorrect ?? 0} dari 15 soal benar`;
+
 
   qs("#fXP").textContent =
     state.xp;
 
+
   currentScreen =
     "#finish";
+
 
   show(
     "#finish",
     false,
     true
   );
+
+
+  updateJourneyProgress();
 
 }
 
@@ -5887,9 +7750,11 @@ document.addEventListener(
     const id =
       event.target?.id;
 
+
     if(!id){
       return;
     }
+
 
     if(
       [
@@ -5909,6 +7774,7 @@ document.addEventListener(
 
     }
 
+
     if(
       [
         "bossInput",
@@ -5925,6 +7791,7 @@ document.addEventListener(
       return;
 
     }
+
 
     if(
       [
@@ -5958,6 +7825,7 @@ document.addEventListener(
 
     }
 
+
     if(
       [
         "m1a",
@@ -5974,6 +7842,7 @@ document.addEventListener(
       return;
 
     }
+
 
     if(
       event.target?.id === "m3case"
@@ -6005,6 +7874,7 @@ function saveBeforeLeave(){
 
     }
 
+
     if(
       currentScreen === "#mission"
     ){
@@ -6012,6 +7882,7 @@ function saveBeforeLeave(){
       captureMissionDraft();
 
     }
+
 
     if(
       currentScreen === "#boss"
@@ -6021,6 +7892,7 @@ function saveBeforeLeave(){
 
     }
 
+
     if(
       currentScreen === "#reflection"
     ){
@@ -6029,8 +7901,10 @@ function saveBeforeLeave(){
 
     }
 
+
     /*
-     * Selalu simpan halaman terakhir.
+     * Jangan pernah menghapus session
+     * saat halaman direfresh.
      */
 
     saveActiveSession();
@@ -6052,9 +7926,32 @@ window.addEventListener(
   saveBeforeLeave
 );
 
+
 window.addEventListener(
   "beforeunload",
   saveBeforeLeave
+);
+
+
+/*
+ * Visibility change:
+ * save ketika tab ditinggalkan.
+ */
+
+document.addEventListener(
+  "visibilitychange",
+  () => {
+
+    if(
+      document.visibilityState ===
+      "hidden"
+    ){
+
+      saveBeforeLeave();
+
+    }
+
+  }
 );
 
 
@@ -6067,34 +7964,21 @@ window.addEventListener(
   () => {
 
     /*
-     * Hash hanya dipakai sebagai
-     * penanda halaman.
+     * Hash tidak digunakan untuk
+     * merender halaman secara otomatis.
      *
-     * Jangan mereset sesi.
+     * Jadi perubahan hash tidak akan
+     * merusak state.
      */
 
     if(
-      !state.code ||
-      !state.className
+      appReady &&
+      currentScreen
     ){
 
-      return;
+      saveActiveSession();
 
     }
-
-    const screen =
-      getHashScreen();
-
-    if(!screen){
-      return;
-    }
-
-    currentScreen =
-      screen;
-
-    updateJourneyProgress();
-
-    saveActiveSession();
 
   }
 );
@@ -6104,7 +7988,9 @@ window.addEventListener(
    ESCAPE HTML
 ========================================================= */
 
-function escapeHtml(value){
+function escapeHtml(
+  value
+){
 
   return String(
     value ?? ""
@@ -6129,33 +8015,104 @@ function escapeHtml(value){
    INITIALIZATION
 ========================================================= */
 
-populateStudents();
+function initializeApp(){
 
-restoreSyncQueue();
+  /*
+   * Jangan mengosongkan session di sini.
+   */
 
-flushSyncQueue();
+  appReady =
+    false;
+
+
+  populateStudents();
+
+
+  restoreSyncQueue();
+
+
+  flushSyncQueue();
+
+
+  /*
+   * Restore dilakukan setelah seluruh fungsi
+   * dan DOM siap.
+   */
+
+  const restored =
+    restoreActiveSession();
+
+
+  if(
+    !restored
+  ){
+
+    resetFreshSession();
+
+
+    currentScreen =
+      "#login";
+
+
+    appReady =
+      false;
+
+
+    show(
+      "#login",
+      false,
+      true
+    );
+
+
+    updateJourneyProgress();
+
+  }
+
+
+  /*
+   * Setelah restore selesai,
+   * tandai aplikasi siap autosave.
+   */
+
+  if(
+    state.code &&
+    state.className
+  ){
+
+    appReady =
+      true;
+
+    updateTop();
+
+    saveActiveSession();
+
+  }
+
+}
 
 
 /*
- * Restore adalah langkah terakhir.
+ * Script berada di bagian paling bawah body,
+ * tetapi tetap aman dijalankan setelah DOM siap.
  */
 
-const restored =
-  restoreActiveSession();
+if(
+  document.readyState ===
+  "loading"
+){
 
-
-if(!restored){
-
-  currentScreen =
-    "#login";
-
-  show(
-    "#login",
-    false,
-    true
+  document.addEventListener(
+    "DOMContentLoaded",
+    initializeApp,
+    {
+      once:true
+    }
   );
 
-  updateJourneyProgress();
+}else{
+
+  initializeApp();
 
 }
 
