@@ -939,7 +939,7 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
 
   <script>
     const SHEET_WEB_APP_URL =
-      "https://script.google.com/macros/s/AKfycbw-qULj48hWVbKztbYDHHHH5RymhFUbcEAvBLC8xLqTKlgkiGQKqc480whgQzAbbSTpnA/exec";
+      "https://script.google.com/macros/s/AKfycbxLQrxic-n42_GNiRuoZxMQM6zoXszP4_10CHg65ib_1nYYmQYzAbHIaVfqc1psasBlFA/exec";
 
     const SESSION_KEY = "cm2_active_session_final";
     const COMPLETED_KEY = "cm2_completed_final";
@@ -1038,6 +1038,10 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       boss:0,
       answers:[],
       answerChoices:[],
+      missionChoices:{
+        m1:{a:"",b:""},
+        m2:{a:"",b:""}
+      },
       preAnswers:[],
       postAnswers:[],
       reflection:{r3:"",r2:"",r1:""},
@@ -1249,6 +1253,20 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       }
     }
 
+    function missionChoiceText(type,part,value){
+      const maps={
+        m1:{a:["RAM","SSD","Monitor"],b:["RAM","SSD/HDD","CPU"]},
+        m2:{a:["ALU","CU"],b:["ALU","CU"]}
+      };
+      const list=maps[type]?.[part]||[];
+      return value==="" || value==null ? "" : (list[Number(value)] ?? "");
+    }
+
+    function missionKeyText(type,part){
+      const keys={m1:{a:"RAM",b:"SSD/HDD"},m2:{a:"ALU",b:"CU"}};
+      return keys[type]?.[part]||"";
+    }
+
     function localSave(){
       if(!state.className || !state.code) return;
 
@@ -1274,6 +1292,14 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         answer_m2:state.essayAnswers.m2 || "",
         answer_m3:state.essayAnswers.m3 || "",
         answer_boss:state.essayAnswers.boss || "",
+        m1_choice_a:missionChoiceText("m1","a",state.missionChoices?.m1?.a),
+        m1_choice_b:missionChoiceText("m1","b",state.missionChoices?.m1?.b),
+        m1_key_a:missionKeyText("m1","a"),
+        m1_key_b:missionKeyText("m1","b"),
+        m2_choice_a:missionChoiceText("m2","a",state.missionChoices?.m2?.a),
+        m2_choice_b:missionChoiceText("m2","b",state.missionChoices?.m2?.b),
+        m2_key_a:missionKeyText("m2","a"),
+        m2_key_b:missionKeyText("m2","b"),
         reflection_r3:state.reflection.r3 || "",
         reflection_r2:state.reflection.r2 || "",
         reflection_r1:state.reflection.r1 || "",
@@ -1364,6 +1390,22 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         );
       }finally{
         syncRunning = false;
+      }
+    }
+
+    async function syncRecordNow(record){
+      try{
+        await fetch(SHEET_WEB_APP_URL,{
+          method:"POST",
+          mode:"no-cors",
+          keepalive:true,
+          headers:{"Content-Type":"text/plain;charset=utf-8"},
+          body:JSON.stringify({action:"upsert",record})
+        });
+        return true;
+      }catch(error){
+        console.error("Immediate Google Sheets sync failed:",error);
+        return false;
       }
     }
 
@@ -2309,7 +2351,7 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         .trim();
     }
 
-    function finishReflection(){
+    async function finishReflection(){
       captureReflectionDraft();
 
       const r3 = normalizeReflectionText(reflectionDraft.r3);
@@ -2332,6 +2374,7 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       qs("#fXP").textContent = state.xp;
 
       localSave();
+      await syncRecordNow(buildRecord());
 
       /*
        * KUNCI FIX UTAMA:
@@ -2420,6 +2463,12 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
             ? saved.state.answerChoices
             : [];
 
+        state.missionChoices = {
+          m1:{a:"",b:""},
+          m2:{a:"",b:""},
+          ...(saved.state.missionChoices||{})
+        };
+
         state.answers =
           Array.isArray(saved.state.answers)
             ? saved.state.answers
@@ -2443,6 +2492,12 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         state.essayAnswers = {
           ...clone(DEFAULT_STATE.essayAnswers),
           ...(saved.state.essayAnswers||{})
+        };
+
+        state.missionChoices = {
+          m1:{a:"",b:""},
+          m2:{a:"",b:""},
+          ...(saved.state.missionChoices||{})
         };
 
         testMode = saved.testMode||"pre";

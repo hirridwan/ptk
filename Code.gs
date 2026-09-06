@@ -9,8 +9,9 @@ const HEADERS = [
   "M3 Objektif", "M3 Uraian XP", "Boss Objektif", "Boss Uraian XP", "Post-Test",
   "N-Gain", "Kategori N-Gain", "Ketuntasan", "Total XP",
   "Jawaban M1", "Jawaban M2", "Jawaban M3", "Jawaban Boss",
-  "Refleksi 3 Hal", "Refleksi 2 Hal", "Refleksi 1 Hal", "Waktu Pengiriman",
-  "Pre-Test Jawaban", "Post-Test Jawaban"
+  "M1 Pilihan 1", "M1 Pilihan 2", "M1 Kunci 1", "M1 Kunci 2",
+  "M2 Pilihan 1", "M2 Pilihan 2", "M2 Kunci 1", "M2 Kunci 2",
+  "Refleksi 3 Hal", "Refleksi 2 Hal", "Refleksi 1 Hal", "Waktu Pengiriman"
 ];
 
 const FIELD = {
@@ -20,9 +21,13 @@ const FIELD = {
   "M3 Objektif":"m3", "M3 Uraian XP":"rubric_m3", "Boss Objektif":"boss",
   "Boss Uraian XP":"rubric_boss", "Post-Test":"post", "Total XP":"xp",
   "Jawaban M1":"answer_m1", "Jawaban M2":"answer_m2", "Jawaban M3":"answer_m3",
-  "Jawaban Boss":"answer_boss", "Refleksi 3 Hal":"reflection_r3",
-  "Refleksi 2 Hal":"reflection_r2", "Refleksi 1 Hal":"reflection_r1",
-  "Pre-Test Jawaban":"pre_answers", "Post-Test Jawaban":"post_answers"
+  "Jawaban Boss":"answer_boss",
+  "M1 Pilihan 1":"m1_choice_a", "M1 Pilihan 2":"m1_choice_b",
+  "M1 Kunci 1":"m1_key_a", "M1 Kunci 2":"m1_key_b",
+  "M2 Pilihan 1":"m2_choice_a", "M2 Pilihan 2":"m2_choice_b",
+  "M2 Kunci 1":"m2_key_a", "M2 Kunci 2":"m2_key_b",
+  "Refleksi 3 Hal":"reflection_r3",
+  "Refleksi 2 Hal":"reflection_r2", "Refleksi 1 Hal":"reflection_r1"
 };
 
 function getSheet_() {
@@ -110,8 +115,9 @@ function doGet(e) {
         team:"", role:"", pre:"", m1:"", rubric_m1:"", m2:"", rubric_m2:"",
         m3:"", rubric_m3:"", boss:"", rubric_boss:"", post:"", xp:"",
         answer_m1:"", answer_m2:"", answer_m3:"", answer_boss:"",
+        m1_choice_a:"", m1_choice_b:"", m1_key_a:"RAM", m1_key_b:"SSD/HDD",
+        m2_choice_a:"", m2_choice_b:"", m2_key_a:"ALU", m2_key_b:"CU",
         reflection_r3:"", reflection_r2:"", reflection_r1:"",
-        pre_answers:"", post_answers:"",
         timestamp:new Date().toISOString()
       };
 
