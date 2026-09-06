@@ -807,17 +807,17 @@
         <div class="required-note">Semua bagian Boss Mission wajib diisi sebelum dikirim.</div>
 
         <div class="grid" style="margin-top:14px;">
-          <div><label>Input yang terlibat</label><input id="bossInput" placeholder="microphone, webcam"></div>
-          <div><label>Process</label><input id="bossProcess" placeholder="Jelaskan singkat"></div>
-          <div><label>Output</label><input id="bossOutput" placeholder="speaker, monitor"></div>
-          <div><label>Memory / CPU</label><input id="bossCpu" placeholder="Jelaskan perannya"></div>
+          <div><label>Input yang terlibat</label><input id="bossInput" placeholder="Contoh format: sebutkan perangkat yang menerima data"></div>
+          <div><label>Process</label><input id="bossProcess" placeholder="Contoh format: jelaskan apa yang dilakukan komputer pada data"></div>
+          <div><label>Output</label><input id="bossOutput" placeholder="Contoh format: tuliskan hasil yang diterima pengguna"></div>
+          <div><label>Memory / CPU</label><input id="bossCpu" placeholder="Contoh format: jelaskan fungsi komponen dalam pengolahan"></div>
         </div>
 
         <label style="margin-top:14px;">Gambarkan/uraikan alur IPO</label>
-        <textarea id="bossIpo" rows="3" placeholder="Input → Process → Output"></textarea>
+        <textarea id="bossIpo" rows="3" placeholder="Contoh format: tulis alur dari data masuk hingga hasil keluar"></textarea>
 
         <label style="margin-top:14px;">Mengapa komponen tersebut ditempatkan pada tahap itu?</label>
-        <textarea id="bossReason" rows="3" placeholder="Tuliskan alasanmu"></textarea>
+        <textarea id="bossReason" rows="3" placeholder="Contoh format: jelaskan alasanmu berdasarkan fungsi tiap bagian"></textarea>
       </div>
 
       <div class="actions" style="margin-top:16px;">
@@ -858,16 +858,16 @@
       <div class="grid">
         <div>
           <label>3 hal yang saya pahami</label>
-          <textarea id="r3" rows="4"></textarea>
+          <textarea id="r3" rows="4" placeholder="Contoh format: tulis poin-poin tentang hal yang sudah kamu pahami"></textarea>
         </div>
         <div>
           <label>2 hal yang membantu saya</label>
-          <textarea id="r2" rows="4"></textarea>
+          <textarea id="r2" rows="4" placeholder="Contoh format: tulis hal yang paling membantu selama pembelajaran"></textarea>
         </div>
       </div>
 
       <label style="margin-top:14px;">1 hal yang masih membingungkan</label>
-      <textarea id="r1" rows="3"></textarea>
+      <textarea id="r1" rows="3" placeholder="Contoh format: tulis bagian yang masih ingin kamu pahami"></textarea>
 
       <div class="actions" style="margin-top:16px;">
         <button class="btn primary" onclick="finishReflection()">Simpan &amp; Selesai</button>
@@ -2144,7 +2144,7 @@ const SHEET_SYNC_URLS = [
               <label class="option"><input type="radio" name="m1b" value="2"><span>CPU</span></label>
 
               <p><b>3.</b> Mengapa RAM dan storage tidak sama?</p>
-              <textarea id="m1reason" rows="3" placeholder="Tuliskan penjelasanmu"></textarea>
+              <textarea id="m1reason" rows="3" placeholder="Contoh format: bandingkan kedua komponen berdasarkan fungsi dan cara kerja"></textarea>
             </div>
           `
         },
@@ -2164,7 +2164,7 @@ const SHEET_SYNC_URLS = [
               <label class="option"><input type="radio" name="m2b" value="1"><span>CU</span></label>
 
               <p><b>3.</b> Jelaskan perbedaan tugas ALU dan CU.</p>
-              <textarea id="m2reason" rows="3" placeholder="Tuliskan penjelasanmu"></textarea>
+              <textarea id="m2reason" rows="3" placeholder="Contoh format: bandingkan kedua komponen berdasarkan fungsi dan cara kerja"></textarea>
             </div>
           `
         },
@@ -2185,14 +2185,14 @@ const SHEET_SYNC_URLS = [
               </select>
 
               <div class="grid" style="margin-top:12px;">
-                <div><label>Input</label><input id="m3input"></div>
-                <div><label>Process</label><input id="m3process"></div>
-                <div><label>Output</label><input id="m3output"></div>
-                <div><label>Storage (jika ada)</label><input id="m3storage"></div>
+                <div><label>Input</label><input id="m3input" placeholder="Contoh format: perangkat yang menerima data"></div>
+                <div><label>Process</label><input id="m3process" placeholder="Contoh format: proses pengolahan data"></div>
+                <div><label>Output</label><input id="m3output" placeholder="Contoh format: hasil yang diterima pengguna"></div>
+                <div><label>Storage (jika ada)</label><input id="m3storage" placeholder="Contoh format: media penyimpanan bila digunakan"></div>
               </div>
 
               <label style="margin-top:14px;">Mengapa urutan tersebut sesuai IPO?</label>
-              <textarea id="m3reason" rows="3"></textarea>
+              <textarea id="m3reason" rows="3" placeholder="Contoh format: jelaskan mengapa urutan tersebut sesuai IPO"></textarea>
             </div>
           `
         }
