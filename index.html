@@ -1,2249 +1,2419 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Computer Mission 2.0 — Siswa</title>
-
-<!-- THREE.JS -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
-
-<style>
-:root{
-  --bg:#07111f;
-  --bg2:#0c1830;
-  --panel:rgba(15,28,52,.92);
-  --ink:#eef5ff;
-  --muted:#a9b8cf;
-  --cyan:#49d7ff;
-  --blue:#5c7cff;
-  --purple:#9b6cff;
-  --green:#46e6a2;
-  --yellow:#ffd86a;
-  --red:#ff6b7a;
-  --line:rgba(255,255,255,.10);
-  --shadow:0 22px 60px rgba(0,0,0,.35);
-}
-
-*{
-  box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  margin:0;
-  min-height:100vh;
-  color:var(--ink);
-  font-family:Inter,Segoe UI,Arial,sans-serif;
-  background:
-    radial-gradient(circle at 10% 10%,rgba(92,124,255,.20),transparent 28%),
-    radial-gradient(circle at 90% 15%,rgba(255,97,199,.14),transparent 25%),
-    radial-gradient(circle at 50% 100%,rgba(73,215,255,.10),transparent 30%),
-    linear-gradient(160deg,var(--bg),var(--bg2));
-  overflow-x:hidden;
-}
-
-button,
-input,
-select,
-textarea{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-  border:0;
-}
-
-.hidden{
-  display:none!important;
-}
-
-/* =========================================================
-   BACKGROUND ANIMATION
-========================================================= */
-
-body::before,
-body::after{
-  content:"";
-  position:fixed;
-  width:420px;
-  height:420px;
-  border-radius:50%;
-  filter:blur(70px);
-  opacity:.12;
-  z-index:-1;
-  pointer-events:none;
-  animation:floatOrb 10s ease-in-out infinite alternate;
-}
-
-body::before{
-  left:-140px;
-  top:18%;
-  background:var(--cyan);
-}
-
-body::after{
-  right:-140px;
-  bottom:4%;
-  background:var(--purple);
-  animation-delay:-4s;
-}
-
-@keyframes floatOrb{
-  0%{
-    transform:translate3d(0,-18px,0) scale(.94);
-  }
-  100%{
-    transform:translate3d(0,20px,0) scale(1.06);
-  }
-}
-
-@keyframes screenIn{
-  from{
-    opacity:0;
-    transform:translateY(14px) scale(.995);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
-}
-
-@keyframes titleShift{
-  0%,100%{
-    background-position:0 50%;
-  }
-  50%{
-    background-position:100% 50%;
-  }
-}
-
-@keyframes scanline{
-  0%{
-    top:-8%;
-    opacity:0;
-  }
-  12%{
-    opacity:1;
-  }
-  88%{
-    opacity:1;
-  }
-  100%{
-    top:108%;
-    opacity:0;
-  }
-}
-
-@keyframes pulseGlow{
-  0%,100%{
-    transform:scale(1);
-    box-shadow:0 0 0 rgba(73,215,255,0);
-  }
-  50%{
-    transform:scale(1.04);
-    box-shadow:0 0 24px rgba(73,215,255,.24);
-  }
-}
-
-@keyframes floatIcon{
-  0%,100%{
-    transform:translateY(0) rotate(0deg);
-  }
-  50%{
-    transform:translateY(-7px) rotate(2deg);
-  }
-}
-
-@keyframes borderPulse{
-  0%,100%{
-    border-color:var(--line);
-  }
-  50%{
-    border-color:rgba(73,215,255,.32);
-  }
-}
-
-@keyframes progressGlow{
-  0%,100%{
-    filter:brightness(1);
-  }
-  50%{
-    filter:brightness(1.22);
-  }
-}
-
-/* =========================================================
-   TOPBAR
-========================================================= */
-
-.topbar{
-  position:sticky;
-  top:0;
-  z-index:20;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:16px;
-  padding:14px 20px;
-  background:rgba(4,10,22,.82);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--line);
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:900;
-}
-
-.brand-icon{
-  width:38px;
-  height:38px;
-  border-radius:12px;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  animation:pulseGlow 3.4s ease-in-out infinite;
-}
-
-.topstats{
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
-
-.pill{
-  padding:8px 12px;
-  border-radius:999px;
-  background:rgba(255,255,255,.07);
-  border:1px solid var(--line);
-  font-size:13px;
-}
-
-.pill.xp{
-  background:linear-gradient(
-    135deg,
-    rgba(92,124,255,.25),
-    rgba(155,108,255,.22)
-  );
-  border-color:rgba(155,108,255,.35);
-}
-
-/* =========================================================
-   BASIC
-========================================================= */
-
-.wrap{
-  max-width:1160px;
-  margin:28px auto;
-  padding:0 18px 50px;
-}
-
-.panel{
-  background:
-    linear-gradient(
-      180deg,
-      rgba(18,35,63,.94),
-      rgba(10,23,43,.96)
-    );
-  border:1px solid var(--line);
-  border-radius:24px;
-  box-shadow:var(--shadow);
-  padding:28px;
-  animation:screenIn .5s ease both;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:16px;
-}
-
-.grid3{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:14px;
-}
-
-.hero{
-  display:grid;
-  grid-template-columns:1.25fr .75fr;
-  gap:22px;
-}
-
-.center{
-  text-align:center;
-}
-
-.muted{
-  color:var(--muted);
-}
-
-.hidden{
-  display:none!important;
-}
-
-h1,
-h2,
-h3{
-  margin-top:0;
-}
-
-h1{
-  font-size:clamp(34px,6vw,58px);
-  line-height:1.02;
-  letter-spacing:-1.8px;
-}
-
-h2{
-  font-size:clamp(24px,4vw,34px);
-}
-
-label{
-  display:block;
-  font-weight:800;
-  font-size:13px;
-  margin-bottom:8px;
-  color:#d8e4f5;
-}
-
-input,
-select,
-textarea{
-  width:100%;
-  padding:13px 14px;
-  color:var(--ink);
-  background:rgba(255,255,255,.055);
-  border:1px solid var(--line);
-  border-radius:12px;
-  outline:none;
-  transition:.2s ease;
-}
-
-input:focus,
-select:focus,
-textarea:focus{
-  border-color:rgba(73,215,255,.55);
-  box-shadow:0 0 0 4px rgba(73,215,255,.08);
-  transform:translateY(-1px);
-}
-
-select option{
-  color:#111;
-}
-
-textarea{
-  resize:vertical;
-}
-
-.actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.btn{
-  padding:12px 16px;
-  border-radius:12px;
-  font-weight:900;
-  transition:
-    transform .18s ease,
-    filter .18s ease,
-    box-shadow .18s ease;
-}
-
-.btn:hover{
-  transform:translateY(-2px);
-  filter:brightness(1.07);
-}
-
-.primary{
-  color:#fff;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  box-shadow:0 12px 28px rgba(92,124,255,.28);
-}
-
-.primary:hover{
-  box-shadow:0 16px 34px rgba(92,124,255,.38);
-}
-
-.secondary{
-  color:#eff5ff;
-  background:rgba(255,255,255,.08);
-  border:1px solid var(--line);
-}
-
-.good{
-  color:#062416;
-  background:linear-gradient(135deg,#1dbb82,var(--green));
-}
-
-.ghost{
-  color:#dce7f7;
-  background:transparent;
-  border:1px solid var(--line);
-}
-
-.mission-card,
-.kpi{
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:18px;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255,255,255,.045),
-      rgba(255,255,255,.02)
-    );
-  transition:
-    transform .2s ease,
-    border-color .2s ease,
-    box-shadow .2s ease;
-}
-
-.mission-card:hover{
-  transform:translateY(-4px);
-  border-color:rgba(73,215,255,.30);
-  box-shadow:0 14px 34px rgba(0,0,0,.22);
-}
-
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  padding:6px 9px;
-  border-radius:999px;
-  background:rgba(92,124,255,.13);
-  border:1px solid rgba(92,124,255,.25);
-  font-size:11px;
-  font-weight:900;
-}
-
-.footer-note{
-  font-size:12px;
-  color:#8ea0ba;
-  line-height:1.6;
-}
-
-.option{
-  display:flex;
-  gap:10px;
-  align-items:flex-start;
-  padding:12px;
-  margin:8px 0;
-  border:1px solid var(--line);
-  border-radius:12px;
-  background:rgba(255,255,255,.03);
-  transition:.18s ease;
-}
-
-.option:hover{
-  transform:translateX(3px);
-  border-color:rgba(73,215,255,.35);
-  background:rgba(73,215,255,.05);
-}
-
-.option input{
-  width:auto;
-  margin-top:4px;
-}
-
-.timer{
-  padding:8px 12px;
-  border-radius:12px;
-  border:1px solid var(--line);
-  font-weight:900;
-  background:rgba(255,255,255,.05);
-}
-
-.progress{
-  height:10px;
-  border:1px solid var(--line);
-  border-radius:99px;
-  overflow:hidden;
-  background:rgba(255,255,255,.05);
-}
-
-.progress span{
-  display:block;
-  height:100%;
-  width:0;
-  background:linear-gradient(
-    90deg,
-    var(--cyan),
-    var(--blue),
-    var(--purple)
-  );
-  animation:progressGlow 2.4s ease-in-out infinite;
-}
-
-.big{
-  font-size:42px;
-  font-weight:950;
-}
-
-/* =========================================================
-   HERO
-========================================================= */
-
-.hero-kicker{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:8px 12px;
-  border-radius:999px;
-  background:rgba(73,215,255,.10);
-  border:1px solid rgba(73,215,255,.25);
-  font-size:11px;
-  font-weight:900;
-}
-
-.game-title{
-  margin:18px 0 14px;
-  background:
-    linear-gradient(
-      90deg,
-      #fff,
-      var(--cyan),
-      #bdaaff,
-      #fff
-    );
-  background-size:240% 100%;
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  animation:titleShift 8s ease-in-out infinite;
-}
-
-.scan-card{
-  min-height:250px;
-  display:grid;
-  place-items:center;
-  border-radius:24px;
-  background:
-    linear-gradient(
-      145deg,
-      rgba(73,215,255,.10),
-      rgba(155,108,255,.10)
-    );
-  border:1px solid rgba(73,215,255,.18);
-  animation:borderPulse 4s ease-in-out infinite;
-}
-
-.scan-grid{
-  width:220px;
-  height:220px;
-  border-radius:26px;
-  display:grid;
-  place-items:center;
-  font-size:52px;
-  background:
-    linear-gradient(
-      rgba(255,255,255,.05) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(255,255,255,.05) 1px,
-      transparent 1px
-    );
-  background-size:22px 22px;
-  position:relative;
-  overflow:hidden;
-  box-shadow:inset 0 0 50px rgba(73,215,255,.08);
-}
-
-.scan-grid::before{
-  content:"";
-  position:absolute;
-  left:10%;
-  right:10%;
-  height:3px;
-  top:-8%;
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      var(--cyan),
-      transparent
-    );
-  box-shadow:0 0 20px var(--cyan);
-  animation:scanline 2.8s linear infinite;
-}
-
-.scan-grid::after{
-  content:"";
-  position:absolute;
-  inset:28%;
-  border-radius:22px;
-  border:2px dashed rgba(255,255,255,.28);
-  box-shadow:0 0 26px rgba(92,124,255,.28);
-  animation:pulseGlow 3s ease-in-out infinite;
-}
-
-/* =========================================================
-   3D DEVICE LAB
-========================================================= */
-
-.sim-intro{
-  margin-top:24px;
-  margin-bottom:14px;
-}
-
-.sim-intro h2{
-  margin-bottom:6px;
-}
-
-.sim-wrap{
-  display:grid;
-  grid-template-columns:1.65fr .75fr;
-  gap:16px;
-}
-
-.sim-stage{
-  height:500px;
-  border-radius:20px;
-  overflow:hidden;
-  border:1px solid rgba(73,215,255,.22);
-  background:
-    radial-gradient(
-      circle at 50% 35%,
-      rgba(73,215,255,.12),
-      transparent 45%
-    ),
-    linear-gradient(
-      160deg,
-      #06101f,
-      #0b1830
-    );
-  position:relative;
-}
-
-#threeStage{
-  width:100%;
-  height:100%;
-  display:block;
-}
-
-.sim-overlay{
-  position:absolute;
-  top:14px;
-  left:14px;
-  z-index:3;
-  padding:8px 11px;
-  border-radius:999px;
-  background:rgba(4,10,22,.78);
-  border:1px solid var(--line);
-  font-size:11px;
-  font-weight:900;
-  backdrop-filter:blur(10px);
-}
-
-.sim-info{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-.sim-title{
-  font-size:21px;
-  font-weight:950;
-}
-
-.sim-info-text{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.65;
-}
-
-.device-btns{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-}
-
-.device-btn{
-  padding:10px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.04);
-  color:var(--ink);
-  border-radius:10px;
-  font-weight:800;
-  transition:.18s ease;
-}
-
-.device-btn:hover{
-  transform:translateY(-2px);
-  border-color:rgba(73,215,255,.32);
-}
-
-.device-btn.active{
-  background:rgba(73,215,255,.12);
-  border-color:rgba(73,215,255,.38);
-  box-shadow:0 0 20px rgba(73,215,255,.08);
-}
-
-.sim-tip{
-  padding:12px;
-  border-radius:12px;
-  background:rgba(255,255,255,.04);
-  border:1px solid var(--line);
-  font-size:13px;
-  line-height:1.55;
-}
-
-.sim-controls{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.sim-hint{
-  font-size:12px;
-  color:var(--muted);
-}
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast{
-  position:fixed;
-  right:18px;
-  bottom:18px;
-  z-index:50;
-  max-width:380px;
-  padding:13px 15px;
-  border-radius:13px;
-  background:#08101f;
-  border:1px solid var(--line);
-  box-shadow:var(--shadow);
-  opacity:0;
-  transform:translateY(12px);
-  pointer-events:none;
-  transition:.25s;
-  font-weight:800;
-}
-
-.toast.show{
-  opacity:1;
-  transform:none;
-}
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
-@media(prefers-reduced-motion:reduce){
-  *,
-  *::before,
-  *::after{
-    animation-duration:.001ms !important;
-    animation-iteration-count:1 !important;
-    transition-duration:.001ms !important;
-  }
-}
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media(max-width:820px){
-
-  .hero,
-  .grid,
-  .grid3,
-  .sim-wrap{
-    grid-template-columns:1fr;
-  }
-
-  .topstats{
-    display:none;
-  }
-
-  .panel{
-    padding:20px;
-  }
-
-  .sim-stage{
-    height:390px;
-  }
-
-  .device-btns{
-    grid-template-columns:1fr 1fr;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Computer Mission 2.0 — Siswa</title>
+
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg2: #0c1830;
+      --panel: rgba(15, 28, 52, .92);
+      --ink: #eef5ff;
+      --muted: #a9b8cf;
+      --cyan: #49d7ff;
+      --blue: #5c7cff;
+      --purple: #9b6cff;
+      --green: #46e6a2;
+      --yellow: #ffd86a;
+      --red: #ff6b7a;
+      --line: rgba(255,255,255,.10);
+      --shadow: 0 22px 60px rgba(0,0,0,.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(92,124,255,.20), transparent 28%),
+        radial-gradient(circle at 90% 15%, rgba(255,97,199,.14), transparent 25%),
+        linear-gradient(160deg, var(--bg), var(--bg2));
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: .12;
+      z-index: -1;
+      pointer-events: none;
+      animation: floatOrb 10s ease-in-out infinite alternate;
+    }
+
+    body::before {
+      left: -140px;
+      top: 18%;
+      background: var(--cyan);
+    }
+
+    body::after {
+      right: -140px;
+      bottom: 4%;
+      background: var(--purple);
+      animation-delay: -4s;
+    }
+
+    @keyframes floatOrb {
+      0% {
+        transform: translate3d(0,-18px,0) scale(.94);
+      }
+
+      100% {
+        transform: translate3d(0,20px,0) scale(1.06);
+      }
+    }
+
+    @keyframes screenIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(.995);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @keyframes titleShift {
+      0%, 100% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    @keyframes pulseGlow {
+      0%,100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(73,215,255,0);
+      }
+
+      50% {
+        transform: scale(1.04);
+        box-shadow: 0 0 24px rgba(73,215,255,.24);
+      }
+    }
+
+    @keyframes floatIcon {
+      0%,100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-7px) rotate(2deg);
+      }
+    }
+
+    @keyframes borderPulse {
+      0%,100% {
+        border-color: var(--line);
+      }
+
+      50% {
+        border-color: rgba(73,215,255,.32);
+      }
+    }
+
+    @keyframes progressGlow {
+      0%,100% {
+        filter: brightness(1);
+      }
+
+      50% {
+        filter: brightness(1.22);
+      }
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 20px;
+      background: rgba(4,10,22,.82);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg,var(--blue),var(--purple));
+      animation: pulseGlow 3.4s ease-in-out infinite;
+    }
+
+    .topstats {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 28px auto;
+      padding: 0 18px 50px;
+    }
+
+    .panel {
+      background:
+        linear-gradient(
+          180deg,
+          rgba(18,35,63,.94),
+          rgba(10,23,43,.96)
+        );
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      animation: screenIn .5s ease both;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: clamp(34px,6vw,58px);
+      line-height: 1.02;
+      letter-spacing: -1.8px;
+    }
+
+    h2 {
+      font-size: clamp(24px,4vw,34px);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(73,215,255,.10);
+      border: 1px solid rgba(73,215,255,.25);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .game-title {
+      margin: 18px 0 14px;
+      background:
+        linear-gradient(
+          90deg,
+          #fff,
+          var(--cyan),
+          #bdaaff,
+          #fff
+        );
+      background-size: 240% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: titleShift 8s ease-in-out infinite;
+    }
+
+    .scan-card {
+      min-height: 250px;
+      display: grid;
+      place-items: center;
+      border-radius: 24px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(73,215,255,.10),
+          rgba(155,108,255,.10)
+        );
+      border: 1px solid rgba(73,215,255,.18);
+      animation: borderPulse 4s ease-in-out infinite;
+    }
+
+    .scan-grid {
+      width: 220px;
+      height: 220px;
+      border-radius: 26px;
+      display: grid;
+      place-items: center;
+      font-size: 52px;
+      background:
+        linear-gradient(
+          rgba(255,255,255,.05) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.05) 1px,
+          transparent 1px
+        );
+      background-size: 22px 22px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 50px rgba(73,215,255,.08);
+    }
+
+    .scan-grid::before {
+      content: "";
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      height: 3px;
+      top: -8%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--cyan),
+        transparent
+      );
+      box-shadow: 0 0 20px var(--cyan);
+      animation: scanline 2.8s linear infinite;
+    }
+
+    .scan-grid::after {
+      content: "";
+      position: absolute;
+      inset: 28%;
+      border-radius: 22px;
+      border: 2px dashed rgba(255,255,255,.28);
+      box-shadow: 0 0 26px rgba(92,124,255,.28);
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes scanline {
+      0% {
+        top: -8%;
+        opacity: 0;
+      }
+
+      12% {
+        opacity: 1;
+      }
+
+      88% {
+        opacity: 1;
+      }
+
+      100% {
+        top: 108%;
+        opacity: 0;
+      }
+    }
+
+    .scan-grid > div {
+      animation: floatIcon 3s ease-in-out infinite;
+      position: relative;
+      z-index: 2;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 16px;
+    }
+
+    .grid3 {
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: 14px;
+    }
+
+    label {
+      display: block;
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: #d8e4f5;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 13px 14px;
+      color: var(--ink);
+      background: rgba(255,255,255,.055);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(73,215,255,.55);
+      box-shadow: 0 0 0 4px rgba(73,215,255,.08);
+    }
+
+    select option {
+      color: #111;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 900;
+      transition:
+        transform .18s ease,
+        filter .18s ease,
+        box-shadow .18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.07);
+    }
+
+    .primary {
+      color: #fff;
+      background: linear-gradient(135deg,var(--blue),var(--purple));
+      box-shadow: 0 12px 28px rgba(92,124,255,.28);
+    }
+
+    .primary:hover {
+      box-shadow: 0 16px 34px rgba(92,124,255,.38);
+    }
+
+    .secondary {
+      color: #eff5ff;
+      background: rgba(255,255,255,.08);
+      border: 1px solid var(--line);
+    }
+
+    .good {
+      color: #062416;
+      background: linear-gradient(135deg,#1dbb82,var(--green));
+      box-shadow: 0 12px 28px rgba(70,230,162,.18);
+    }
+
+    .ghost {
+      color: #dce7f7;
+      background: transparent;
+      border: 1px solid var(--line);
+    }
+
+    .mission-card,
+    .kpi {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      background: rgba(255,255,255,.035);
+      transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+    }
+
+    .mission-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(73,215,255,.30);
+      box-shadow: 0 14px 34px rgba(0,0,0,.22);
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: rgba(92,124,255,.13);
+      border: 1px solid rgba(92,124,255,.25);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .option {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.03);
+      transition: .18s ease;
+    }
+
+    .option:hover {
+      transform: translateX(3px);
+      border-color: rgba(73,215,255,.30);
+      background: rgba(73,215,255,.05);
+    }
+
+    .option input {
+      width: auto;
+      margin-top: 4px;
+    }
+
+    .timer {
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      font-weight: 900;
+      background: rgba(255,255,255,.05);
+    }
+
+    .progress {
+      height: 10px;
+      border: 1px solid var(--line);
+      border-radius: 99px;
+      overflow: hidden;
+      background: rgba(255,255,255,.06);
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background:
+        linear-gradient(
+          90deg,
+          var(--cyan),
+          var(--blue),
+          var(--purple)
+        );
+      animation: progressGlow 2.4s ease-in-out infinite;
+      transition: width .4s ease;
+    }
+
+    .big {
+      font-size: 42px;
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .score {
+      font-size: 22px;
+      font-weight: 950;
+    }
+
+    .footer-note {
+      font-size: 12px;
+      color: #8ea0ba;
+      line-height: 1.6;
+    }
+
+    .section-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 50;
+      max-width: 380px;
+      padding: 13px 15px;
+      border-radius: 13px;
+      background: #08101f;
+      border: 1px solid var(--line);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: .25s;
+      font-weight: 800;
+      box-shadow: var(--shadow);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: none;
+    }
+
+
+    /* =========================================================
+       EXPLORATION 3D
+    ========================================================= */
+
+    .explore-layout {
+      display: grid;
+      grid-template-columns: 1.5fr .8fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .three-stage {
+      height: 520px;
+      min-height: 420px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      border: 1px solid rgba(73,215,255,.22);
+      background:
+        radial-gradient(
+          circle at 50% 45%,
+          rgba(73,215,255,.08),
+          transparent 40%
+        ),
+        #050d1b;
+    }
+
+    .three-stage canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .three-help {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 3;
+      padding: 8px 11px;
+      border-radius: 10px;
+      background: rgba(3,10,22,.78);
+      border: 1px solid var(--line);
+      color: #cfe5ff;
+      font-size: 11px;
+      font-weight: 800;
+      pointer-events: none;
+    }
+
+    .device-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .device-title {
+      font-size: 22px;
+      font-weight: 950;
+      margin: 0;
+    }
+
+    .device-description {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+      margin: 8px 0 0;
+    }
+
+    .device-buttons {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 9px;
+    }
+
+    .device-btn {
+      padding: 11px 10px;
+      border-radius: 12px;
+      color: #e9f3ff;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--line);
+      font-weight: 900;
+      transition: .18s ease;
+    }
+
+    .device-btn:hover {
+      border-color: rgba(73,215,255,.35);
+      transform: translateY(-2px);
+    }
+
+    .device-btn.active {
+      background: rgba(73,215,255,.12);
+      border-color: rgba(73,215,255,.55);
+      box-shadow: 0 0 18px rgba(73,215,255,.10);
+    }
+
+    .device-info {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 15px;
+      background: rgba(255,255,255,.025);
+    }
+
+    .device-info p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    .device-actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .device-actions .btn {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .status-ok {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      background: rgba(70,230,162,.10);
+      border: 1px solid rgba(70,230,162,.22);
+      color: #9bffd7;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .001ms !important;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .grid,
+      .grid3,
+      .explore-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .topstats {
+        display: none;
+      }
+
+      .panel {
+        padding: 20px;
+      }
+
+      .three-stage {
+        height: 430px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .device-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .three-stage {
+        height: 360px;
+        min-height: 320px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- ========================================================
-     TOPBAR
-========================================================= -->
-
-<div class="topbar">
-
-  <div class="brand">
-
-    <div class="brand-icon">
-      🧠
-    </div>
-
-    <div>
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-icon">🧠</div>
 
       <div>
-        COMPUTER MISSION
-        <span style="opacity:.55">2.0</span>
-      </div>
+        <div>
+          COMPUTER MISSION
+          <span style="opacity:.55">2.0</span>
+        </div>
 
-      <div style="
-        font-size:10px;
-        color:#91a5c1;
-        letter-spacing:1px;
-      ">
-        STUDENT MODE // X SERIES
+        <div style="
+          font-size:10px;
+          color:#91a5c1;
+          letter-spacing:1px;
+        ">
+          STUDENT MODE // X SERIES
+        </div>
       </div>
-
     </div>
 
-  </div>
-
-  <div class="topstats">
-
-    <span
-      class="pill"
-      id="studentPill"
-    >
-      Belum mulai
-    </span>
-
-    <span class="pill xp">
-      ⚡ XP
-      <b id="xpTop">0</b>
-    </span>
-
-  </div>
-
-</div>
-
-<div class="wrap">
-
-<!-- ========================================================
-     LOGIN
-========================================================= -->
-
-<section
-  id="login"
-  class="panel"
->
-
-  <div class="hero">
-
-    <div>
-
-      <span class="hero-kicker">
-        ⚡ DIGITAL QUEST • PTK SIKLUS II
+    <div class="topstats">
+      <span
+        class="pill"
+        id="studentPill"
+      >
+        Belum mulai
       </span>
 
-      <h1 class="game-title">
-        Where Does<br>
-        My Data Go?
-      </h1>
+      <span class="pill">
+        ⚡ XP
+        <b id="xpTop">0</b>
+      </span>
+    </div>
+  </div>
 
-      <p style="line-height:1.7;">
 
-        Selamat datang,
-        <b>Data Detective</b>.
+  <div class="wrap">
 
-        Kenali perangkat komputer,
-        pahami alur
-        <b>Input → Process → Output</b>,
-        lalu selesaikan misi bersama timmu.
+    <!-- =====================================================
+         LOGIN
+    ====================================================== -->
 
-      </p>
+    <section id="login" class="panel">
 
-      <div
-        class="grid"
-        style="margin-top:22px;"
-      >
+      <div class="hero">
 
         <div>
 
-          <label>Kelas</label>
+          <span class="hero-kicker">
+            ⚡ DIGITAL QUEST • PTK SIKLUS II
+          </span>
 
-          <select
-            id="classSelect"
-            onchange="populateStudents()"
+          <h1 class="game-title">
+            Where Does<br>
+            My Data Go?
+          </h1>
+
+          <p style="line-height:1.7;">
+            Selamat datang,
+            <b>Data Detective</b>.
+            Pecahkan misi tentang
+            <b>Input → Process → Output</b>,
+            CPU, RAM, Storage,
+            dan selesaikan Boss Mission
+            bersama timmu.
+          </p>
+
+          <div
+            class="grid"
+            style="margin-top:22px;"
           >
 
-            <option value="">
-              -- Pilih kelas --
-            </option>
+            <div>
 
-            <option value="X5">
-              X-5
-            </option>
+              <label>
+                Kelas
+              </label>
 
-            <option value="X8">
-              X-8
-            </option>
+              <select
+                id="classSelect"
+                onchange="populateStudents()"
+              >
+                <option value="">
+                  -- Pilih kelas --
+                </option>
 
-            <option value="X11">
-              X-11
-            </option>
+                <option value="X5">
+                  X-5
+                </option>
 
-          </select>
+                <option value="X8">
+                  X-8
+                </option>
+
+                <option value="X11">
+                  X-11
+                </option>
+              </select>
+
+            </div>
+
+
+            <div>
+
+              <label>
+                Nama siswa
+              </label>
+
+              <select id="studentCode">
+
+                <option value="">
+                  -- Pilih nama siswa --
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div>
+
+              <label>
+                Tim
+              </label>
+
+              <select id="team">
+                <option>Tim 1</option>
+                <option>Tim 2</option>
+                <option>Tim 3</option>
+                <option>Tim 4</option>
+                <option>Tim 5</option>
+                <option>Tim 6</option>
+              </select>
+
+            </div>
+
+
+            <div>
+
+              <label>
+                Peran
+              </label>
+
+              <select id="role">
+                <option>Leader</option>
+                <option>Reader</option>
+                <option>Recorder</option>
+                <option>Card/Device Manager</option>
+                <option>Checker</option>
+                <option>Time Keeper</option>
+                <option>Anggota Pendukung</option>
+              </select>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="actions"
+            style="margin-top:20px;"
+          >
+
+            <button
+              class="btn primary"
+              onclick="startSession()"
+            >
+              🚀 Mulai Misi
+            </button>
+
+          </div>
 
         </div>
 
-        <div>
 
-          <label>Nama siswa</label>
+        <div class="scan-card">
 
-          <select id="studentCode">
+          <div class="scan-grid">
 
-            <option value="">
-              -- Pilih nama siswa --
-            </option>
+            <div>
+              🖥️
+            </div>
 
-          </select>
-
-        </div>
-
-        <div>
-
-          <label>Tim</label>
-
-          <select id="team">
-
-            <option>Tim 1</option>
-            <option>Tim 2</option>
-            <option>Tim 3</option>
-            <option>Tim 4</option>
-            <option>Tim 5</option>
-            <option>Tim 6</option>
-
-          </select>
-
-        </div>
-
-        <div>
-
-          <label>Peran</label>
-
-          <select id="role">
-
-            <option>Leader</option>
-            <option>Reader</option>
-            <option>Recorder</option>
-            <option>Card/Device Manager</option>
-            <option>Checker</option>
-            <option>Time Keeper</option>
-            <option>Anggota Pendukung</option>
-
-          </select>
+          </div>
 
         </div>
 
       </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         DASHBOARD SISWA
+    ====================================================== -->
+
+    <section
+      id="dash"
+      class="panel hidden"
+    >
+
+      <div class="grid3">
+
+        <div class="kpi">
+
+          <small>
+            Kelas / Guru
+          </small>
+
+          <div
+            id="dClass"
+            class="score"
+          >
+            -
+          </div>
+
+        </div>
+
+
+        <div class="kpi">
+
+          <small>
+            Kode / Nama
+          </small>
+
+          <div
+            id="dCode"
+            class="score"
+          >
+            -
+          </div>
+
+        </div>
+
+
+        <div class="kpi">
+
+          <small>
+            Tim
+          </small>
+
+          <div
+            id="dTeam"
+            class="score"
+          >
+            -
+          </div>
+
+        </div>
+
+
+        <div class="kpi">
+
+          <small>
+            XP
+          </small>
+
+          <div
+            id="dXP"
+            class="score"
+          >
+            0
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="progress"
+        style="margin-top:18px;"
+      >
+        <span id="prog"></span>
+      </div>
+
+
+      <div
+        class="section-label"
+        style="margin-top:24px;"
+      >
+
+        <h2 style="margin:0;">
+          MISSION MAP
+        </h2>
+
+        <span class="badge">
+          6 STAGE QUEST
+        </span>
+
+      </div>
+
+
+      <div class="grid3">
+
+        <div class="mission-card">
+          <span class="badge">1</span>
+          <h3>Pre-test</h3>
+          <p>15 soal individu</p>
+        </div>
+
+        <div class="mission-card">
+          <span class="badge">2</span>
+          <h3>Mini Lesson</h3>
+          <p>IPO, CPU, RAM, Storage</p>
+        </div>
+
+        <div class="mission-card">
+          <span class="badge">3</span>
+          <h3>Mission 1</h3>
+          <p>RAM or Storage</p>
+        </div>
+
+        <div class="mission-card">
+          <span class="badge">4</span>
+          <h3>Mission 2</h3>
+          <p>ALU or CU</p>
+        </div>
+
+        <div class="mission-card">
+          <span class="badge">5</span>
+          <h3>Mission 3</h3>
+          <p>Trace the Data</p>
+        </div>
+
+        <div class="mission-card">
+          <span class="badge">6</span>
+          <h3>Boss Mission</h3>
+          <p>Solve the Computer Case</p>
+        </div>
+
+      </div>
+
 
       <div
         class="actions"
-        style="margin-top:20px;"
+        style="margin-top:18px;"
       >
 
         <button
           class="btn primary"
-          onclick="startSession()"
+          onclick="startPretest()"
         >
-          🚀 Mulai Misi
+          Mulai Pre-test
         </button>
 
       </div>
 
-    </div>
+    </section>
 
-    <div class="scan-card">
 
-      <div class="scan-grid">
-        🖥️
-      </div>
+    <!-- =====================================================
+         PRE / POST TEST
+    ====================================================== -->
 
-    </div>
-
-  </div>
-
-</section>
-
-<!-- ========================================================
-     DASHBOARD
-========================================================= -->
-
-<section
-  id="dash"
-  class="panel hidden"
->
-
-  <div class="grid3">
-
-    <div class="kpi">
-
-      <small>
-        Kelas / Guru
-      </small>
+    <section
+      id="test"
+      class="panel hidden"
+    >
 
       <div
-        id="dClass"
-        class="score"
+        style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:10px;
+        "
       >
-        -
-      </div>
 
-    </div>
+        <div>
 
-    <div class="kpi">
+          <h2 id="testTitle">
+            Pre-test
+          </h2>
 
-      <small>
-        Kode / Nama
-      </small>
+          <div
+            id="qCount"
+            class="muted"
+          ></div>
 
-      <div
-        id="dCode"
-        class="score"
-      >
-        -
-      </div>
+          <div class="footer-note">
+            Nilai = jumlah benar ÷ 15 × 100
+          </div>
 
-    </div>
-
-    <div class="kpi">
-
-      <small>
-        Tim
-      </small>
-
-      <div
-        id="dTeam"
-        class="score"
-      >
-        -
-      </div>
-
-    </div>
-
-    <div class="kpi">
-
-      <small>
-        XP
-      </small>
-
-      <div
-        id="dXP"
-        class="score"
-      >
-        0
-      </div>
-
-    </div>
-
-  </div>
-
-  <div
-    class="progress"
-    style="margin-top:18px;"
-  >
-    <span id="prog"></span>
-  </div>
-
-  <div
-    class="section-label"
-    style="
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-top:24px;
-    "
-  >
-
-    <h2 style="margin:0;">
-      MISSION MAP
-    </h2>
-
-    <span class="badge">
-      6 STAGE QUEST
-    </span>
-
-  </div>
-
-  <div class="grid3">
-
-    <div class="mission-card">
-      <span class="badge">1</span>
-      <h3>Pre-test</h3>
-      <p>15 soal individu</p>
-    </div>
-
-    <div class="mission-card">
-      <span class="badge">2</span>
-      <h3>Exploration Lab</h3>
-      <p>Kenali perangkat komputer</p>
-    </div>
-
-    <div class="mission-card">
-      <span class="badge">3</span>
-      <h3>Mission 1</h3>
-      <p>RAM or Storage</p>
-    </div>
-
-    <div class="mission-card">
-      <span class="badge">4</span>
-      <h3>Mission 2</h3>
-      <p>ALU or CU</p>
-    </div>
-
-    <div class="mission-card">
-      <span class="badge">5</span>
-      <h3>Mission 3</h3>
-      <p>Trace the Data</p>
-    </div>
-
-    <div class="mission-card">
-      <span class="badge">6</span>
-      <h3>Boss Mission</h3>
-      <p>Solve the Computer Case</p>
-    </div>
-
-  </div>
-
-  <div
-    class="actions"
-    style="margin-top:18px;"
-  >
-
-    <button
-      class="btn primary"
-      onclick="startPretest()"
-    >
-      Mulai Pre-test
-    </button>
-
-  </div>
-
-</section>
-
-<!-- ========================================================
-     TEST
-========================================================= -->
-
-<section
-  id="test"
-  class="panel hidden"
->
-
-  <div
-    style="
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-    "
-  >
-
-    <div>
-
-      <h2 id="testTitle">
-        Pre-test
-      </h2>
-
-      <div
-        id="qCount"
-        class="muted"
-      ></div>
-
-      <div class="footer-note">
-        Nilai = jumlah benar ÷ 15 × 100
-      </div>
-
-    </div>
-
-    <div
-      id="testTimer"
-      class="timer"
-    >
-      10:00
-    </div>
-
-  </div>
-
-  <div
-    id="questionBox"
-    style="margin-top:16px;"
-  ></div>
-
-  <div
-    class="actions"
-    style="margin-top:16px;"
-  >
-
-    <button
-      class="btn secondary"
-      onclick="prevQ()"
-    >
-      Sebelumnya
-    </button>
-
-    <button
-      class="btn primary"
-      onclick="nextQ()"
-    >
-      Berikutnya
-    </button>
-
-    <button
-      class="btn good hidden"
-      id="finishTestBtn"
-      onclick="finishTest()"
-    >
-      Selesai
-    </button>
-
-  </div>
-
-</section>
-
-<!-- ========================================================
-     MINI LESSON
-========================================================= -->
-
-<section
-  id="mini"
-  class="panel hidden"
->
-
-  <h2>
-    Mini Lesson
-  </h2>
-
-  <p class="muted">
-    Baca ringkasannya sebelum masuk ke Exploration Lab.
-  </p>
-
-  <div class="grid">
-
-    <div class="mission-card">
-
-      <h3>
-        IPO
-      </h3>
-
-      <p>
-        <b>Input</b> = data yang masuk.
-        <b>Process</b> = data diolah.
-        <b>Output</b> = hasil yang keluar.
-      </p>
-
-    </div>
-
-    <div class="mission-card">
-
-      <h3>
-        CPU
-      </h3>
-
-      <p>
-        <b>ALU</b> melakukan operasi
-        aritmetika dan logika.
-        <b>CU</b> mengatur jalannya instruksi.
-      </p>
-
-    </div>
-
-    <div class="mission-card">
-
-      <h3>
-        RAM vs Storage
-      </h3>
-
-      <p>
-        <b>RAM</b> adalah memori kerja sementara.
-        <b>SSD/HDD</b> digunakan untuk menyimpan
-        data secara lebih permanen.
-      </p>
-
-    </div>
-
-    <div class="mission-card">
-
-      <h3>
-        Memory
-      </h3>
-
-      <p>
-        Data dari storage dapat dimuat ke RAM
-        agar dapat digunakan oleh CPU.
-      </p>
-
-    </div>
-
-  </div>
-
-  <div
-    class="actions"
-    style="margin-top:18px;"
-  >
-
-    <button
-      class="btn primary"
-      onclick="startExploration()"
-    >
-      🔎 Masuk Exploration Lab
-    </button>
-
-  </div>
-
-</section>
-
-<!-- ========================================================
-     EXPLORATION LAB
-========================================================= -->
-
-<section
-  id="exploration"
-  class="panel hidden"
->
-
-  <div class="sim-intro">
-
-    <span class="badge">
-      EXPLORATION LAB
-    </span>
-
-    <h2 style="margin-top:12px;">
-      Kenali Perangkat Komputer
-    </h2>
-
-    <p class="muted">
-      Putar model 3D dengan mouse atau sentuhan.
-      Pilih perangkat untuk melihat bentuk dan fungsinya.
-    </p>
-
-  </div>
-
-  <div class="sim-wrap">
-
-    <div class="sim-stage">
-
-      <div class="sim-overlay">
-        🖱️ Drag = Putar • Scroll = Zoom
-      </div>
-
-      <div id="threeStage"></div>
-
-    </div>
-
-    <div class="sim-info">
-
-      <div class="mission-card">
-
-        <div class="sim-title" id="simTitle">
-          Motherboard
         </div>
+
 
         <div
-          class="sim-info-text"
-          id="simInfo"
-          style="margin-top:8px;"
+          id="testTimer"
+          class="timer"
         >
-          Papan utama tempat berbagai komponen
-          komputer terhubung.
+          10:00
         </div>
 
       </div>
 
-      <div class="mission-card">
 
-        <label>
-          Pilih perangkat
-        </label>
+      <div
+        id="questionBox"
+        style="margin-top:16px;"
+      ></div>
 
-        <div class="device-btns">
 
-          <button
-            class="device-btn active"
-            data-device="motherboard"
-          >
-            Motherboard
-          </button>
+      <div
+        class="actions"
+        style="margin-top:16px;"
+      >
 
-          <button
-            class="device-btn"
-            data-device="cpu"
-          >
+        <button
+          class="btn secondary"
+          onclick="prevQ()"
+        >
+          Sebelumnya
+        </button>
+
+        <button
+          class="btn primary"
+          onclick="nextQ()"
+        >
+          Berikutnya
+        </button>
+
+        <button
+          class="btn good hidden"
+          id="finishTestBtn"
+          onclick="finishTest()"
+        >
+          Selesai
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MINI LESSON
+    ====================================================== -->
+
+    <section
+      id="mini"
+      class="panel hidden"
+    >
+
+      <span class="badge">
+        PREPARATION PHASE
+      </span>
+
+      <h2 style="margin-top:14px;">
+        Mini Lesson
+      </h2>
+
+      <p class="muted">
+        Baca dan pahami konsep berikut sebelum masuk ke misi.
+        Setelah itu kamu akan mengenali perangkat komputer melalui simulasi 3D.
+      </p>
+
+
+      <div class="grid">
+
+        <div class="mission-card">
+
+          <h3>
+            Input → Process → Output
+          </h3>
+
+          <p>
+            <b>Input</b> adalah data yang masuk ke komputer.
+            <b>Process</b> adalah pengolahan data.
+            <b>Output</b> adalah hasil yang keluar.
+          </p>
+
+        </div>
+
+
+        <div class="mission-card">
+
+          <h3>
             CPU
-          </button>
+          </h3>
 
-          <button
-            class="device-btn"
-            data-device="ram"
-          >
-            RAM
-          </button>
+          <p>
+            <b>ALU</b> menangani operasi aritmetika dan logika,
+            sedangkan <b>CU</b> mengatur jalannya instruksi.
+          </p>
 
-          <button
-            class="device-btn"
-            data-device="ssd"
-          >
-            SSD
-          </button>
+        </div>
 
-          <button
-            class="device-btn"
-            data-device="keyboard"
-          >
-            Keyboard
-          </button>
 
-          <button
-            class="device-btn"
-            data-device="monitor"
-          >
-            Monitor
-          </button>
+        <div class="mission-card">
+
+          <h3>
+            RAM vs Storage
+          </h3>
+
+          <p>
+            <b>RAM</b> merupakan memori kerja sementara.
+            <b>SSD/HDD</b> digunakan menyimpan data
+            untuk digunakan kembali.
+          </p>
+
+        </div>
+
+
+        <div class="mission-card">
+
+          <h3>
+            Komponen Komputer
+          </h3>
+
+          <p>
+            Motherboard menghubungkan komponen,
+            CPU memproses instruksi,
+            RAM membantu pekerjaan aktif,
+            dan storage menyimpan data.
+          </p>
 
         </div>
 
       </div>
 
-      <div class="mission-card">
-
-        <div class="sim-title">
-          Cara menggunakan
-        </div>
-
-        <div
-          class="sim-hint"
-          style="margin-top:8px;"
-        >
-          Putar model dengan drag.
-          Gunakan scroll untuk zoom.
-          Gunakan tombol reset untuk kembali
-          ke posisi awal.
-        </div>
-
-        <div
-          class="sim-controls"
-          style="margin-top:12px;"
-        >
-
-          <button
-            class="btn secondary"
-            onclick="reset3DView()"
-          >
-            ↻ Reset Tampilan
-          </button>
-
-          <button
-            class="btn secondary"
-            onclick="toggleAutoRotate()"
-            id="autoRotateBtn"
-          >
-            ⟳ Auto Rotate: ON
-          </button>
-
-        </div>
-
-      </div>
-
-      <div class="sim-tip">
-
-        <b>🎯 Tantangan:</b><br>
-
-        Coba identifikasi:
-        mana perangkat <b>input</b>,
-        mana <b>process</b>,
-        dan mana <b>output</b>.
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <div
-    class="actions"
-    style="margin-top:18px;"
-  >
-
-    <button
-      class="btn primary"
-      onclick="startMission1()"
-    >
-      Mulai Mission 1 →
-    </button>
-
-  </div>
-
-</section>
-
-<!-- ========================================================
-     MISSION
-========================================================= -->
-
-<section
-  id="mission"
-  class="panel hidden"
->
-
-  <div
-    style="
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-    "
-  >
-
-    <div>
-
-      <h2 id="missionTitle">
-        Mission
-      </h2>
 
       <div
-        id="missionDesc"
+        class="mission-card"
+        style="margin-top:18px;"
+      >
+
+        <div class="section-label">
+
+          <div>
+            <h3 style="margin-bottom:5px;">
+              Sebelum lanjut
+            </h3>
+
+            <div class="muted">
+              Kenali dulu bentuk perangkat dan fungsi dasarnya
+              melalui laboratorium 3D.
+            </div>
+          </div>
+
+          <span class="status-ok">
+            ● INTERACTIVE
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="actions"
+        style="margin-top:18px;"
+      >
+
+        <button
+          class="btn primary"
+          onclick="showExploration()"
+        >
+          🔬 Masuk Exploration Lab
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         EXPLORATION LAB 3D
+    ====================================================== -->
+
+    <section
+      id="exploration"
+      class="panel hidden"
+    >
+
+      <div class="section-label">
+
+        <div>
+
+          <span class="badge">
+            EXPLORATION LAB
+          </span>
+
+          <h2 style="margin:12px 0 6px;">
+            Kenali Perangkat Komputer
+          </h2>
+
+          <p class="muted" style="margin:0;">
+            Putar model 3D dengan mouse atau sentuhan.
+            Pilih perangkat untuk melihat bentuk dan fungsi dasarnya.
+          </p>
+
+        </div>
+
+        <span class="status-ok">
+          ● 3D ONLINE
+        </span>
+
+      </div>
+
+
+      <div class="explore-layout">
+
+        <div class="three-stage" id="threeStage">
+
+          <div class="three-help">
+            🖱 Drag = Putar &nbsp; • &nbsp;
+            Scroll = Zoom
+          </div>
+
+        </div>
+
+
+        <div class="device-panel">
+
+          <div class="device-info">
+
+            <h3
+              id="deviceTitle"
+              class="device-title"
+            >
+              Motherboard
+            </h3>
+
+            <p
+              id="deviceDescription"
+              class="device-description"
+            >
+              Papan utama tempat berbagai komponen komputer terhubung.
+            </p>
+
+          </div>
+
+
+          <div class="device-info">
+
+            <label style="margin-bottom:10px;">
+              Pilih perangkat
+            </label>
+
+            <div class="device-buttons">
+
+              <button
+                class="device-btn active"
+                data-device="motherboard"
+              >
+                Motherboard
+              </button>
+
+              <button
+                class="device-btn"
+                data-device="cpu"
+              >
+                CPU
+              </button>
+
+              <button
+                class="device-btn"
+                data-device="ram"
+              >
+                RAM
+              </button>
+
+              <button
+                class="device-btn"
+                data-device="ssd"
+              >
+                SSD
+              </button>
+
+              <button
+                class="device-btn"
+                data-device="keyboard"
+              >
+                Keyboard
+              </button>
+
+              <button
+                class="device-btn"
+                data-device="monitor"
+              >
+                Monitor
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <div class="device-info">
+
+            <h3 style="margin-bottom:7px;">
+              Cara menggunakan
+            </h3>
+
+            <p class="footer-note">
+              Putar model dengan drag mouse atau geser dengan jari.
+              Gunakan scroll/pinch untuk memperbesar atau memperkecil.
+              Model juga dapat diputar otomatis.
+            </p>
+
+
+            <div
+              class="device-actions"
+              style="margin-top:12px;"
+            >
+
+              <button
+                class="btn secondary"
+                onclick="reset3D()"
+              >
+                ↻ Reset Tampilan
+              </button>
+
+              <button
+                class="btn secondary"
+                id="autoRotateBtn"
+                onclick="toggleAutoRotate()"
+              >
+                ⟳ Auto Rotate: ON
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="mission-card"
+            style="margin-top:auto;"
+          >
+
+            <h3>
+              Misi Pengamatan
+            </h3>
+
+            <p class="muted">
+              Perhatikan bentuk perangkat.
+              Coba hubungkan bentuk tersebut
+              dengan fungsi yang telah dipelajari.
+            </p>
+
+            <button
+              class="btn primary"
+              style="width:100%;"
+              onclick="startMission1()"
+            >
+              🚀 Lanjut Mission 1
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MISSION
+    ====================================================== -->
+
+    <section
+      id="mission"
+      class="panel hidden"
+    >
+
+      <div
+        style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:12px;
+        "
+      >
+
+        <div>
+
+          <h2 id="missionTitle">
+            Mission
+          </h2>
+
+          <div
+            id="missionDesc"
+            class="muted"
+          ></div>
+
+        </div>
+
+
+        <div
+          id="missionTimer"
+          class="timer"
+        >
+          10:00
+        </div>
+
+      </div>
+
+
+      <div
+        id="missionContent"
+        style="margin-top:18px;"
+      ></div>
+
+
+      <div
+        class="actions"
+        style="margin-top:16px;"
+      >
+
+        <button
+          id="missionSubmit"
+          class="btn primary"
+          onclick="submitMission()"
+        >
+          Kirim Jawaban
+        </button>
+
+        <button
+          id="missionNext"
+          class="btn good hidden"
+          onclick="nextMission()"
+        >
+          Lanjut
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         BOSS
+    ====================================================== -->
+
+    <section
+      id="boss"
+      class="panel hidden"
+    >
+
+      <div
+        style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:12px;
+        "
+      >
+
+        <div>
+
+          <h2>
+            👑 Boss Mission
+          </h2>
+
+          <div class="muted">
+            13 XP penyelesaian +
+            17 XP uraian rubrik guru
+          </div>
+
+        </div>
+
+
+        <div
+          id="bossTimer"
+          class="timer"
+        >
+          10:00
+        </div>
+
+      </div>
+
+
+      <div
+        class="mission-card"
+        style="margin-top:16px;"
+      >
+
+        <p>
+          <b>Kasus:</b>
+          Dina melakukan video call menggunakan laptop.
+          Ia berbicara melalui microphone dan wajahnya
+          ditangkap webcam.
+          Komputer memproses data tersebut,
+          kemudian suara dan gambar diterima
+          oleh lawan bicara.
+        </p>
+
+
+        <div class="grid">
+
+          <div>
+
+            <label>
+              Input yang terlibat
+            </label>
+
+            <input
+              id="bossInput"
+              placeholder="microphone, webcam"
+            >
+
+          </div>
+
+
+          <div>
+
+            <label>
+              Process
+            </label>
+
+            <input
+              id="bossProcess"
+              placeholder="Jelaskan singkat"
+            >
+
+          </div>
+
+
+          <div>
+
+            <label>
+              Output
+            </label>
+
+            <input
+              id="bossOutput"
+              placeholder="speaker, monitor"
+            >
+
+          </div>
+
+
+          <div>
+
+            <label>
+              Memory / CPU
+            </label>
+
+            <input
+              id="bossCpu"
+              placeholder="Jelaskan perannya"
+            >
+
+          </div>
+
+        </div>
+
+
+        <label style="margin-top:14px;">
+          Gambarkan/uraikan alur IPO
+        </label>
+
+        <textarea
+          id="bossIpo"
+          rows="3"
+        ></textarea>
+
+
+        <label style="margin-top:14px;">
+          Mengapa komponen tersebut ditempatkan pada tahap itu?
+        </label>
+
+        <textarea
+          id="bossReason"
+          rows="3"
+        ></textarea>
+
+      </div>
+
+
+      <div
+        class="actions"
+        style="margin-top:16px;"
+      >
+
+        <button
+          class="btn primary"
+          onclick="submitBoss()"
+        >
+          Kirim Boss Mission
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         REFLECTION
+    ====================================================== -->
+
+    <section
+      id="reflection"
+      class="panel hidden"
+    >
+
+      <span class="badge">
+        FINAL REFLECTION
+      </span>
+
+      <h2 style="margin-top:14px;">
+        Refleksi 3–2–1
+      </h2>
+
+      <p class="muted">
+        Refleksikan pengalaman belajar setelah menyelesaikan seluruh misi.
+      </p>
+
+
+      <div class="grid">
+
+        <div>
+
+          <label>
+            3 hal yang saya pahami
+          </label>
+
+          <textarea
+            id="r3"
+            rows="5"
+            placeholder="Tuliskan tiga hal yang kamu pahami..."
+          ></textarea>
+
+        </div>
+
+
+        <div>
+
+          <label>
+            2 hal yang membantu saya
+          </label>
+
+          <textarea
+            id="r2"
+            rows="5"
+            placeholder="Tuliskan dua hal yang membantu..."
+          ></textarea>
+
+        </div>
+
+      </div>
+
+
+      <label style="margin-top:14px;">
+        1 hal yang masih membingungkan
+      </label>
+
+      <textarea
+        id="r1"
+        rows="4"
+        placeholder="Tuliskan satu hal yang masih membingungkan..."
+      ></textarea>
+
+
+      <div
+        class="actions"
+        style="margin-top:16px;"
+      >
+
+        <button
+          class="btn primary"
+          onclick="finishReflection()"
+        >
+          Simpan &amp; Selesai
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FINISH
+    ====================================================== -->
+
+    <section
+      id="finish"
+      class="panel hidden"
+    >
+
+      <div class="big">
+        🎉 Misi Selesai!
+      </div>
+
+      <p
         class="muted"
-      ></div>
-
-    </div>
-
-    <div
-      id="missionTimer"
-      class="timer"
-    >
-      10:00
-    </div>
-
-  </div>
-
-  <div
-    id="missionContent"
-    style="margin-top:18px;"
-  ></div>
-
-  <div
-    class="actions"
-    style="margin-top:16px;"
-  >
-
-    <button
-      id="missionSubmit"
-      class="btn primary"
-      onclick="submitMission()"
-    >
-      Kirim Jawaban
-    </button>
-
-    <button
-      id="missionNext"
-      class="btn good hidden"
-      onclick="nextMission()"
-    >
-      Lanjut
-    </button>
-
-  </div>
-
-</section>
-
-<!-- ========================================================
-     BOSS
-========================================================= -->
-
-<section
-  id="boss"
-  class="panel hidden"
->
-
-  <div
-    style="
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-    "
-  >
-
-    <div>
-
-      <h2>
-        👑 Boss Mission
-      </h2>
-
-      <div class="muted">
-        13 XP penyelesaian +
-        17 XP uraian rubrik guru
-      </div>
-
-    </div>
-
-    <div
-      id="bossTimer"
-      class="timer"
-    >
-      10:00
-    </div>
-
-  </div>
-
-  <div
-    class="mission-card"
-    style="margin-top:16px;"
-  >
-
-    <p>
-
-      <b>Kasus:</b>
-
-      Dina melakukan video call menggunakan laptop.
-      Ia berbicara melalui microphone dan wajahnya
-      ditangkap webcam.
-
-      Komputer memproses data tersebut,
-      kemudian suara dan gambar diterima
-      oleh lawan bicara.
-
-    </p>
-
-    <div class="grid">
-
-      <div>
-
-        <label>
-          Input yang terlibat
-        </label>
-
-        <input
-          id="bossInput"
-          placeholder="microphone, webcam"
-        >
-
-      </div>
-
-      <div>
-
-        <label>
-          Process
-        </label>
-
-        <input
-          id="bossProcess"
-          placeholder="Jelaskan singkat"
-        >
-
-      </div>
-
-      <div>
-
-        <label>
-          Output
-        </label>
-
-        <input
-          id="bossOutput"
-          placeholder="speaker, monitor"
-        >
-
-      </div>
-
-      <div>
-
-        <label>
-          Memory / CPU
-        </label>
-
-        <input
-          id="bossCpu"
-          placeholder="Jelaskan perannya"
-        >
-
-      </div>
-
-    </div>
-
-    <label style="margin-top:14px;">
-      Gambarkan/uraikan alur IPO
-    </label>
-
-    <textarea
-      id="bossIpo"
-      rows="3"
-      placeholder="Input → Process → Output"
-    ></textarea>
-
-    <label style="margin-top:14px;">
-      Mengapa komponen tersebut ditempatkan
-      pada tahap itu?
-    </label>
-
-    <textarea
-      id="bossReason"
-      rows="3"
-    ></textarea>
-
-  </div>
-
-  <div
-    class="actions"
-    style="margin-top:16px;"
-  >
-
-    <button
-      class="btn primary"
-      onclick="submitBoss()"
-    >
-      Kirim Boss Mission
-    </button>
-
-  </div>
-
-</section>
-
-<!-- ========================================================
-     REFLECTION
-========================================================= -->
-
-<section
-  id="reflection"
-  class="panel hidden"
->
-
-  <h2>
-    Refleksi 3–2–1
-  </h2>
-
-  <div class="grid">
-
-    <div>
-
-      <label>
-        3 hal yang saya pahami
-      </label>
-
-      <textarea
-        id="r3"
-        rows="4"
-      ></textarea>
-
-    </div>
-
-    <div>
-
-      <label>
-        2 hal yang membantu saya
-      </label>
-
-      <textarea
-        id="r2"
-        rows="4"
-      ></textarea>
-
-    </div>
-
-  </div>
-
-  <label style="margin-top:14px;">
-    1 hal yang masih membingungkan
-  </label>
-
-  <textarea
-    id="r1"
-    rows="3"
-  ></textarea>
-
-  <div
-    class="actions"
-    style="margin-top:16px;"
-  >
-
-    <button
-      class="btn primary"
-      onclick="finishReflection()"
-    >
-      Simpan &amp; Selesai
-    </button>
-
-  </div>
-
-</section>
-
-<!-- ========================================================
-     FINISH
-========================================================= -->
-
-<section
-  id="finish"
-  class="panel hidden"
->
-
-  <div class="big">
-    🎉 Misi Selesai!
-  </div>
-
-  <p
-    class="muted"
-    style="text-align:center;"
-  >
-    Data tersimpan ke Google Sheets.
-    Guru dapat melihat jawaban uraian
-    dan refleksi di dashboard guru.
-  </p>
-
-  <div
-    class="grid3"
-    style="margin-top:18px;"
-  >
-
-    <div class="kpi">
-
-      <small>
-        Pre-Test
-      </small>
-
-      <div
-        id="fPre"
-        class="score"
+        style="text-align:center;"
       >
-        -
-      </div>
+        Data tersimpan ke Google Sheets.
+        Guru dapat melihat jawaban uraian
+        dan refleksi pada dashboard guru.
+      </p>
+
 
       <div
-        id="fPreDetail"
-        class="footer-note"
-      ></div>
-
-    </div>
-
-    <div class="kpi">
-
-      <small>
-        Post-Test
-      </small>
-
-      <div
-        id="fPost"
-        class="score"
+        class="grid3"
+        style="margin-top:18px;"
       >
-        -
+
+        <div class="kpi">
+
+          <small>
+            Pre-Test
+          </small>
+
+          <div
+            id="fPre"
+            class="score"
+          >
+            -
+          </div>
+
+          <div
+            id="fPreDetail"
+            class="footer-note"
+          ></div>
+
+        </div>
+
+
+        <div class="kpi">
+
+          <small>
+            Post-Test
+          </small>
+
+          <div
+            id="fPost"
+            class="score"
+          >
+            -
+          </div>
+
+          <div
+            id="fPostDetail"
+            class="footer-note"
+          ></div>
+
+        </div>
+
+
+        <div class="kpi">
+
+          <small>
+            Total XP
+          </small>
+
+          <div
+            id="fXP"
+            class="score"
+          >
+            -
+          </div>
+
+          <div class="footer-note">
+            Skor gamifikasi
+          </div>
+
+        </div>
+
       </div>
 
-      <div
-        id="fPostDetail"
-        class="footer-note"
-      ></div>
-
-    </div>
-
-    <div class="kpi">
-
-      <small>
-        Total XP
-      </small>
 
       <div
-        id="fXP"
-        class="score"
+        class="mission-card"
+        style="margin-top:18px;"
       >
-        -
+
+        <h3>
+          Data Detective
+        </h3>
+
+        <p class="muted">
+          Kamu telah menyelesaikan rangkaian
+          Pre-Test → Mini Lesson →
+          Exploration Lab → Mission 1 →
+          Mission 2 → Mission 3 →
+          Boss Mission → Post-Test → Refleksi.
+        </p>
+
       </div>
 
-      <div class="footer-note">
-        Skor gamifikasi
-      </div>
-
-    </div>
+    </section>
 
   </div>
 
-</section>
-
-</div>
-
-<div
-  id="toast"
-  class="toast"
-></div>
-
-<!-- ========================================================
-     STUDENT ROSTER
-========================================================= -->
-
-<script src="students.js"></script>
-
-<script>
-
-/* =========================================================
-   GOOGLE SHEETS
-========================================================= */
-
-const SHEET_WEB_APP_URL =
-  "https://script.google.com/macros/s/AKfycbx_H6HUvj4CZYRBTakW3qEBdeX1KzxaCOzxb_4RYCd5t2EAOQy8Ubcvuk-rCvVDNhTX/exec";
-
-
-/* =========================================================
-   QUESTIONS
-========================================================= */
-
-const questions = [
-
-  {
-    stem:"Ketika seseorang mengetik pesan pada laptop, tulisan yang diketik kemudian muncul di layar. Urutan proses IPO yang paling tepat adalah ...",
-    opts:[
-      "Keyboard → CPU → Monitor",
-      "Monitor → CPU → Keyboard",
-      "CPU → Monitor → Keyboard",
-      "Keyboard → Monitor → CPU",
-      "Monitor → Keyboard → CPU"
-    ],
-    a:0
-  },
-
-  {
-    stem:"Pada mesin presensi wajah, kamera menangkap wajah siswa. Sistem kemudian mencocokkannya dengan data yang telah tersimpan. Bagian komputer yang terutama melakukan pengolahan dan pencocokan tersebut adalah ...",
-    opts:[
-      "Monitor",
-      "CPU",
-      "Keyboard",
-      "Speaker",
-      "Printer"
-    ],
-    a:1
-  },
-
-  {
-    stem:"Sebuah file tugas disimpan agar dapat dibuka kembali minggu depan. Perangkat yang berfungsi menyimpan file secara jangka panjang adalah ...",
-    opts:[
-      "RAM",
-      "CPU",
-      "SSD/HDD",
-      "Monitor",
-      "Keyboard"
-    ],
-    a:2
-  },
-
-  {
-    stem:"Saat kalkulator komputer menghitung 125 × 8, bagian CPU yang melakukan operasi hitung tersebut adalah ...",
-    opts:[
-      "CU",
-      "ALU",
-      "RAM",
-      "SSD",
-      "Motherboard"
-    ],
-    a:1
-  },
-
-  {
-    stem:"Sebuah program sedang menjalankan beberapa instruksi. Bagian CPU yang mengatur dan mengendalikan jalannya instruksi tersebut adalah ...",
-    opts:[
-      "ALU",
-      "CU",
-      "RAM",
-      "SSD",
-      "Monitor"
-    ],
-    a:1
-  },
-
-  {
-    stem:"Sebuah program memeriksa kondisi “jika nilai lebih besar dari 75, tampilkan LULUS”. Operasi logika pada kondisi tersebut terutama dilakukan oleh ...",
-    opts:[
-      "ALU",
-      "Monitor",
-      "Keyboard",
-      "Storage",
-      "Speaker"
-    ],
-    a:0
-  },
-
-  {
-    stem:"Sinta sedang mengedit dokumen yang belum disimpan. Ketika listrik mati, perubahan terakhir pada dokumen hilang. Hal ini menunjukkan bahwa data tersebut sebelumnya berada pada ...",
-    opts:[
-      "SSD yang permanen",
-      "RAM yang bersifat sementara",
-      "Monitor",
-      "Keyboard",
-      "Printer"
-    ],
-    a:1
-  },
-
-  {
-    stem:"Ketika aplikasi dibuka, data program yang tersimpan di SSD perlu dimuat ke RAM sebelum digunakan oleh CPU. Proses tersebut merupakan ...",
-    opts:[
-      "Monitor → RAM",
-      "SSD → RAM",
-      "RAM → SSD",
-      "Keyboard → SSD",
-      "CPU → Monitor"
-    ],
-    a:1
-  },
-
-  {
-    stem:"Sebuah komputer menjadi lambat saat banyak aplikasi dibuka. Task Manager menunjukkan CPU 25%, RAM 98%, dan Disk 5%. Komponen yang paling mungkin menjadi kendala adalah ...",
-    opts:[
-      "CPU",
-      "RAM",
-      "Disk",
-      "Monitor",
-      "Keyboard"
-    ],
-    a:1
-  },
-
-  {
-    stem:"Sebuah server membutuhkan waktu lama ketika harus membaca banyak file soal dari media penyimpanan. Komponen yang paling tepat diperiksa terlebih dahulu adalah ...",
-    opts:[
-      "Monitor",
-      "Keyboard",
-      "Storage dan proses I/O",
-      "Speaker",
-      "Mouse"
-    ],
-    a:2
-  },
-
-  {
-    stem:"Komputer menyala, kipas berputar, tetapi tidak muncul tampilan dan lampu Caps Lock tidak merespons. Kesimpulan yang paling masuk akal adalah ...",
-    opts:[
-      "Monitor pasti rusak",
-      "Komputer sudah masuk Windows",
-      "Proses awal sistem atau komponen inti belum berjalan normal",
-      "Keyboard hanya kehabisan baterai",
-      "Harddisk pasti penuh"
-    ],
-    a:2
-  },
-
-  {
-    stem:"Komputer kantor memiliki Core i5, RAM 8 GB, dan HDD 1 TB. Booting Windows sangat lama. Upgrade yang paling langsung terasa untuk masalah tersebut adalah ...",
-    opts:[
-      "Tambah RAM menjadi 16 GB",
-      "Ganti HDD dengan SSD",
-      "Ganti monitor",
-      "Ganti keyboard",
-      "Tambah speaker"
-    ],
-    a:1
-  },
-
-  {
-    stem:"Aplikasi pengolah video sering tertutup sendiri ketika banyak layer dan efek dibuka bersamaan. SSD dan CPU sudah memadai. Komponen yang paling perlu diperhatikan adalah ...",
-    opts:[
-      "RAM",
-      "Monitor",
-      "Keyboard",
-      "Speaker",
-      "Mouse"
-    ],
-    a:0
-  },
-
-  {
-    stem:"Sekolah ingin membuat kios informasi yang dikendalikan dengan sentuhan pada layar. Rancangan yang paling sesuai adalah ...",
-    opts:[
-      "Layar sentuh + CPU hemat daya + storage secukupnya + RAM standar",
-      "Monitor biasa + keyboard + mouse + CPU paling mahal",
-      "CPU tinggi + RAM 32 GB tanpa monitor",
-      "Layar sentuh tanpa CPU",
-      "Printer + scanner tanpa monitor"
-    ],
-    a:0
-  },
-
-  {
-    stem:"Perpustakaan membutuhkan PC hanya untuk mengetik dokumen dan membuka katalog buku di internet. Rancangan yang paling efisien adalah ...",
-    opts:[
-      "CPU kelas tinggi untuk grafis 3D",
-      "VR agar pencarian lebih menarik",
-      "Keyboard/mouse nyaman, monitor nyaman, CPU dan RAM sesuai kebutuhan dasar",
-      "Storage 10 TB",
-      "RAM 64 GB"
-    ],
-    a:2
-  }
-
-];
-
-
-/* =========================================================
-   STATE
-========================================================= */
-
-let state = {
-
-  code:"",
-  name:"",
-  className:"",
-  teacher:"",
-  team:"",
-  role:"",
-
-  xp:0,
-
-  pre:null,
-  post:null,
-
-  m1:0,
-  m2:0,
-  m3:0,
-  boss:0,
-
-  answers:[],
-
-  reflection:{
-    r3:"",
-    r2:"",
-    r1:""
-  },
-
-  essayAnswers:{
-    m1:"",
-    m2:"",
-    m3:"",
-    boss:""
-  },
-
-  preCorrect:0,
-  postCorrect:0
-
-};
-
-let testMode =
-  "pre";
-
-let qIndex =
-  0;
-
-let selectedQuestions =
-  [];
-
-let timerHandle =
-  null;
-
-let timerSeconds =
-  0;
-
-let missionType =
-  "";
-
-let missionTimerHandle =
-  null;
-
-let missionSeconds =
-  0;
-
-let syncQueue =
-  [];
-
-let syncRunning =
-  false;
-
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-const qs =
-  selector =>
-    document.querySelector(selector);
-
-function show(id){
-
-  document
-    .querySelectorAll("section")
-    .forEach(
-      section =>
-        section.classList.add("hidden")
-    );
-
-  qs(id).classList.remove("hidden");
-}
-
-function showToast(message){
-
-  const toast =
-    qs("#toast");
-
-  toast.textContent =
-    message;
-
-  toast.classList.add("show");
-
-  clearTimeout(
-    window.__toastTimer
-  );
-
-  window.__toastTimer =
-    setTimeout(
-      () =>
-        toast.classList.remove("show"),
-      2600
-    );
-}
-
-
-/* =========================================================
-   ROSTER
-========================================================= */
-
-function populateStudents(){
-
-  const classKey =
-    qs("#classSelect").value;
-
-  const select =
-    qs("#studentCode");
-
-  select.innerHTML =
-    '<option value="">-- Pilih nama siswa --</option>';
-
-  (
-    CLASS_ROSTERS[classKey] ||
-    []
-  ).forEach(
-    student => {
-
-      const option =
-        document.createElement("option");
-
-      option.value =
-        student.code;
-
-      option.textContent =
-        student.name;
-
-      select.appendChild(
-        option
-      );
+
+  <div id="toast" class="toast"></div>
+
+
+  <!-- =======================================================
+       STUDENT ROSTER
+  ======================================================== -->
+
+  <script src="students.js"></script>
+
+
+  <!-- =======================================================
+       MAIN APP
+  ======================================================== -->
+
+  <script>
+
+    const SHEET_WEB_APP_URL =
+      "https://script.google.com/macros/s/AKfycbx_H6HUvj4CZYRBTakW3qEBdeX1KzxaCOzxb_4RYCd5t2EAOQy8Ubcvuk-rCvVDNhTX/exec";
+
+
+    /* =======================================================
+       QUESTIONS
+    ======================================================== */
+
+    const questions = [
+
+      {
+        stem:
+          "Ketika seseorang mengetik pesan pada laptop, tulisan yang diketik kemudian muncul di layar. Urutan proses IPO yang paling tepat adalah ...",
+
+        opts: [
+          "Keyboard → CPU → Monitor",
+          "Monitor → CPU → Keyboard",
+          "CPU → Monitor → Keyboard",
+          "Keyboard → Monitor → CPU",
+          "Monitor → Keyboard → CPU"
+        ],
+
+        a:0
+      },
+
+
+      {
+        stem:
+          "Pada mesin presensi wajah, kamera menangkap wajah siswa. Sistem kemudian mencocokkannya dengan data yang telah tersimpan. Bagian komputer yang terutama melakukan pengolahan dan pencocokan tersebut adalah ...",
+
+        opts: [
+          "Monitor",
+          "CPU",
+          "Keyboard",
+          "Speaker",
+          "Printer"
+        ],
+
+        a:1
+      },
+
+
+      {
+        stem:
+          "Sebuah file tugas disimpan agar dapat dibuka kembali minggu depan. Perangkat yang berfungsi menyimpan file secara jangka panjang adalah ...",
+
+        opts: [
+          "RAM",
+          "CPU",
+          "SSD/HDD",
+          "Monitor",
+          "Keyboard"
+        ],
+
+        a:2
+      },
+
+
+      {
+        stem:
+          "Saat kalkulator komputer menghitung 125 × 8, bagian CPU yang melakukan operasi hitung tersebut adalah ...",
+
+        opts: [
+          "CU",
+          "ALU",
+          "RAM",
+          "SSD",
+          "Motherboard"
+        ],
+
+        a:1
+      },
+
+
+      {
+        stem:
+          "Sebuah program sedang menjalankan beberapa instruksi. Bagian CPU yang mengatur dan mengendalikan jalannya instruksi tersebut adalah ...",
+
+        opts: [
+          "ALU",
+          "CU",
+          "RAM",
+          "SSD",
+          "Monitor"
+        ],
+
+        a:1
+      },
+
+
+      {
+        stem:
+          "Sebuah program memeriksa kondisi “jika nilai lebih besar dari 75, tampilkan LULUS”. Operasi logika pada kondisi tersebut terutama dilakukan oleh ...",
+
+        opts: [
+          "ALU",
+          "Monitor",
+          "Keyboard",
+          "Storage",
+          "Speaker"
+        ],
+
+        a:0
+      },
+
+
+      {
+        stem:
+          "Sinta sedang mengedit dokumen yang belum disimpan. Ketika listrik mati, perubahan terakhir pada dokumen hilang. Hal ini menunjukkan bahwa data tersebut sebelumnya berada pada ...",
+
+        opts: [
+          "SSD yang permanen",
+          "RAM yang bersifat sementara",
+          "Monitor",
+          "Keyboard",
+          "Printer"
+        ],
+
+        a:1
+      },
+
+
+      {
+        stem:
+          "Ketika aplikasi dibuka, data program yang tersimpan di SSD perlu dimuat ke RAM sebelum digunakan oleh CPU. Proses tersebut merupakan ...",
+
+        opts: [
+          "Monitor → RAM",
+          "SSD → RAM",
+          "RAM → SSD",
+          "Keyboard → SSD",
+          "CPU → Monitor"
+        ],
+
+        a:1
+      },
+
+
+      {
+        stem:
+          "Sebuah komputer menjadi lambat saat banyak aplikasi dibuka. Task Manager menunjukkan CPU 25%, RAM 98%, dan Disk 5%. Komponen yang paling mungkin menjadi kendala adalah ...",
+
+        opts: [
+          "CPU",
+          "RAM",
+          "Disk",
+          "Monitor",
+          "Keyboard"
+        ],
+
+        a:1
+      },
+
+
+      {
+        stem:
+          "Sebuah server membutuhkan waktu lama ketika harus membaca banyak file soal dari media penyimpanan. Komponen yang paling tepat diperiksa terlebih dahulu adalah ...",
+
+        opts: [
+          "Monitor",
+          "Keyboard",
+          "Storage dan proses I/O",
+          "Speaker",
+          "Mouse"
+        ],
+
+        a:2
+      },
+
+
+      {
+        stem:
+          "Komputer menyala, kipas berputar, tetapi tidak muncul tampilan dan lampu Caps Lock tidak merespons. Kesimpulan yang paling masuk akal adalah ...",
+
+        opts: [
+          "Monitor pasti rusak",
+          "Komputer sudah masuk Windows",
+          "Proses awal sistem atau komponen inti belum berjalan normal",
+          "Keyboard hanya kehabisan baterai",
+          "Harddisk pasti penuh"
+        ],
+
+        a:2
+      },
+
+
+      {
+        stem:
+          "Komputer kantor memiliki Core i5, RAM 8 GB, dan HDD 1 TB. Booting Windows sangat lama. Upgrade yang paling langsung terasa untuk masalah tersebut adalah ...",
+
+        opts: [
+          "Tambah RAM menjadi 16 GB",
+          "Ganti HDD dengan SSD",
+          "Ganti monitor",
+          "Ganti keyboard",
+          "Tambah speaker"
+        ],
+
+        a:1
+      },
+
+
+      {
+        stem:
+          "Aplikasi pengolah video sering tertutup sendiri ketika banyak layer dan efek dibuka bersamaan. SSD dan CPU sudah memadai. Komponen yang paling perlu diperhatikan adalah ...",
+
+        opts: [
+          "RAM",
+          "Monitor",
+          "Keyboard",
+          "Speaker",
+          "Mouse"
+        ],
+
+        a:0
+      },
+
+
+      {
+        stem:
+          "Sekolah ingin membuat kios informasi yang dikendalikan dengan sentuhan pada layar. Rancangan yang paling sesuai adalah ...",
+
+        opts: [
+          "Layar sentuh + CPU hemat daya + storage secukupnya + RAM standar",
+          "Monitor biasa + keyboard + mouse + CPU paling mahal",
+          "CPU tinggi + RAM 32 GB tanpa monitor",
+          "Layar sentuh tanpa CPU",
+          "Printer + scanner tanpa monitor"
+        ],
+
+        a:0
+      },
+
+
+      {
+        stem:
+          "Perpustakaan membutuhkan PC hanya untuk mengetik dokumen dan membuka katalog buku di internet. Rancangan yang paling efisien adalah ...",
+
+        opts: [
+          "CPU kelas tinggi untuk grafis 3D",
+          "VR agar pencarian lebih menarik",
+          "Keyboard/mouse nyaman, monitor nyaman, CPU dan RAM sesuai kebutuhan dasar",
+          "Storage 10 TB",
+          "RAM 64 GB"
+        ],
+
+        a:2
+      }
+
+    ];
+
+
+    /* =======================================================
+       STATE
+    ======================================================== */
+
+    let state = {
+
+      code:"",
+      name:"",
+      className:"",
+      teacher:"",
+      team:"",
+      role:"",
+
+      xp:0,
+
+      pre:null,
+      post:null,
+
+      m1:0,
+      m2:0,
+      m3:0,
+      boss:0,
+
+      answers:[],
+
+      reflection:{
+        r3:"",
+        r2:"",
+        r1:""
+      },
+
+      essayAnswers:{
+        m1:"",
+        m2:"",
+        m3:"",
+        boss:""
+      },
+
+      preCorrect:0,
+      postCorrect:0
+
+    };
+
+
+    let testMode = "pre";
+    let qIndex = 0;
+    let selectedQuestions = [];
+
+    let timerHandle = null;
+    let timerSeconds = 0;
+
+    let missionType = "";
+
+    let missionTimerHandle = null;
+    let missionSeconds = 0;
+
+    let syncQueue = [];
+    let syncRunning = false;
+
+
+    /* =======================================================
+       BASIC HELPERS
+    ======================================================== */
+
+    const qs = selector =>
+      document.querySelector(selector);
+
+
+    function show(id) {
+
+      document
+        .querySelectorAll("section")
+        .forEach(section =>
+          section.classList.add("hidden")
+        );
+
+      qs(id).classList.remove("hidden");
+
+      window.scrollTo({
+        top:0,
+        behavior:"smooth"
+      });
     }
-  );
-}
 
-qs("#studentCode")
-  .addEventListener(
-    "change",
-    () => {
+
+    function showToast(message) {
+
+      const toast =
+        qs("#toast");
+
+      toast.textContent =
+        message;
+
+      toast.classList.add("show");
+
+      clearTimeout(
+        window.__toastTimer
+      );
+
+      window.__toastTimer =
+        setTimeout(
+          () =>
+            toast.classList.remove("show"),
+          2600
+        );
+
+    }
+
+
+    /* =======================================================
+       STUDENT LOGIN
+    ======================================================== */
+
+    function populateStudents() {
+
+      const classKey =
+        qs("#classSelect").value;
+
+      const select =
+        qs("#studentCode");
+
+      select.innerHTML =
+        `
+          <option value="">
+            -- Pilih nama siswa --
+          </option>
+        `;
+
+      (
+        CLASS_ROSTERS[classKey] ||
+        []
+      ).forEach(
+        student => {
+
+          const option =
+            document.createElement("option");
+
+          option.value =
+            student.code;
+
+          option.textContent =
+            student.name;
+
+          select.appendChild(
+            option
+          );
+
+        }
+      );
+
+    }
+
+
+    qs("#studentCode")
+      .addEventListener(
+        "change",
+        () => {
+
+          const classKey =
+            qs("#classSelect").value;
+
+          const code =
+            qs("#studentCode").value;
+
+          const student =
+            (
+              CLASS_ROSTERS[classKey] ||
+              []
+            ).find(
+              item =>
+                item.code === code
+            );
+
+          if(student){
+
+            qs("#studentPill").textContent =
+              `${student.name} • ${student.code} • ${student.class}`;
+
+          }
+
+        }
+      );
+
+
+    function startSession() {
 
       const classKey =
         qs("#classSelect").value;
@@ -2260,292 +2430,266 @@ qs("#studentCode")
             item.code === code
         );
 
-      if(student){
+      if(!student){
 
-        qs("#studentPill").textContent =
-          `${student.name} • ${student.code} • ${student.class}`;
+        alert(
+          "Pilih kelas dan nama siswa."
+        );
+
+        return;
+      }
+
+
+      state = {
+
+        ...state,
+
+        code:
+          student.code,
+
+        name:
+          student.name,
+
+        className:
+          student.class,
+
+        teacher:
+          student.teacher,
+
+        team:
+          qs("#team").value,
+
+        role:
+          qs("#role").value,
+
+        xp:0,
+
+        pre:null,
+        post:null,
+
+        m1:0,
+        m2:0,
+        m3:0,
+        boss:0,
+
+        answers:[],
+
+        reflection:{
+          r3:"",
+          r2:"",
+          r1:""
+        },
+
+        essayAnswers:{
+          m1:"",
+          m2:"",
+          m3:"",
+          boss:""
+        },
+
+        preCorrect:0,
+        postCorrect:0
+
+      };
+
+
+      qs("#studentPill").textContent =
+        `${state.name} • ${state.code} • ${state.className}`;
+
+      qs("#dClass").textContent =
+        `${state.className} • ${state.teacher}`;
+
+      qs("#dCode").textContent =
+        `${state.name} (${state.code})`;
+
+      qs("#dTeam").textContent =
+        state.team;
+
+
+      updateTop();
+
+      show("#dash");
+
+    }
+
+
+    function updateTop() {
+
+      qs("#xpTop").textContent =
+        state.xp;
+
+      qs("#dXP").textContent =
+        state.xp;
+
+      qs("#prog").style.width =
+        Math.min(
+          100,
+          state.xp
+        ) + "%";
+
+    }
+
+
+    /* =======================================================
+       TEST
+    ======================================================== */
+
+    function shuffle(array) {
+
+      const copy =
+        [...array];
+
+      for(
+        let i = copy.length - 1;
+        i > 0;
+        i--
+      ){
+
+        const j =
+          Math.floor(
+            Math.random() *
+            (i + 1)
+          );
+
+        [
+          copy[i],
+          copy[j]
+        ] =
+        [
+          copy[j],
+          copy[i]
+        ];
 
       }
 
+      return copy;
     }
-  );
 
 
-/* =========================================================
-   SESSION
-========================================================= */
+    function shuffledQuestion(question) {
 
-function startSession(){
+      return {
 
-  const classKey =
-    qs("#classSelect").value;
+        ...question,
 
-  const code =
-    qs("#studentCode").value;
+        opts:
+          shuffle(
+            question.opts.map(
+              (text,index) => ({
+                text,
+                ok:
+                  index ===
+                  question.a
+              })
+            )
+          )
 
-  const student =
-    (
-      CLASS_ROSTERS[classKey] ||
-      []
-    ).find(
-      item =>
-        item.code === code
-    );
+      };
 
-  if(!student){
-
-    alert(
-      "Pilih kelas dan nama siswa."
-    );
-
-    return;
-  }
-
-  state = {
-
-    ...state,
-
-    code:
-      student.code,
-
-    name:
-      student.name,
-
-    className:
-      student.class,
-
-    teacher:
-      student.teacher,
-
-    team:
-      qs("#team").value,
-
-    role:
-      qs("#role").value,
-
-    xp:0,
-
-    pre:null,
-
-    post:null,
-
-    m1:0,
-
-    m2:0,
-
-    m3:0,
-
-    boss:0,
-
-    answers:[],
-
-    reflection:{
-      r3:"",
-      r2:"",
-      r1:""
-    },
-
-    essayAnswers:{
-      m1:"",
-      m2:"",
-      m3:"",
-      boss:""
-    },
-
-    preCorrect:0,
-
-    postCorrect:0
-
-  };
-
-  qs("#studentPill").textContent =
-    `${state.name} • ${state.code} • ${state.className}`;
-
-  qs("#dClass").textContent =
-    `${state.className} • ${state.teacher}`;
-
-  qs("#dCode").textContent =
-    `${state.name} (${state.code})`;
-
-  qs("#dTeam").textContent =
-    state.team;
-
-  updateTop();
-
-  show("#dash");
-}
-
-function updateTop(){
-
-  qs("#xpTop").textContent =
-    state.xp;
-
-  qs("#dXP").textContent =
-    state.xp;
-
-  qs("#prog").style.width =
-    Math.min(
-      100,
-      state.xp
-    ) +
-    "%";
-}
+    }
 
 
-/* =========================================================
-   TEST
-========================================================= */
+    function startPretest() {
 
-function shuffle(array){
+      testMode =
+        "pre";
 
-  const copy =
-    [...array];
+      qIndex =
+        0;
 
-  for(
-    let i =
-      copy.length - 1;
-    i > 0;
-    i--
-  ){
+      state.answers =
+        [];
 
-    const j =
-      Math.floor(
-        Math.random() *
-        (i + 1)
+      selectedQuestions =
+        shuffle(
+          questions.map(
+            shuffledQuestion
+          )
+        );
+
+      startTest();
+
+    }
+
+
+    function startPosttest() {
+
+      testMode =
+        "post";
+
+      qIndex =
+        0;
+
+      state.answers =
+        [];
+
+      selectedQuestions =
+        shuffle(
+          questions.map(
+            shuffledQuestion
+          )
+        );
+
+      startTest();
+
+    }
+
+
+    function startTest() {
+
+      qs("#testTitle").textContent =
+        testMode === "pre"
+          ? "Pre-test — 15 Soal"
+          : "Post-test — 15 Soal";
+
+      qs("#finishTestBtn")
+        .classList.add("hidden");
+
+      show("#test");
+
+      startTestTimer(
+        600
       );
 
-    [
-      copy[i],
-      copy[j]
-    ] = [
-      copy[j],
-      copy[i]
-    ];
-  }
+      renderQuestion();
 
-  return copy;
-}
+    }
 
-function shuffledQuestion(question){
 
-  return {
+    function renderQuestion() {
 
-    ...question,
+      const question =
+        selectedQuestions[qIndex];
 
-    opts:
-      shuffle(
-        question.opts.map(
-          (text,index) =>
-            ({
-              text,
-              ok:
-                index ===
-                question.a
-            })
-        )
-      )
+      qs("#qCount").textContent =
+        `Soal ${qIndex + 1} dari ${selectedQuestions.length}`;
 
-  };
-}
 
-function startPretest(){
+      qs("#finishTestBtn")
+        .classList.toggle(
+          "hidden",
+          qIndex !==
+          selectedQuestions.length - 1
+        );
 
-  testMode =
-    "pre";
 
-  qIndex =
-    0;
+      qs("#questionBox").innerHTML = `
 
-  state.answers =
-    [];
+        <div class="mission-card">
 
-  selectedQuestions =
-    shuffle(
-      questions.map(
-        shuffledQuestion
-      )
-    );
+          <div
+            style="
+              font-weight:800;
+              margin-bottom:12px;
+            "
+          >
+            ${escapeHtml(question.stem)}
+          </div>
 
-  startTest();
-}
+          ${
+            question.opts.map(
+              (option,index) => `
 
-function startPosttest(){
-
-  testMode =
-    "post";
-
-  qIndex =
-    0;
-
-  state.answers =
-    [];
-
-  selectedQuestions =
-    shuffle(
-      questions.map(
-        shuffledQuestion
-      )
-    );
-
-  startTest();
-}
-
-function startTest(){
-
-  qs("#testTitle").textContent =
-    testMode === "pre"
-      ? "Pre-test — 15 Soal"
-      : "Post-test — 15 Soal";
-
-  qs("#finishTestBtn")
-    .classList.add("hidden");
-
-  show("#test");
-
-  startTestTimer(
-    600
-  );
-
-  renderQuestion();
-}
-
-function renderQuestion(){
-
-  const question =
-    selectedQuestions[
-      qIndex
-    ];
-
-  qs("#qCount").textContent =
-    `Soal ${qIndex + 1} dari ${selectedQuestions.length}`;
-
-  qs("#finishTestBtn")
-    .classList.toggle(
-      "hidden",
-      qIndex !==
-      selectedQuestions.length - 1
-    );
-
-  qs("#questionBox").innerHTML =
-    `
-      <div class="mission-card">
-
-        <div
-          style="
-            font-weight:800;
-            margin-bottom:12px;
-          "
-        >
-          ${escapeHtml(
-            question.stem
-          )}
-        </div>
-
-        ${
-          question.opts
-            .map(
-              (option,index) =>
-                `
                 <label class="option">
 
                   <input
@@ -2555,2440 +2699,2651 @@ function renderQuestion(){
                   >
 
                   <span>
-                    ${String.fromCharCode(
-                      65 + index
-                    )}.
-                    ${escapeHtml(
-                      option.text
-                    )}
+                    ${
+                      String.fromCharCode(
+                        65 + index
+                      )
+                    }.
+                    ${escapeHtml(option.text)}
                   </span>
 
                 </label>
-                `
-            )
-            .join("")
-        }
-
-      </div>
-    `;
-}
-
-function storeAnswer(){
-
-  const element =
-    document.querySelector(
-      'input[name="q"]:checked'
-    );
-
-  state.answers[
-    qIndex
-  ] =
-    element
-      ? selectedQuestions[
-          qIndex
-        ].opts[
-          Number(
-            element.value
-          )
-        ].ok
-      : null;
-}
-
-function prevQ(){
-
-  storeAnswer();
-
-  if(qIndex > 0){
-
-    qIndex--;
-
-    renderQuestion();
-  }
-}
-
-function nextQ(){
-
-  storeAnswer();
-
-  if(
-    qIndex <
-    selectedQuestions.length - 1
-  ){
-
-    qIndex++;
-
-    renderQuestion();
-  }
-}
-
-function startTestTimer(seconds){
-
-  clearInterval(
-    timerHandle
-  );
-
-  timerSeconds =
-    seconds;
-
-  updateTimer();
-
-  timerHandle =
-    setInterval(
-      () => {
-
-        timerSeconds--;
-
-        updateTimer();
-
-        if(
-          timerSeconds <= 0
-        ){
-
-          clearInterval(
-            timerHandle
-          );
-
-          finishTest();
-
-        }
-
-      },
-      1000
-    );
-}
-
-function updateTimer(){
-
-  const minutes =
-    String(
-      Math.floor(
-        timerSeconds / 60
-      )
-    ).padStart(
-      2,
-      "0"
-    );
-
-  const seconds =
-    String(
-      timerSeconds % 60
-    ).padStart(
-      2,
-      "0"
-    );
-
-  qs("#testTimer").textContent =
-    `${minutes}:${seconds}`;
-}
-
-function finishTest(){
-
-  storeAnswer();
-
-  clearInterval(
-    timerHandle
-  );
-
-  const correct =
-    state.answers.filter(
-      value =>
-        value === true
-    ).length;
-
-  const score =
-    Math.round(
-      (
-        correct /
-        questions.length
-      ) * 100
-    );
-
-  if(testMode === "pre"){
-
-    state.pre =
-      score;
-
-    state.preCorrect =
-      correct;
-
-    localSave();
-
-    show("#mini");
-
-    return;
-  }
-
-  state.post =
-    score;
-
-  state.postCorrect =
-    correct;
-
-  localSave();
-
-  qs("#fPre").textContent =
-    `${state.pre ?? "-"}/100`;
-
-  qs("#fPost").textContent =
-    `${state.post ?? "-"}/100`;
-
-  qs("#fPreDetail").textContent =
-    `${state.preCorrect ?? 0} dari 15 soal benar`;
-
-  qs("#fPostDetail").textContent =
-    `${state.postCorrect ?? 0} dari 15 soal benar`;
-
-  qs("#fXP").textContent =
-    state.xp;
-
-  show("#reflection");
-}
-
-
-/* =========================================================
-   EXPLORATION
-========================================================= */
-
-function startExploration(){
-
-  show("#exploration");
-
-  if(!threeReady){
-    showToast(
-      "3D belum berhasil dimuat. Coba refresh halaman."
-    );
-    return;
-  }
-
-  resize3D();
-  loadDevice("motherboard");
-}
-
-
-/* =========================================================
-   MISSIONS
-========================================================= */
-
-function startMission1(){
-  startMission("m1");
-}
-
-function startMission2(){
-  startMission("m2");
-}
-
-function startMission3(){
-  startMission("m3");
-}
-
-function startMission(type){
-
-  missionType =
-    type;
-
-  show("#mission");
-
-  const configs = {
-
-    m1:{
-
-      title:
-        "Mission 1 — RAM or Storage?",
-
-      desc:
-        "16 XP objektif + 9 XP uraian rubrik",
-
-      seconds:
-        600,
-
-      html:`
-
-        <div class="mission-card">
-
-          <p>
-
-            <b>1.</b>
-            Komputer sedang membuka banyak tab browser.
-            Komponen memori kerja sementara adalah ...
-
-          </p>
-
-          <label class="option">
-            <input
-              type="radio"
-              name="m1a"
-              value="0"
-            >
-            <span>RAM</span>
-          </label>
-
-          <label class="option">
-            <input
-              type="radio"
-              name="m1a"
-              value="1"
-            >
-            <span>SSD</span>
-          </label>
-
-          <label class="option">
-            <input
-              type="radio"
-              name="m1a"
-              value="2"
-            >
-            <span>Monitor</span>
-          </label>
-
-
-          <p>
-
-            <b>2.</b>
-            Roni menyimpan dokumen agar dapat dibuka
-            minggu depan. Pilihan yang tepat adalah ...
-
-          </p>
-
-          <label class="option">
-            <input
-              type="radio"
-              name="m1b"
-              value="0"
-            >
-            <span>RAM</span>
-          </label>
-
-          <label class="option">
-            <input
-              type="radio"
-              name="m1b"
-              value="1"
-            >
-            <span>SSD/HDD</span>
-          </label>
-
-          <label class="option">
-            <input
-              type="radio"
-              name="m1b"
-              value="2"
-            >
-            <span>CPU</span>
-          </label>
-
-
-          <p>
-            <b>3.</b>
-            Mengapa RAM dan storage tidak sama?
-          </p>
-
-          <textarea
-            id="m1reason"
-            rows="3"
-            placeholder="Tuliskan penjelasanmu"
-          ></textarea>
+              `
+            ).join("")
+          }
 
         </div>
 
-      `
-    },
+      `;
 
-    m2:{
-
-      title:
-        "Mission 2 — ALU or CU?",
-
-      desc:
-        "16 XP objektif + 9 XP uraian rubrik",
-
-      seconds:
-        600,
-
-      html:`
-
-        <div class="mission-card">
-
-          <p>
-
-            <b>1.</b>
-            CPU menghitung 125 × 8.
-            Bagian yang melakukan operasi hitung adalah ...
-
-          </p>
-
-          <label class="option">
-            <input
-              type="radio"
-              name="m2a"
-              value="0"
-            >
-            <span>ALU</span>
-          </label>
-
-          <label class="option">
-            <input
-              type="radio"
-              name="m2a"
-              value="1"
-            >
-            <span>CU</span>
-          </label>
-
-
-          <p>
-
-            <b>2.</b>
-            Bagian CPU yang mengatur jalannya
-            instruksi program adalah ...
-
-          </p>
-
-          <label class="option">
-            <input
-              type="radio"
-              name="m2b"
-              value="0"
-            >
-            <span>ALU</span>
-          </label>
-
-          <label class="option">
-            <input
-              type="radio"
-              name="m2b"
-              value="1"
-            >
-            <span>CU</span>
-          </label>
-
-
-          <p>
-            <b>3.</b>
-            Jelaskan perbedaan tugas ALU dan CU.
-          </p>
-
-          <textarea
-            id="m2reason"
-            rows="3"
-            placeholder="Tuliskan penjelasanmu"
-          ></textarea>
-
-        </div>
-
-      `
-    },
-
-    m3:{
-
-      title:
-        "Mission 3 — Trace the Data",
-
-      desc:
-        "15 XP struktur + 5 XP uraian rubrik",
-
-      seconds:
-        900,
-
-      html:`
-
-        <div class="mission-card">
-
-          <p>
-            Pilih kasus lalu tuliskan alurnya.
-          </p>
-
-          <select
-            id="m3case"
-          >
-
-            <option>
-              Mengetik tugas
-            </option>
-
-            <option>
-              Merekam suara
-            </option>
-
-            <option>
-              Membuka foto
-            </option>
-
-            <option>
-              Mencetak dokumen
-            </option>
-
-          </select>
-
-
-          <div
-            class="grid"
-            style="margin-top:12px;"
-          >
-
-            <div>
-
-              <label>
-                Input
-              </label>
-
-              <input
-                id="m3input"
-              >
-
-            </div>
-
-            <div>
-
-              <label>
-                Process
-              </label>
-
-              <input
-                id="m3process"
-              >
-
-            </div>
-
-            <div>
-
-              <label>
-                Output
-              </label>
-
-              <input
-                id="m3output"
-              >
-
-            </div>
-
-            <div>
-
-              <label>
-                Storage
-              </label>
-
-              <input
-                id="m3storage"
-              >
-
-            </div>
-
-          </div>
-
-
-          <label
-            style="margin-top:14px;"
-          >
-            Mengapa urutan tersebut sesuai IPO?
-          </label>
-
-          <textarea
-            id="m3reason"
-            rows="3"
-          ></textarea>
-
-        </div>
-
-      `
     }
 
-  };
 
-  const config =
-    configs[type];
+    function storeAnswer() {
 
-  qs("#missionTitle").textContent =
-    config.title;
+      const element =
+        document.querySelector(
+          'input[name="q"]:checked'
+        );
 
-  qs("#missionDesc").textContent =
-    config.desc;
+      state.answers[qIndex] =
+        element
+          ? selectedQuestions[qIndex]
+              .opts[
+                Number(element.value)
+              ].ok
+          : null;
 
-  qs("#missionContent").innerHTML =
-    config.html;
-
-  qs("#missionSubmit")
-    .classList.remove(
-      "hidden"
-    );
-
-  qs("#missionNext")
-    .classList.add(
-      "hidden"
-    );
-
-  startMissionTimer(
-    config.seconds
-  );
-}
-
-function startMissionTimer(seconds){
-
-  clearInterval(
-    missionTimerHandle
-  );
-
-  missionSeconds =
-    seconds;
-
-  updateMissionTimer();
-
-  missionTimerHandle =
-    setInterval(
-      () => {
-
-        missionSeconds--;
-
-        updateMissionTimer();
-
-        if(
-          missionSeconds <= 0
-        ){
-
-          clearInterval(
-            missionTimerHandle
-          );
-
-          submitMission();
-
-        }
-
-      },
-      1000
-    );
-}
-
-function updateMissionTimer(){
-
-  const minutes =
-    String(
-      Math.floor(
-        missionSeconds / 60
-      )
-    ).padStart(
-      2,
-      "0"
-    );
-
-  const seconds =
-    String(
-      missionSeconds % 60
-    ).padStart(
-      2,
-      "0"
-    );
-
-  qs("#missionTimer").textContent =
-    `${minutes}:${seconds}`;
-}
-
-function submitMission(){
-
-  clearInterval(
-    missionTimerHandle
-  );
-
-  let score =
-    0;
-
-  if(
-    missionType ===
-    "m1"
-  ){
-
-    if(
-      qs(
-        'input[name="m1a"]:checked'
-      )?.value ===
-      "0"
-    ){
-      score += 8;
     }
 
-    if(
-      qs(
-        'input[name="m1b"]:checked'
-      )?.value ===
-      "1"
-    ){
-      score += 8;
+
+    function prevQ() {
+
+      storeAnswer();
+
+      if(qIndex > 0){
+
+        qIndex--;
+
+        renderQuestion();
+
+      }
+
     }
 
-    state.m1 =
-      score;
 
-    state.essayAnswers.m1 =
-      qs(
-        "#m1reason"
-      ).value.trim();
+    function nextQ() {
 
-  }else if(
-    missionType ===
-    "m2"
-  ){
+      storeAnswer();
 
-    if(
-      qs(
-        'input[name="m2a"]:checked'
-      )?.value ===
-      "0"
-    ){
-      score += 8;
+      if(
+        qIndex <
+        selectedQuestions.length - 1
+      ){
+
+        qIndex++;
+
+        renderQuestion();
+
+      }
+
     }
 
-    if(
-      qs(
-        'input[name="m2b"]:checked'
-      )?.value ===
-      "1"
-    ){
-      score += 8;
-    }
 
-    state.m2 =
-      score;
+    function startTestTimer(seconds) {
 
-    state.essayAnswers.m2 =
-      qs(
-        "#m2reason"
-      ).value.trim();
-
-  }else{
-
-    const input =
-      qs("#m3input")
-        .value.trim();
-
-    const process =
-      qs("#m3process")
-        .value.trim();
-
-    const output =
-      qs("#m3output")
-        .value.trim();
-
-    const storage =
-      qs("#m3storage")
-        .value.trim();
-
-    const reason =
-      qs("#m3reason")
-        .value.trim();
-
-    if(input){
-      score += 5;
-    }
-
-    if(process){
-      score += 5;
-    }
-
-    if(output){
-      score += 5;
-    }
-
-    state.m3 =
-      score;
-
-    state.essayAnswers.m3 = [
-
-      `Kasus: ${qs("#m3case").value}`,
-
-      `Input: ${input}`,
-
-      `Process: ${process}`,
-
-      `Output: ${output}`,
-
-      `Storage: ${storage}`,
-
-      `Alasan: ${reason}`
-
-    ].join("\n");
-
-  }
-
-  state.xp +=
-    score;
-
-  updateTop();
-
-  localSave();
-
-  qs("#missionSubmit")
-    .classList.add(
-      "hidden"
-    );
-
-  qs("#missionNext")
-    .classList.remove(
-      "hidden"
-    );
-}
-
-function nextMission(){
-
-  if(
-    missionType ===
-    "m1"
-  ){
-
-    startMission2();
-
-  }else if(
-    missionType ===
-    "m2"
-  ){
-
-    startMission3();
-
-  }else{
-
-    startBoss();
-
-  }
-}
-
-
-/* =========================================================
-   BOSS
-========================================================= */
-
-function startBoss(){
-
-  show("#boss");
-
-  startBossTimer(
-    600
-  );
-}
-
-function startBossTimer(seconds){
-
-  clearInterval(
-    missionTimerHandle
-  );
-
-  missionSeconds =
-    seconds;
-
-  updateBossTimer();
-
-  missionTimerHandle =
-    setInterval(
-      () => {
-
-        missionSeconds--;
-
-        updateBossTimer();
-
-        if(
-          missionSeconds <= 0
-        ){
-
-          clearInterval(
-            missionTimerHandle
-          );
-
-          submitBoss();
-
-        }
-
-      },
-      1000
-    );
-}
-
-function updateBossTimer(){
-
-  const minutes =
-    String(
-      Math.floor(
-        missionSeconds /
-        60
-      )
-    ).padStart(
-      2,
-      "0"
-    );
-
-  const seconds =
-    String(
-      missionSeconds %
-      60
-    ).padStart(
-      2,
-      "0"
-    );
-
-  qs("#bossTimer").textContent =
-    `${minutes}:${seconds}`;
-}
-
-function submitBoss(){
-
-  clearInterval(
-    missionTimerHandle
-  );
-
-  const input =
-    qs("#bossInput")
-      .value.trim();
-
-  const process =
-    qs("#bossProcess")
-      .value.trim();
-
-  const output =
-    qs("#bossOutput")
-      .value.trim();
-
-  const cpu =
-    qs("#bossCpu")
-      .value.trim();
-
-  const ipo =
-    qs("#bossIpo")
-      .value.trim();
-
-  const reason =
-    qs("#bossReason")
-      .value.trim();
-
-  let score =
-    0;
-
-  if(input){
-    score += 3;
-  }
-
-  if(process){
-    score += 3;
-  }
-
-  if(output){
-    score += 3;
-  }
-
-  if(cpu){
-    score += 2;
-  }
-
-  if(ipo){
-    score += 2;
-  }
-
-  state.boss =
-    score;
-
-  state.xp +=
-    score;
-
-  state.essayAnswers.boss = [
-
-    `Input: ${input}`,
-
-    `Process: ${process}`,
-
-    `Output: ${output}`,
-
-    `CPU / Memory: ${cpu}`,
-
-    `Alur IPO: ${ipo}`,
-
-    `Alasan: ${reason}`
-
-  ].join("\n");
-
-  updateTop();
-
-  localSave();
-
-  startPosttest();
-}
-
-
-/* =========================================================
-   REFLECTION
-========================================================= */
-
-function finishReflection(){
-
-  state.reflection = {
-
-    r3:
-      qs("#r3")
-        .value.trim(),
-
-    r2:
-      qs("#r2")
-        .value.trim(),
-
-    r1:
-      qs("#r1")
-        .value.trim()
-
-  };
-
-  localSave();
-
-  qs("#fPre").textContent =
-    `${state.pre ?? "-"}/100`;
-
-  qs("#fPost").textContent =
-    `${state.post ?? "-"}/100`;
-
-  qs("#fPreDetail").textContent =
-    `${state.preCorrect ?? 0} dari 15 soal benar`;
-
-  qs("#fPostDetail").textContent =
-    `${state.postCorrect ?? 0} dari 15 soal benar`;
-
-  qs("#fXP").textContent =
-    state.xp;
-
-  show("#finish");
-
-  showToast(
-    "Refleksi berhasil disimpan."
-  );
-}
-
-
-/* =========================================================
-   RECORD
-========================================================= */
-
-function buildRecord(){
-
-  return {
-
-    className:
-      state.className,
-
-    teacher:
-      state.teacher,
-
-    code:
-      state.code,
-
-    name:
-      state.name,
-
-    team:
-      state.team,
-
-    role:
-      state.role,
-
-    pre:
-      state.pre,
-
-    m1:
-      state.m1,
-
-    m2:
-      state.m2,
-
-    m3:
-      state.m3,
-
-    boss:
-      state.boss,
-
-    post:
-      state.post,
-
-    xp:
-      state.xp,
-
-    rubric_m1:
-      "",
-
-    rubric_m2:
-      "",
-
-    rubric_m3:
-      "",
-
-    rubric_boss:
-      "",
-
-    answer_m1:
-      state.essayAnswers.m1 ||
-      "",
-
-    answer_m2:
-      state.essayAnswers.m2 ||
-      "",
-
-    answer_m3:
-      state.essayAnswers.m3 ||
-      "",
-
-    answer_boss:
-      state.essayAnswers.boss ||
-      "",
-
-    reflection_r3:
-      state.reflection.r3 ||
-      "",
-
-    reflection_r2:
-      state.reflection.r2 ||
-      "",
-
-    reflection_r1:
-      state.reflection.r1 ||
-      "",
-
-    timestamp:
-      new Date().toISOString()
-
-  };
-}
-
-
-/* =========================================================
-   LOCAL SAVE
-========================================================= */
-
-function localSave(){
-
-  if(
-    !state.className ||
-    !state.code
-  ){
-    return;
-  }
-
-  const record =
-    buildRecord();
-
-  const records =
-    JSON.parse(
-      localStorage.getItem(
-        "cm2_records"
-      ) ||
-      "[]"
-    );
-
-  const index =
-    records.findIndex(
-      item =>
-        item.className ===
-          record.className &&
-        item.code ===
-          record.code
-    );
-
-  if(index >= 0){
-
-    records[index] =
-      record;
-
-  }else{
-
-    records.push(
-      record
-    );
-
-  }
-
-  localStorage.setItem(
-    "cm2_records",
-    JSON.stringify(
-      records
-    )
-  );
-
-  queueSync(
-    record
-  );
-}
-
-
-/* =========================================================
-   GOOGLE SYNC
-========================================================= */
-
-function queueSync(record){
-
-  syncQueue =
-    syncQueue.filter(
-      item =>
-        !(
-          item.className ===
-            record.className &&
-          item.code ===
-            record.code
-        )
-    );
-
-  syncQueue.push(
-    record
-  );
-
-  clearTimeout(
-    window.__syncTimer
-  );
-
-  window.__syncTimer =
-    setTimeout(
-      flushSyncQueue,
-      450
-    );
-}
-
-async function flushSyncQueue(){
-
-  if(
-    syncRunning ||
-    !syncQueue.length
-  ){
-    return;
-  }
-
-  syncRunning =
-    true;
-
-  try{
-
-    while(
-      syncQueue.length
-    ){
-
-      const record =
-        syncQueue.shift();
-
-      await fetch(
-        SHEET_WEB_APP_URL,
-        {
-          method:"POST",
-          mode:"no-cors",
-          headers:{
-            "Content-Type":
-              "text/plain;charset=utf-8"
-          },
-          body:
-            JSON.stringify({
-              action:
-                "upsert",
-              record:
-                record
-            })
-        }
+      clearInterval(
+        timerHandle
       );
 
+      timerSeconds =
+        seconds;
+
+      updateTimer();
+
+
+      timerHandle =
+        setInterval(
+          () => {
+
+            timerSeconds--;
+
+            updateTimer();
+
+            if(
+              timerSeconds <= 0
+            ){
+
+              clearInterval(
+                timerHandle
+              );
+
+              finishTest();
+
+            }
+
+          },
+          1000
+        );
+
     }
 
-  }catch(error){
 
-    console.error(
-      "Google Sheets sync failed:",
-      error
-    );
+    function updateTimer() {
 
-    if(
-      syncQueue.length
-    ){
+      const minutes =
+        String(
+          Math.floor(
+            timerSeconds / 60
+          )
+        ).padStart(
+          2,
+          "0"
+        );
+
+      const seconds =
+        String(
+          timerSeconds % 60
+        ).padStart(
+          2,
+          "0"
+        );
+
+
+      qs("#testTimer").textContent =
+        `${minutes}:${seconds}`;
+
+    }
+
+
+    function finishTest() {
+
+      storeAnswer();
+
+      clearInterval(
+        timerHandle
+      );
+
+
+      const correct =
+        state.answers.filter(
+          value =>
+            value === true
+        ).length;
+
+
+      const score =
+        Math.round(
+          (
+            correct /
+            questions.length
+          ) * 100
+        );
+
+
+      if(
+        testMode === "pre"
+      ){
+
+        state.pre =
+          score;
+
+        state.preCorrect =
+          correct;
+
+        localSave();
+
+        show("#mini");
+
+        return;
+      }
+
+
+      state.post =
+        score;
+
+      state.postCorrect =
+        correct;
+
+      localSave();
+
+
+      qs("#fPre").textContent =
+        `${state.pre ?? "-"}/100`;
+
+      qs("#fPost").textContent =
+        `${state.post ?? "-"}/100`;
+
+      qs("#fPreDetail").textContent =
+        `${state.preCorrect} dari 15 soal benar`;
+
+      qs("#fPostDetail").textContent =
+        `${state.postCorrect} dari 15 soal benar`;
+
+      qs("#fXP").textContent =
+        state.xp;
+
+      show("#reflection");
+
+    }
+
+
+    /* =======================================================
+       EXPLORATION
+    ======================================================== */
+
+    function showExploration() {
+
+      show("#exploration");
 
       setTimeout(
-        flushSyncQueue,
-        2500
+        () => {
+
+          if(
+            window.__threeInitialized
+          ){
+
+            resize3D();
+
+          }else{
+
+            init3D();
+
+          }
+
+        },
+        80
       );
 
     }
 
-  }finally{
 
-    syncRunning =
-      false;
+    /* =======================================================
+       MISSIONS
+    ======================================================== */
 
-  }
-}
+    function startMission1() {
 
+      startMission("m1");
 
-/* =========================================================
-   3D ENGINE
-========================================================= */
-
-let threeReady =
-  false;
-
-let scene =
-  null;
-
-let camera =
-  null;
-
-let renderer =
-  null;
-
-let controls =
-  null;
-
-let currentModel =
-  null;
-
-let currentKey =
-  "motherboard";
-
-let autoRotate =
-  true;
-
-let threeResizeObserver =
-  null;
+    }
 
 
-/* =========================================================
-   3D DEVICE INFORMATION
-========================================================= */
+    function startMission2() {
 
-const DEVICE_INFO = {
+      startMission("m2");
 
-  motherboard:{
-    title:"Motherboard",
-    text:
-      "Papan utama komputer yang menjadi tempat berbagai komponen seperti CPU, RAM dan storage saling terhubung."
-  },
-
-  cpu:{
-    title:"CPU",
-    text:
-      "CPU adalah pusat pemrosesan instruksi. CPU menjalankan operasi dan mengendalikan jalannya program."
-  },
-
-  ram:{
-    title:"RAM",
-    text:
-      "RAM merupakan memori kerja sementara yang digunakan untuk menyimpan data dan program yang sedang aktif."
-  },
-
-  ssd:{
-    title:"SSD",
-    text:
-      "SSD merupakan media penyimpanan yang digunakan untuk menyimpan sistem operasi, aplikasi dan file secara lebih permanen."
-  },
-
-  keyboard:{
-    title:"Keyboard",
-    text:
-      "Keyboard adalah perangkat input yang digunakan untuk memasukkan teks, angka dan perintah ke komputer."
-  },
-
-  monitor:{
-    title:"Monitor",
-    text:
-      "Monitor merupakan perangkat output yang menampilkan hasil pemrosesan komputer kepada pengguna."
-  }
-
-};
+    }
 
 
-/* =========================================================
-   MATERIAL
-========================================================= */
+    function startMission3() {
 
-function makeMaterial(
-  color,
-  metalness=0.15,
-  roughness=0.48
-){
+      startMission("m3");
 
-  return new THREE.MeshStandardMaterial({
-
-    color:
-      color,
-
-    metalness:
-      metalness,
-
-    roughness:
-      roughness
-
-  });
-
-}
-
-function createBox(
-  width,
-  height,
-  depth,
-  color,
-  x=0,
-  y=0,
-  z=0
-){
-
-  const geometry =
-    new THREE.BoxGeometry(
-      width,
-      height,
-      depth
-    );
-
-  const material =
-    makeMaterial(
-      color
-    );
-
-  const mesh =
-    new THREE.Mesh(
-      geometry,
-      material
-    );
-
-  mesh.position.set(
-    x,
-    y,
-    z
-  );
-
-  return mesh;
-}
-
-function createCylinder(
-  radius,
-  height,
-  color,
-  x=0,
-  y=0,
-  z=0
-){
-
-  const geometry =
-    new THREE.CylinderGeometry(
-      radius,
-      radius,
-      height,
-      48
-    );
-
-  const material =
-    makeMaterial(
-      color,
-      .25,
-      .38
-    );
-
-  const mesh =
-    new THREE.Mesh(
-      geometry,
-      material
-    );
-
-  mesh.position.set(
-    x,
-    y,
-    z
-  );
-
-  return mesh;
-}
+    }
 
 
-/* =========================================================
-   BUILD MOTHERBOARD
-========================================================= */
+    function startMission(type) {
 
-function buildMotherboard(){
+      missionType =
+        type;
 
-  const group =
-    new THREE.Group();
+      show("#mission");
 
-  const board =
-    createBox(
-      6,
-      .22,
-      4,
-      0x163955
-    );
 
-  group.add(
-    board
-  );
+      const configs = {
 
-  /* CPU socket */
+        m1: {
 
-  const socket =
-    createBox(
-      1.7,
-      .16,
-      1.5,
-      0x0c1726,
-      -.75,
-      .18,
-      .15
-    );
+          title:
+            "Mission 1 — RAM or Storage?",
 
-  group.add(
-    socket
-  );
+          desc:
+            "16 XP objektif + 9 XP uraian rubrik",
 
-  const cpuMark =
-    createCylinder(
-      .72,
-      .16,
-      0x49d7ff,
-      -.75,
-      .34,
-      .15
-    );
+          seconds:
+            600,
 
-  group.add(
-    cpuMark
-  );
+          html: `
 
-  /* RAM slots */
+            <div class="mission-card">
 
-  for(
-    let i=0;
-    i<4;
-    i++
-  ){
+              <p>
 
-    group.add(
-      createBox(
-        .18,
-        .12,
-        1.35,
-        0x56647d,
-        .95,
-        .23,
-        -1.35 +
-        i*.45
-      )
-    );
+                <b>1.</b>
+                Komputer sedang membuka
+                banyak tab browser.
+                Komponen memori kerja
+                sementara adalah ...
 
-  }
+              </p>
 
-  /* chips */
 
-  for(
-    let x=-2;
-    x<=2;
-    x+=1
-  ){
+              <label class="option">
 
-    for(
-      let z=-.8;
-      z<=.8;
-      z+=.8
-    ){
+                <input
+                  type="radio"
+                  name="m1a"
+                  value="0"
+                >
 
-      group.add(
-        createBox(
-          .35,
-          .09,
-          .30,
-          0x101f34,
-          x,
-          .17,
-          z
-        )
+                <span>
+                  RAM
+                </span>
+
+              </label>
+
+
+              <label class="option">
+
+                <input
+                  type="radio"
+                  name="m1a"
+                  value="1"
+                >
+
+                <span>
+                  SSD
+                </span>
+
+              </label>
+
+
+              <label class="option">
+
+                <input
+                  type="radio"
+                  name="m1a"
+                  value="2"
+                >
+
+                <span>
+                  Monitor
+                </span>
+
+              </label>
+
+
+              <p>
+
+                <b>2.</b>
+                Roni menyimpan dokumen
+                agar dapat dibuka minggu depan.
+                Pilihan yang tepat adalah ...
+
+              </p>
+
+
+              <label class="option">
+
+                <input
+                  type="radio"
+                  name="m1b"
+                  value="0"
+                >
+
+                <span>
+                  RAM
+                </span>
+
+              </label>
+
+
+              <label class="option">
+
+                <input
+                  type="radio"
+                  name="m1b"
+                  value="1"
+                >
+
+                <span>
+                  SSD/HDD
+                </span>
+
+              </label>
+
+
+              <label class="option">
+
+                <input
+                  type="radio"
+                  name="m1b"
+                  value="2"
+                >
+
+                <span>
+                  CPU
+                </span>
+
+              </label>
+
+
+              <p>
+
+                <b>3.</b>
+                Mengapa RAM dan storage
+                tidak sama?
+
+              </p>
+
+
+              <textarea
+                id="m1reason"
+                rows="4"
+                placeholder="Tuliskan penjelasanmu"
+              ></textarea>
+
+            </div>
+
+          `
+
+        },
+
+
+        m2: {
+
+          title:
+            "Mission 2 — ALU or CU?",
+
+          desc:
+            "16 XP objektif + 9 XP uraian rubrik",
+
+          seconds:
+            600,
+
+          html: `
+
+            <div class="mission-card">
+
+              <p>
+
+                <b>1.</b>
+                CPU menghitung 125 × 8.
+                Bagian yang melakukan
+                operasi hitung adalah ...
+
+              </p>
+
+
+              <label class="option">
+
+                <input
+                  type="radio"
+                  name="m2a"
+                  value="0"
+                >
+
+                <span>
+                  ALU
+                </span>
+
+              </label>
+
+
+              <label class="option">
+
+                <input
+                  type="radio"
+                  name="m2a"
+                  value="1"
+                >
+
+                <span>
+                  CU
+                </span>
+
+              </label>
+
+
+              <p>
+
+                <b>2.</b>
+                Bagian CPU yang mengatur
+                jalannya instruksi program adalah ...
+
+              </p>
+
+
+              <label class="option">
+
+                <input
+                  type="radio"
+                  name="m2b"
+                  value="0"
+                >
+
+                <span>
+                  ALU
+                </span>
+
+              </label>
+
+
+              <label class="option">
+
+                <input
+                  type="radio"
+                  name="m2b"
+                  value="1"
+                >
+
+                <span>
+                  CU
+                </span>
+
+              </label>
+
+
+              <p>
+
+                <b>3.</b>
+                Jelaskan perbedaan tugas
+                ALU dan CU.
+
+              </p>
+
+
+              <textarea
+                id="m2reason"
+                rows="4"
+                placeholder="Tuliskan penjelasanmu"
+              ></textarea>
+
+            </div>
+
+          `
+
+        },
+
+
+        m3: {
+
+          title:
+            "Mission 3 — Trace the Data",
+
+          desc:
+            "15 XP struktur + 5 XP uraian rubrik",
+
+          seconds:
+            900,
+
+          html: `
+
+            <div class="mission-card">
+
+              <p>
+                Pilih kasus lalu tuliskan alurnya.
+              </p>
+
+
+              <select id="m3case">
+
+                <option>
+                  Mengetik tugas
+                </option>
+
+                <option>
+                  Merekam suara
+                </option>
+
+                <option>
+                  Membuka foto
+                </option>
+
+                <option>
+                  Mencetak dokumen
+                </option>
+
+              </select>
+
+
+              <div
+                class="grid"
+                style="margin-top:12px;"
+              >
+
+                <div>
+
+                  <label>
+                    Input
+                  </label>
+
+                  <input
+                    id="m3input"
+                  >
+
+                </div>
+
+
+                <div>
+
+                  <label>
+                    Process
+                  </label>
+
+                  <input
+                    id="m3process"
+                  >
+
+                </div>
+
+
+                <div>
+
+                  <label>
+                    Output
+                  </label>
+
+                  <input
+                    id="m3output"
+                  >
+
+                </div>
+
+
+                <div>
+
+                  <label>
+                    Storage (jika ada)
+                  </label>
+
+                  <input
+                    id="m3storage"
+                  >
+
+                </div>
+
+              </div>
+
+
+              <label
+                style="margin-top:14px;"
+              >
+                Mengapa urutan tersebut sesuai IPO?
+              </label>
+
+
+              <textarea
+                id="m3reason"
+                rows="4"
+              ></textarea>
+
+            </div>
+
+          `
+
+        }
+
+      };
+
+
+      const config =
+        configs[type];
+
+
+      qs("#missionTitle").textContent =
+        config.title;
+
+      qs("#missionDesc").textContent =
+        config.desc;
+
+      qs("#missionContent").innerHTML =
+        config.html;
+
+
+      qs("#missionSubmit")
+        .classList.remove(
+          "hidden"
+        );
+
+      qs("#missionNext")
+        .classList.add(
+          "hidden"
+        );
+
+
+      startMissionTimer(
+        config.seconds
       );
 
     }
 
-  }
 
-  /* pins */
+    function startMissionTimer(seconds) {
 
-  for(
-    let i=0;
-    i<18;
-    i++
-  ){
-
-    group.add(
-      createBox(
-        .07,
-        .06,
-        .5,
-        0x46e6a2,
-        -2.55 +
-        i*.28,
-        .02,
-        1.48
-      )
-    );
-
-  }
-
-  return group;
-}
-
-
-/* =========================================================
-   BUILD CPU
-========================================================= */
-
-function buildCPU(){
-
-  const group =
-    new THREE.Group();
-
-  group.add(
-    createBox(
-      3,
-      .42,
-      3,
-      0x162940
-    )
-  );
-
-  group.add(
-    createBox(
-      2.4,
-      .52,
-      2.4,
-      0x203856,
-      0,
-      .45,
-      0
-    )
-  );
-
-  group.add(
-    createCylinder(
-      1.05,
-      .22,
-      0x49d7ff,
-      0,
-      .80,
-      0
-    )
-  );
-
-  group.add(
-    createBox(
-      .16,
-      .18,
-      2.4,
-      0xb7c2d6,
-      -1.15,
-      .98,
-      0
-    )
-  );
-
-  group.add(
-    createBox(
-      .16,
-      .18,
-      2.4,
-      0xb7c2d6,
-      1.15,
-      .98,
-      0
-    )
-  );
-
-  return group;
-}
-
-
-/* =========================================================
-   BUILD RAM
-========================================================= */
-
-function buildRAM(){
-
-  const group =
-    new THREE.Group();
-
-  group.add(
-    createBox(
-      1.2,
-      .12,
-      4.2,
-      0x173651
-    )
-  );
-
-  for(
-    let i=0;
-    i<8;
-    i++
-  ){
-
-    group.add(
-      createBox(
-        .76,
-        .32,
-        .32,
-        0x356bff,
-        -.22,
-        .24,
-        -1.55 +
-        i*.45
-      )
-    );
-
-  }
-
-  for(
-    let i=0;
-    i<20;
-    i++
-  ){
-
-    group.add(
-      createBox(
-        .06,
-        .06,
-        .25,
-        0xffd86a,
-        -.52 +
-        i*.055,
-        -.10,
-        1.86
-      )
-    );
-
-  }
-
-  return group;
-}
-
-
-/* =========================================================
-   BUILD SSD
-========================================================= */
-
-function buildSSD(){
-
-  const group =
-    new THREE.Group();
-
-  group.add(
-    createBox(
-      2.2,
-      .28,
-      3.2,
-      0x202836
-    )
-  );
-
-  group.add(
-    createBox(
-      .35,
-      .08,
-      .55,
-      0x46e6a2,
-      -.45,
-      .18,
-      -.35
-    )
-  );
-
-  group.add(
-    createBox(
-      .75,
-      .08,
-      .55,
-      0x5c7cff,
-      .45,
-      .18,
-      .45
-    )
-  );
-
-  group.add(
-    createBox(
-      .55,
-      .08,
-      .55,
-      0x49d7ff,
-      0,
-      .18,
-      -1
-    )
-  );
-
-  return group;
-}
-
-
-/* =========================================================
-   BUILD KEYBOARD
-========================================================= */
-
-function buildKeyboard(){
-
-  const group =
-    new THREE.Group();
-
-  group.add(
-    createBox(
-      5,
-      .32,
-      2.1,
-      0x17263a
-    )
-  );
-
-  for(
-    let row=0;
-    row<4;
-    row++
-  ){
-
-    for(
-      let col=0;
-      col<12;
-      col++
-    ){
-
-      group.add(
-        createBox(
-          .25,
-          .10,
-          .22,
-          0x8ea0ba,
-          -1.9 +
-          col*.35,
-          .23,
-          -.65 +
-          row*.38
-        )
+      clearInterval(
+        missionTimerHandle
       );
+
+      missionSeconds =
+        seconds;
+
+      updateMissionTimer();
+
+
+      missionTimerHandle =
+        setInterval(
+          () => {
+
+            missionSeconds--;
+
+            updateMissionTimer();
+
+
+            if(
+              missionSeconds <= 0
+            ){
+
+              clearInterval(
+                missionTimerHandle
+              );
+
+              submitMission();
+
+            }
+
+          },
+          1000
+        );
 
     }
 
-  }
 
-  return group;
-}
+    function updateMissionTimer() {
 
+      const minutes =
+        String(
+          Math.floor(
+            missionSeconds / 60
+          )
+        ).padStart(
+          2,
+          "0"
+        );
 
-/* =========================================================
-   BUILD MONITOR
-========================================================= */
-
-function buildMonitor(){
-
-  const group =
-    new THREE.Group();
-
-  group.add(
-    createBox(
-      5,
-      .25,
-      3.1,
-      0x121d2c,
-      0,
-      0,
-      0
-    )
-  );
-
-  group.add(
-    createBox(
-      4.5,
-      2.65,
-      .12,
-      0x06111f,
-      0,
-      .38,
-      .12
-    )
-  );
-
-  group.add(
-    createBox(
-      .42,
-      1.0,
-      .4,
-      0x27394e,
-      0,
-      -1.2,
-      0
-    )
-  );
-
-  group.add(
-    createBox(
-      2.2,
-      .18,
-      1.1,
-      0x34465d,
-      0,
-      -1.72,
-      0
-    )
-  );
-
-  return group;
-}
+      const seconds =
+        String(
+          missionSeconds % 60
+        ).padStart(
+          2,
+          "0"
+        );
 
 
-/* =========================================================
-   CLEAR CURRENT MODEL
-========================================================= */
+      qs("#missionTimer").textContent =
+        `${minutes}:${seconds}`;
 
-function clearModel(){
+    }
 
-  if(
-    !currentModel
-  ){
-    return;
-  }
 
-  scene.remove(
-    currentModel
-  );
+    function submitMission() {
 
-  currentModel.traverse(
-    object => {
+      clearInterval(
+        missionTimerHandle
+      );
+
+
+      let score =
+        0;
+
 
       if(
-        object.geometry
-      ){
-        object.geometry.dispose();
-      }
-
-      if(
-        object.material
+        missionType === "m1"
       ){
 
         if(
-          Array.isArray(
-            object.material
-          )
+          qs(
+            'input[name="m1a"]:checked'
+          )?.value === "0"
         ){
 
-          object.material.forEach(
-            material =>
-              material.dispose()
+          score += 8;
+
+        }
+
+
+        if(
+          qs(
+            'input[name="m1b"]:checked'
+          )?.value === "1"
+        ){
+
+          score += 8;
+
+        }
+
+
+        state.m1 =
+          score;
+
+        state.essayAnswers.m1 =
+          qs("#m1reason")
+            .value
+            .trim();
+
+      }
+
+
+      else if(
+        missionType === "m2"
+      ){
+
+        if(
+          qs(
+            'input[name="m2a"]:checked'
+          )?.value === "0"
+        ){
+
+          score += 8;
+
+        }
+
+
+        if(
+          qs(
+            'input[name="m2b"]:checked'
+          )?.value === "1"
+        ){
+
+          score += 8;
+
+        }
+
+
+        state.m2 =
+          score;
+
+        state.essayAnswers.m2 =
+          qs("#m2reason")
+            .value
+            .trim();
+
+      }
+
+
+      else {
+
+        const input =
+          qs("#m3input")
+            .value
+            .trim();
+
+        const process =
+          qs("#m3process")
+            .value
+            .trim();
+
+        const output =
+          qs("#m3output")
+            .value
+            .trim();
+
+        const storage =
+          qs("#m3storage")
+            .value
+            .trim();
+
+        const reason =
+          qs("#m3reason")
+            .value
+            .trim();
+
+
+        if(input){
+          score += 5;
+        }
+
+        if(process){
+          score += 5;
+        }
+
+        if(output){
+          score += 5;
+        }
+
+
+        state.m3 =
+          score;
+
+
+        state.essayAnswers.m3 = [
+
+          `Kasus: ${qs("#m3case").value}`,
+
+          `Input: ${input}`,
+
+          `Process: ${process}`,
+
+          `Output: ${output}`,
+
+          `Storage: ${storage}`,
+
+          `Alasan: ${reason}`
+
+        ].join("\n");
+
+      }
+
+
+      state.xp +=
+        score;
+
+
+      updateTop();
+
+      localSave();
+
+
+      qs("#missionSubmit")
+        .classList.add(
+          "hidden"
+        );
+
+      qs("#missionNext")
+        .classList.remove(
+          "hidden"
+        );
+
+    }
+
+
+    function nextMission() {
+
+      if(
+        missionType === "m1"
+      ){
+
+        startMission2();
+
+      }
+
+      else if(
+        missionType === "m2"
+      ){
+
+        startMission3();
+
+      }
+
+      else {
+
+        startBoss();
+
+      }
+
+    }
+
+
+    /* =======================================================
+       BOSS
+    ======================================================== */
+
+    function startBoss() {
+
+      show("#boss");
+
+      startBossTimer(
+        600
+      );
+
+    }
+
+
+    function startBossTimer(seconds) {
+
+      clearInterval(
+        missionTimerHandle
+      );
+
+      missionSeconds =
+        seconds;
+
+      updateBossTimer();
+
+
+      missionTimerHandle =
+        setInterval(
+          () => {
+
+            missionSeconds--;
+
+            updateBossTimer();
+
+
+            if(
+              missionSeconds <= 0
+            ){
+
+              clearInterval(
+                missionTimerHandle
+              );
+
+              submitBoss();
+
+            }
+
+          },
+          1000
+        );
+
+    }
+
+
+    function updateBossTimer() {
+
+      const minutes =
+        String(
+          Math.floor(
+            missionSeconds / 60
+          )
+        ).padStart(
+          2,
+          "0"
+        );
+
+      const seconds =
+        String(
+          missionSeconds % 60
+        ).padStart(
+          2,
+          "0"
+        );
+
+
+      qs("#bossTimer").textContent =
+        `${minutes}:${seconds}`;
+
+    }
+
+
+    function submitBoss() {
+
+      clearInterval(
+        missionTimerHandle
+      );
+
+
+      const input =
+        qs("#bossInput")
+          .value
+          .trim();
+
+      const process =
+        qs("#bossProcess")
+          .value
+          .trim();
+
+      const output =
+        qs("#bossOutput")
+          .value
+          .trim();
+
+      const cpu =
+        qs("#bossCpu")
+          .value
+          .trim();
+
+      const ipo =
+        qs("#bossIpo")
+          .value
+          .trim();
+
+      const reason =
+        qs("#bossReason")
+          .value
+          .trim();
+
+
+      let score =
+        0;
+
+
+      if(input){
+        score += 3;
+      }
+
+      if(process){
+        score += 3;
+      }
+
+      if(output){
+        score += 3;
+      }
+
+      if(cpu){
+        score += 2;
+      }
+
+      if(ipo){
+        score += 2;
+      }
+
+
+      state.boss =
+        score;
+
+
+      state.xp +=
+        score;
+
+
+      state.essayAnswers.boss = [
+
+        `Input: ${input}`,
+
+        `Process: ${process}`,
+
+        `Output: ${output}`,
+
+        `CPU / Memory: ${cpu}`,
+
+        `Alur IPO: ${ipo}`,
+
+        `Alasan: ${reason}`
+
+      ].join("\n");
+
+
+      updateTop();
+
+      localSave();
+
+      startPosttest();
+
+    }
+
+
+    /* =======================================================
+       REFLECTION
+    ======================================================== */
+
+    function finishReflection() {
+
+      state.reflection = {
+
+        r3:
+          qs("#r3")
+            .value
+            .trim(),
+
+        r2:
+          qs("#r2")
+            .value
+            .trim(),
+
+        r1:
+          qs("#r1")
+            .value
+            .trim()
+
+      };
+
+
+      localSave();
+
+
+      qs("#fPre").textContent =
+        `${state.pre ?? "-"}/100`;
+
+      qs("#fPost").textContent =
+        `${state.post ?? "-"}/100`;
+
+      qs("#fPreDetail").textContent =
+        `${state.preCorrect ?? 0} dari 15 soal benar`;
+
+      qs("#fPostDetail").textContent =
+        `${state.postCorrect ?? 0} dari 15 soal benar`;
+
+      qs("#fXP").textContent =
+        state.xp;
+
+
+      show("#finish");
+
+
+      showToast(
+        "Refleksi berhasil disimpan."
+      );
+
+    }
+
+
+    /* =======================================================
+       BUILD RECORD
+    ======================================================== */
+
+    function buildRecord() {
+
+      return {
+
+        className:
+          state.className,
+
+        teacher:
+          state.teacher,
+
+        code:
+          state.code,
+
+        name:
+          state.name,
+
+        team:
+          state.team,
+
+        role:
+          state.role,
+
+        pre:
+          state.pre,
+
+        m1:
+          state.m1,
+
+        m2:
+          state.m2,
+
+        m3:
+          state.m3,
+
+        boss:
+          state.boss,
+
+        post:
+          state.post,
+
+        xp:
+          state.xp,
+
+        /*
+         * Guru akan mengisi kolom
+         * uraian XP dari dashboard.
+         */
+        rubric_m1:"",
+        rubric_m2:"",
+        rubric_m3:"",
+        rubric_boss:"",
+
+        answer_m1:
+          state.essayAnswers.m1 || "",
+
+        answer_m2:
+          state.essayAnswers.m2 || "",
+
+        answer_m3:
+          state.essayAnswers.m3 || "",
+
+        answer_boss:
+          state.essayAnswers.boss || "",
+
+        reflection_r3:
+          state.reflection.r3 || "",
+
+        reflection_r2:
+          state.reflection.r2 || "",
+
+        reflection_r1:
+          state.reflection.r1 || "",
+
+        timestamp:
+          new Date().toISOString()
+
+      };
+
+    }
+
+
+    /* =======================================================
+       LOCAL + GOOGLE SHEETS
+    ======================================================== */
+
+    function localSave() {
+
+      if(
+        !state.className ||
+        !state.code
+      ){
+
+        return;
+
+      }
+
+
+      const record =
+        buildRecord();
+
+
+      const records =
+        JSON.parse(
+          localStorage.getItem(
+            "cm2_records"
+          ) || "[]"
+        );
+
+
+      const index =
+        records.findIndex(
+          item =>
+            item.className ===
+              record.className &&
+            item.code ===
+              record.code
+        );
+
+
+      if(index >= 0){
+
+        records[index] =
+          record;
+
+      }else{
+
+        records.push(
+          record
+        );
+
+      }
+
+
+      localStorage.setItem(
+        "cm2_records",
+        JSON.stringify(records)
+      );
+
+
+      queueSync(
+        record
+      );
+
+    }
+
+
+    function queueSync(record) {
+
+      if(
+        !SHEET_WEB_APP_URL
+      ){
+
+        return;
+
+      }
+
+
+      syncQueue =
+        syncQueue.filter(
+          item =>
+            !(
+              item.className ===
+                record.className &&
+              item.code ===
+                record.code
+            )
+        );
+
+
+      syncQueue.push(
+        record
+      );
+
+
+      clearTimeout(
+        window.__syncTimer
+      );
+
+
+      window.__syncTimer =
+        setTimeout(
+          flushSyncQueue,
+          450
+        );
+
+    }
+
+
+    async function flushSyncQueue() {
+
+      if(
+        syncRunning ||
+        !syncQueue.length
+      ){
+
+        return;
+
+      }
+
+
+      syncRunning =
+        true;
+
+
+      try {
+
+        while(
+          syncQueue.length
+        ){
+
+          const record =
+            syncQueue.shift();
+
+
+          await fetch(
+            SHEET_WEB_APP_URL,
+            {
+
+              method:
+                "POST",
+
+              mode:
+                "no-cors",
+
+              headers:{
+                "Content-Type":
+                  "text/plain;charset=utf-8"
+              },
+
+              body:
+                JSON.stringify({
+                  action:"upsert",
+                  record
+                })
+
+            }
           );
-
-        }else{
-
-          object.material.dispose();
 
         }
 
       }
 
+      catch(error){
+
+        console.error(
+          "Google Sheets sync failed:",
+          error
+        );
+
+
+        setTimeout(
+          flushSyncQueue,
+          2500
+        );
+
+      }
+
+      finally{
+
+        syncRunning =
+          false;
+
+      }
+
     }
-  );
 
-  currentModel =
-    null;
-}
 
-
-/* =========================================================
-   LOAD DEVICE
-========================================================= */
-
-function loadDevice(key){
-
-  if(
-    !threeReady ||
-    !scene
-  ){
-    return;
-  }
-
-  currentKey =
-    key;
-
-  clearModel();
-
-  const builders = {
-
-    motherboard:
-      buildMotherboard,
-
-    cpu:
-      buildCPU,
-
-    ram:
-      buildRAM,
-
-    ssd:
-      buildSSD,
-
-    keyboard:
-      buildKeyboard,
-
-    monitor:
-      buildMonitor
-
-  };
-
-  const builder =
-    builders[key];
-
-  if(!builder){
-    return;
-  }
-
-  currentModel =
-    builder();
-
-  scene.add(
-    currentModel
-  );
-
-  qs("#simTitle").textContent =
-    DEVICE_INFO[key].title;
-
-  qs("#simInfo").textContent =
-    DEVICE_INFO[key].text;
-
-  document
-    .querySelectorAll(
-      ".device-btn"
-    )
-    .forEach(
-      button =>
-        button.classList.toggle(
-          "active",
-          button.dataset.device ===
-          key
-        )
-    );
-
-  reset3DView();
-}
-
-
-/* =========================================================
-   RESET 3D
-========================================================= */
-
-function reset3DView(){
-
-  if(
-    !camera ||
-    !controls
-  ){
-    return;
-  }
-
-  camera.position.set(
-    7,
-    5.5,
-    8
-  );
-
-  controls.target.set(
-    0,
-    0,
-    0
-  );
-
-  controls.update();
-
-  if(
-    currentModel
-  ){
-
-    currentModel.rotation.set(
-      0,
-      0,
-      0
-    );
-
-  }
-}
-
-
-/* =========================================================
-   TOGGLE AUTO ROTATE
-========================================================= */
-
-function toggleAutoRotate(){
-
-  autoRotate =
-    !autoRotate;
-
-  const button =
-    qs("#autoRotateBtn");
-
-  button.textContent =
-    autoRotate
-      ? "⟳ Auto Rotate: ON"
-      : "⟳ Auto Rotate: OFF";
-
-}
-
-
-/* =========================================================
-   RESIZE
-========================================================= */
-
-function resize3D(){
-
-  if(
-    !renderer ||
-    !camera
-  ){
-    return;
-  }
-
-  const width =
-    document
-      .querySelector(
-        "#threeStage"
-      )
-      .clientWidth;
-
-  const height =
-    document
-      .querySelector(
-        "#threeStage"
-      )
-      .clientHeight;
-
-  if(
-    !width ||
-    !height
-  ){
-    return;
-  }
-
-  camera.aspect =
-    width /
-    height;
-
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(
-    width,
-    height,
-    false
-  );
-}
-
-
-/* =========================================================
-   ANIMATION LOOP
-========================================================= */
-
-function animate3D(){
-
-  requestAnimationFrame(
-    animate3D
-  );
-
-  if(
-    currentModel &&
-    autoRotate
-  ){
-
-    currentModel.rotation.y +=
-      0.0025;
-
-  }
-
-  if(
-    controls
-  ){
-    controls.update();
-  }
-
-  if(
-    renderer &&
-    scene &&
-    camera
-  ){
-
-    renderer.render(
-      scene,
-      camera
-    );
-
-  }
-}
-
-
-/* =========================================================
-   INIT THREE
-========================================================= */
-
-function init3D(){
-
-  const stage =
-    document.querySelector(
-      "#threeStage"
-    );
-
-  if(
-    !stage ||
-    typeof THREE ===
-      "undefined"
-  ){
-
-    console.error(
-      "Three.js gagal dimuat."
-    );
-
-    return;
-
-  }
-
-  try{
-
-    scene =
-      new THREE.Scene();
-
-    camera =
-      new THREE.PerspectiveCamera(
-        45,
-        1,
-        .1,
-        100
+    /* =======================================================
+       ESCAPE
+    ======================================================== */
+
+    function escapeHtml(value) {
+
+      return String(
+        value ?? ""
+      ).replace(
+        /[&<>"']/g,
+        character => ({
+          "&":"&amp;",
+          "<":"&lt;",
+          ">":"&gt;",
+          '"':"&quot;",
+          "'":"&#39;"
+        })[character]
       );
 
-    camera.position.set(
-      7,
-      5.5,
-      8
-    );
+    }
 
-    renderer =
-      new THREE.WebGLRenderer({
 
-        antialias:true,
+    /* =======================================================
+       THREE.JS 3D
+    ======================================================== */
 
-        alpha:true
+  </script>
+
+
+  <script type="module">
+
+    import * as THREE from
+      "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+
+    import { OrbitControls } from
+      "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+
+
+    let scene;
+    let camera;
+    let renderer;
+    let controls;
+
+    let currentModel =
+      null;
+
+    let autoRotate =
+      true;
+
+
+    const deviceDescriptions = {
+
+      motherboard:
+        "Papan utama tempat CPU, RAM, storage, dan berbagai komponen lain saling terhubung.",
+
+      cpu:
+        "Komponen utama yang memproses instruksi dan menjalankan operasi komputer.",
+
+      ram:
+        "Memori kerja sementara yang digunakan saat program sedang berjalan.",
+
+      ssd:
+        "Media penyimpanan untuk menyimpan sistem, aplikasi, dan file dalam jangka panjang.",
+
+      keyboard:
+        "Perangkat input yang digunakan untuk memasukkan teks, angka, dan perintah.",
+
+      monitor:
+        "Perangkat output yang menampilkan informasi visual dari komputer."
+
+    };
+
+
+    const stage =
+      document.getElementById(
+        "threeStage"
+      );
+
+
+    function material(
+      color,
+      metalness = 0.15,
+      roughness = 0.45
+    ){
+
+      return new THREE.MeshStandardMaterial({
+
+        color,
+
+        metalness,
+
+        roughness
 
       });
 
-    renderer.setPixelRatio(
-      Math.min(
-        window.devicePixelRatio ||
-        1,
-        2
-      )
-    );
+    }
 
-    renderer.setSize(
-      stage.clientWidth,
-      stage.clientHeight
-    );
 
-    renderer.outputColorSpace =
-      THREE.SRGBColorSpace;
+    function box(
+      width,
+      height,
+      depth,
+      color,
+      x = 0,
+      y = 0,
+      z = 0
+    ){
 
-    renderer.shadowMap.enabled =
-      true;
+      const mesh =
+        new THREE.Mesh(
 
-    stage.innerHTML =
-      "";
+          new THREE.BoxGeometry(
+            width,
+            height,
+            depth
+          ),
 
-    stage.appendChild(
-      renderer.domElement
-    );
+          material(
+            color
+          )
 
-    controls =
-      new THREE.OrbitControls(
-        camera,
+        );
+
+
+      mesh.position.set(
+        x,
+        y,
+        z
+      );
+
+
+      return mesh;
+
+    }
+
+
+    function cylinder(
+      radius,
+      height,
+      color,
+      x = 0,
+      y = 0,
+      z = 0
+    ){
+
+      const mesh =
+        new THREE.Mesh(
+
+          new THREE.CylinderGeometry(
+            radius,
+            radius,
+            height,
+            48
+          ),
+
+          material(
+            color,
+            .25,
+            .35
+          )
+
+        );
+
+
+      mesh.position.set(
+        x,
+        y,
+        z
+      );
+
+
+      return mesh;
+
+    }
+
+
+    /* =======================================================
+       MOTHERBOARD
+    ======================================================== */
+
+    function buildMotherboard(){
+
+      const group =
+        new THREE.Group();
+
+
+      group.add(
+        box(
+          6,
+          .22,
+          4,
+          0x173b58
+        )
+      );
+
+
+      group.add(
+        box(
+          1.7,
+          .16,
+          1.5,
+          0x081421,
+          -.75,
+          .18,
+          .1
+        )
+      );
+
+
+      group.add(
+        cylinder(
+          .72,
+          .16,
+          0x49d7ff,
+          -.75,
+          .34,
+          .1
+        )
+      );
+
+
+      for(
+        let i = 0;
+        i < 4;
+        i++
+      ){
+
+        group.add(
+          box(
+            .18,
+            .12,
+            1.35,
+            0x66758c,
+            .95,
+            .23,
+            -1.35 +
+              i * .45
+          )
+        );
+
+      }
+
+
+      for(
+        let x = -2;
+        x <= 2;
+        x += 1
+      ){
+
+        for(
+          let z = -.8;
+          z <= .8;
+          z += .8
+        ){
+
+          group.add(
+            box(
+              .35,
+              .09,
+              .30,
+              0x0c1b2c,
+              x,
+              .17,
+              z
+            )
+          );
+
+        }
+
+      }
+
+
+      return group;
+
+    }
+
+
+    /* =======================================================
+       CPU
+    ======================================================== */
+
+    function buildCPU(){
+
+      const group =
+        new THREE.Group();
+
+
+      group.add(
+        box(
+          3,
+          .4,
+          3,
+          0x17283e
+        )
+      );
+
+
+      group.add(
+        box(
+          2.4,
+          .5,
+          2.4,
+          0x243d5a,
+          0,
+          .42,
+          0
+        )
+      );
+
+
+      group.add(
+        cylinder(
+          1,
+          .22,
+          0x49d7ff,
+          0,
+          .75,
+          0
+        )
+      );
+
+
+      group.add(
+        box(
+          .16,
+          .18,
+          2.4,
+          0xc8d2df,
+          -1.15,
+          .96,
+          0
+        )
+      );
+
+
+      group.add(
+        box(
+          .16,
+          .18,
+          2.4,
+          0xc8d2df,
+          1.15,
+          .96,
+          0
+        )
+      );
+
+
+      return group;
+
+    }
+
+
+    /* =======================================================
+       RAM
+    ======================================================== */
+
+    function buildRAM(){
+
+      const group =
+        new THREE.Group();
+
+
+      group.add(
+        box(
+          1.2,
+          .12,
+          4.2,
+          0x183b59
+        )
+      );
+
+
+      for(
+        let i = 0;
+        i < 8;
+        i++
+      ){
+
+        group.add(
+          box(
+            .76,
+            .32,
+            .32,
+            0x416dff,
+            -.22,
+            .22,
+            -1.55 +
+              i * .45
+          )
+        );
+
+      }
+
+
+      return group;
+
+    }
+
+
+    /* =======================================================
+       SSD
+    ======================================================== */
+
+    function buildSSD(){
+
+      const group =
+        new THREE.Group();
+
+
+      group.add(
+        box(
+          2.2,
+          .28,
+          3.2,
+          0x242b38
+        )
+      );
+
+
+      group.add(
+        box(
+          .65,
+          .08,
+          .55,
+          0x49d7ff,
+          -.45,
+          .18,
+          -.35
+        )
+      );
+
+
+      group.add(
+        box(
+          .65,
+          .08,
+          .55,
+          0x46e6a2,
+          .45,
+          .18,
+          .45
+        )
+      );
+
+
+      return group;
+
+    }
+
+
+    /* =======================================================
+       KEYBOARD
+    ======================================================== */
+
+    function buildKeyboard(){
+
+      const group =
+        new THREE.Group();
+
+
+      group.add(
+        box(
+          5,
+          .32,
+          2.1,
+          0x17263a
+        )
+      );
+
+
+      for(
+        let row = 0;
+        row < 4;
+        row++
+      ){
+
+        for(
+          let col = 0;
+          col < 12;
+          col++
+        ){
+
+          group.add(
+            box(
+              .25,
+              .10,
+              .22,
+              0xaab8c9,
+              -1.9 +
+                col * .35,
+              .23,
+              -.65 +
+                row * .38
+            )
+          );
+
+        }
+
+      }
+
+
+      return group;
+
+    }
+
+
+    /* =======================================================
+       MONITOR
+    ======================================================== */
+
+    function buildMonitor(){
+
+      const group =
+        new THREE.Group();
+
+
+      group.add(
+        box(
+          5,
+          3.1,
+          .25,
+          0x121c2a,
+          0,
+          .3,
+          0
+        )
+      );
+
+
+      group.add(
+        box(
+          4.45,
+          2.6,
+          .10,
+          0x071321,
+          0,
+          .35,
+          .17
+        )
+      );
+
+
+      group.add(
+        box(
+          .42,
+          1,
+          .4,
+          0x2c4058,
+          0,
+          -1.45,
+          0
+        )
+      );
+
+
+      group.add(
+        box(
+          2.2,
+          .18,
+          1.1,
+          0x364c67,
+          0,
+          -1.95,
+          0
+        )
+      );
+
+
+      return group;
+
+    }
+
+
+    const devices = {
+
+      motherboard:
+        buildMotherboard,
+
+      cpu:
+        buildCPU,
+
+      ram:
+        buildRAM,
+
+      ssd:
+        buildSSD,
+
+      keyboard:
+        buildKeyboard,
+
+      monitor:
+        buildMonitor
+
+    };
+
+
+    function clearModel(){
+
+      if(
+        !currentModel
+      ){
+
+        return;
+
+      }
+
+
+      scene.remove(
+        currentModel
+      );
+
+
+      currentModel.traverse(
+        object => {
+
+          if(
+            object.geometry
+          ){
+
+            object.geometry.dispose();
+
+          }
+
+
+          if(
+            object.material
+          ){
+
+            if(
+              Array.isArray(
+                object.material
+              )
+            ){
+
+              object.material.forEach(
+                material =>
+                  material.dispose()
+              );
+
+            }
+
+            else {
+
+              object.material.dispose();
+
+            }
+
+          }
+
+        }
+      );
+
+
+      currentModel =
+        null;
+
+    }
+
+
+    function updateDeviceText(
+      type
+    ){
+
+      const names = {
+
+        motherboard:
+          "Motherboard",
+
+        cpu:
+          "CPU",
+
+        ram:
+          "RAM",
+
+        ssd:
+          "SSD",
+
+        keyboard:
+          "Keyboard",
+
+        monitor:
+          "Monitor"
+
+      };
+
+
+      document.getElementById(
+        "deviceTitle"
+      ).textContent =
+        names[type];
+
+
+      document.getElementById(
+        "deviceDescription"
+      ).textContent =
+        deviceDescriptions[type];
+
+    }
+
+
+    window.loadDevice =
+      function(type){
+
+        if(
+          !scene
+        ){
+
+          return;
+
+        }
+
+
+        clearModel();
+
+
+        currentModel =
+          devices[type]();
+
+
+        scene.add(
+          currentModel
+        );
+
+
+        updateDeviceText(
+          type
+        );
+
+
+        document
+          .querySelectorAll(
+            ".device-btn"
+          )
+          .forEach(
+            button => {
+
+              button.classList.toggle(
+                "active",
+                button.dataset.device ===
+                  type
+              );
+
+            }
+          );
+
+
+        reset3D();
+
+      };
+
+
+    window.reset3D =
+      function(){
+
+        if(
+          !camera ||
+          !controls
+        ){
+
+          return;
+
+        }
+
+
+        camera.position.set(
+          7,
+          5,
+          8
+        );
+
+
+        controls.target.set(
+          0,
+          0,
+          0
+        );
+
+
+        controls.update();
+
+
+        if(
+          currentModel
+        ){
+
+          currentModel.rotation.set(
+            0,
+            0,
+            0
+          );
+
+        }
+
+      };
+
+
+    window.toggleAutoRotate =
+      function(){
+
+        autoRotate =
+          !autoRotate;
+
+
+        document.getElementById(
+          "autoRotateBtn"
+        ).textContent =
+          autoRotate
+            ? "⟳ Auto Rotate: ON"
+            : "⟳ Auto Rotate: OFF";
+
+      };
+
+
+    window.resize3D =
+      function(){
+
+        if(
+          !camera ||
+          !renderer ||
+          !stage
+        ){
+
+          return;
+
+        }
+
+
+        const width =
+          Math.max(
+            stage.clientWidth,
+            1
+          );
+
+        const height =
+          Math.max(
+            stage.clientHeight,
+            1
+          );
+
+
+        camera.aspect =
+          width /
+          height;
+
+
+        camera.updateProjectionMatrix();
+
+
+        renderer.setSize(
+          width,
+          height,
+          false
+        );
+
+      };
+
+
+    function init3D(){
+
+      if(
+        window.__threeInitialized
+      ){
+
+        return;
+
+      }
+
+
+      if(
+        !stage
+      ){
+
+        console.error(
+          "threeStage tidak ditemukan."
+        );
+
+        return;
+
+      }
+
+
+      scene =
+        new THREE.Scene();
+
+
+      camera =
+        new THREE.PerspectiveCamera(
+          45,
+          Math.max(
+            stage.clientWidth,
+            1
+          ) /
+          Math.max(
+            stage.clientHeight,
+            1
+          ),
+          .1,
+          100
+        );
+
+
+      camera.position.set(
+        7,
+        5,
+        8
+      );
+
+
+      renderer =
+        new THREE.WebGLRenderer({
+
+          antialias:true,
+
+          alpha:true
+
+        });
+
+
+      renderer.setPixelRatio(
+        Math.min(
+          window.devicePixelRatio || 1,
+          2
+        )
+      );
+
+
+      renderer.setSize(
+        Math.max(
+          stage.clientWidth,
+          1
+        ),
+        Math.max(
+          stage.clientHeight,
+          1
+        ),
+        false
+      );
+
+
+      renderer.outputColorSpace =
+        THREE.SRGBColorSpace;
+
+
+      stage.innerHTML = `
+
+        <div class="three-help">
+          🖱 Drag = Putar &nbsp; • &nbsp;
+          Scroll = Zoom
+        </div>
+
+      `;
+
+
+      stage.appendChild(
         renderer.domElement
       );
 
-    controls.enableDamping =
-      true;
 
-    controls.dampingFactor =
-      .08;
+      controls =
+        new OrbitControls(
+          camera,
+          renderer.domElement
+        );
 
-    controls.minDistance =
-      4;
 
-    controls.maxDistance =
-      14;
+      controls.enableDamping =
+        true;
 
-    controls.target.set(
-      0,
-      0,
-      0
-    );
+      controls.dampingFactor =
+        .08;
 
-    controls.enablePan =
-      false;
+      controls.enableZoom =
+        true;
 
-    /* Ambient */
+      controls.enablePan =
+        false;
 
-    const ambient =
-      new THREE.AmbientLight(
-        0x9edfff,
-        1.8
+      controls.minDistance =
+        4;
+
+      controls.maxDistance =
+        16;
+
+
+      /*
+       * LIGHT
+       */
+
+      scene.add(
+        new THREE.AmbientLight(
+          0xffffff,
+          1.9
+        )
       );
 
-    scene.add(
-      ambient
-    );
 
-    /* Key light */
+      const keyLight =
+        new THREE.DirectionalLight(
+          0xffffff,
+          2.4
+        );
 
-    const key =
-      new THREE.DirectionalLight(
-        0xffffff,
-        2.2
+
+      keyLight.position.set(
+        5,
+        8,
+        6
       );
 
-    key.position.set(
-      5,
-      8,
-      6
-    );
 
-    scene.add(
-      key
-    );
-
-    /* Cyan light */
-
-    const cyanLight =
-      new THREE.PointLight(
-        0x49d7ff,
-        80,
-        20
+      scene.add(
+        keyLight
       );
 
-    cyanLight.position.set(
-      -4,
-      3,
-      3
-    );
 
-    scene.add(
-      cyanLight
-    );
+      const cyanLight =
+        new THREE.PointLight(
+          0x49d7ff,
+          80,
+          20
+        );
 
-    /* Purple light */
 
-    const purpleLight =
-      new THREE.PointLight(
-        0x9b6cff,
-        55,
-        18
+      cyanLight.position.set(
+        -4,
+        3,
+        4
       );
 
-    purpleLight.position.set(
-      4,
-      -1,
-      -4
-    );
 
-    scene.add(
-      purpleLight
-    );
+      scene.add(
+        cyanLight
+      );
 
-    threeReady =
-      true;
 
-    loadDevice(
-      "motherboard"
-    );
+      const purpleLight =
+        new THREE.PointLight(
+          0x9b6cff,
+          70,
+          20
+        );
 
-    resize3D();
+
+      purpleLight.position.set(
+        4,
+        -2,
+        -4
+      );
+
+
+      scene.add(
+        purpleLight
+      );
+
+
+      window.__threeInitialized =
+        true;
+
+
+      window.loadDevice(
+        "motherboard"
+      );
+
+
+      animate();
+
+    }
+
+
+    function animate(){
+
+      requestAnimationFrame(
+        animate
+      );
+
+
+      if(
+        currentModel &&
+        autoRotate
+      ){
+
+        currentModel.rotation.y +=
+          .003;
+
+      }
+
+
+      if(
+        controls
+      ){
+
+        controls.update();
+
+      }
+
+
+      if(
+        renderer &&
+        scene &&
+        camera
+      ){
+
+        renderer.render(
+          scene,
+          camera
+        );
+
+      }
+
+    }
+
+
+    document
+      .querySelectorAll(
+        ".device-btn"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              window.loadDevice(
+                button.dataset.device
+              );
+
+            }
+          );
+
+        }
+      );
+
 
     window.addEventListener(
       "resize",
-      resize3D
+      () => {
+
+        window.resize3D();
+
+      }
     );
 
-    if(
-      window.ResizeObserver
-    ){
 
-      threeResizeObserver =
-        new ResizeObserver(
-          () => resize3D()
-        );
+    /*
+     * Jangan init saat halaman login
+     * karena ukuran container masih hidden.
+     * Renderer akan dibuat saat
+     * Exploration Lab dibuka.
+     */
 
-      threeResizeObserver.observe(
-        stage
-      );
+  </script>
 
-    }
 
-    animate3D();
+  <script>
 
-  }catch(error){
+    /*
+     * Jalankan roster setelah DOM siap.
+     */
 
-    console.error(
-      "3D initialization error:",
-      error
+    populateStudents();
+
+
+    /*
+     * Backup otomatis sebelum halaman ditutup.
+     */
+
+    window.addEventListener(
+      "beforeunload",
+      () => {
+
+        if(
+          syncQueue.length
+        ){
+
+          flushSyncQueue();
+
+        }
+
+      }
     );
 
-    threeReady =
-      false;
-
-  }
-}
-
-
-/* =========================================================
-   DEVICE BUTTONS
-========================================================= */
-
-document
-  .querySelectorAll(
-    ".device-btn"
-  )
-  .forEach(
-    button => {
-
-      button.addEventListener(
-        "click",
-        () =>
-          loadDevice(
-            button.dataset.device
-          )
-      );
-
-    }
-  );
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHtml(value){
-
-  return String(
-    value ?? ""
-  ).replace(
-    /[&<>"']/g,
-    character =>
-      ({
-        "&":"&amp;",
-        "<":"&lt;",
-        ">":"&gt;",
-        '"':"&quot;",
-        "'":"&#39;"
-      })[character]
-  );
-}
-
-
-/* =========================================================
-   STARTUP
-========================================================= */
-
-populateStudents();
-
-window.addEventListener(
-  "load",
-  () => {
-
-    setTimeout(
-      init3D,
-      100
-    );
-
-  }
-);
-
-</script>
+  </script>
 
 </body>
 </html>
