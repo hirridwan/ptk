@@ -879,7 +879,7 @@
 
   <div id="toast" class="toast"></div>
 
-  <script src="./students.js?v=2"></script>
+  <script src="students.js"></script>
 
   <script>
     const SHEET_WEB_APP_URL =
@@ -988,6 +988,8 @@
       postCorrect:0
     };
 
+    const clone = obj => JSON.parse(JSON.stringify(obj));
+
     let state = clone(DEFAULT_STATE);
     let testMode = "pre";
     let qIndex = 0;
@@ -1009,7 +1011,6 @@
     let reflectionDraft = {r3:"",r2:"",r1:""};
 
     const qs = selector => document.querySelector(selector);
-    const clone = obj => JSON.parse(JSON.stringify(obj));
 
     function safeNumber(value,fallback=0){
       const n = Number(value);
