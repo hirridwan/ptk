@@ -1050,6 +1050,8 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       },
       preAnswers:[],
       postAnswers:[],
+      preAnswersText:"",
+      postAnswersText:"",
       reflection:{r3:"",r2:"",r1:""},
       essayAnswers:{m1:"",m2:"",m3:"",boss:""},
       preCorrect:0,
@@ -1323,8 +1325,13 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         reflection_r3:state.reflection.r3 || "",
         reflection_r2:state.reflection.r2 || "",
         reflection_r1:state.reflection.r1 || "",
-        pre_answers:formatTestAnswersForSheet(state.preAnswers),
-        post_answers:formatTestAnswersForSheet(state.postAnswers),
+        pre_answers:
+          state.preAnswersText ||
+          formatTestAnswersForSheet(state.preAnswers),
+
+        post_answers:
+          state.postAnswersText ||
+          formatTestAnswersForSheet(state.postAnswers),
         timestamp:new Date().toISOString()
       };
 
@@ -1621,6 +1628,10 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
 
       state = {
         ...clone(DEFAULT_STATE),
+        preAnswers:[],
+        postAnswers:[],
+        preAnswersText:"",
+        postAnswersText:"",
         code:student.code,
         name:student.name,
         className:student.class,
@@ -1819,7 +1830,9 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
     }
 
     function storeAnswer(){
-      if(!selectedQuestions[qIndex]) return;
+      const question = selectedQuestions[qIndex];
+
+      if(!question) return;
 
       const element =
         document.querySelector(
@@ -1831,9 +1844,12 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
         state.answerChoices[qIndex] = null;
       }else{
         const choice = Number(element.value);
-        state.answerChoices[qIndex] = choice;
-        state.answers[qIndex] =
-          selectedQuestions[qIndex].opts[choice].ok;
+        const option = question.opts?.[choice];
+
+        if(option){
+          state.answerChoices[qIndex] = choice;
+          state.answers[qIndex] = Boolean(option.ok);
+        }
       }
 
       updateQuestionProgress();
@@ -1908,23 +1924,34 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
     }
 
     function buildTestAnswerLog(){
-      return selectedQuestions.map((question,index)=>{
+      const list = Array.isArray(selectedQuestions)
+        ? selectedQuestions
+        : [];
+
+      return list.map((question,index)=>{
         const choice = state.answerChoices?.[index];
-        const option =
+        const numericChoice =
           choice===null || choice===undefined || choice===""
             ? null
-            : question.opts[Number(choice)];
+            : Number(choice);
+
+        const option =
+          numericChoice===null || !question?.opts?.[numericChoice]
+            ? null
+            : question.opts[numericChoice];
 
         return {
           displayNumber:index+1,
           questionNumber:
-            Number.isInteger(question.sourceIndex)
+            Number.isInteger(question?.sourceIndex)
               ? question.sourceIndex+1
-              : index+1,
+              : Number.isInteger(question?.src)
+                ? question.src+1
+                : index+1,
           choice:
-            option ? String.fromCharCode(65+Number(choice)) : "",
+            option ? String.fromCharCode(65+numericChoice) : "",
           answer:
-            option ? option.text : "",
+            option ? String(option.text ?? "") : "",
           correct:
             option ? Boolean(option.ok) : null
         };
@@ -1932,6 +1959,10 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
     }
 
     function formatTestAnswersForSheet(log){
+      if(typeof log === "string"){
+        return log;
+      }
+
       return (Array.isArray(log)?log:[]).map(item => {
         const status =
           item.correct===true
@@ -1939,6 +1970,7 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
             : item.correct===false
               ? "Salah"
               : "Tidak dijawab";
+
         return `No ${item.displayNumber} (Soal ${item.questionNumber}): ${item.choice||"-"}. ${item.answer||"-"} — ${status}`;
       }).join("\n");
     }
@@ -1947,21 +1979,30 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       storeAnswer();
       clearInterval(timerHandle);
 
-      const correct = state.answers.filter(value=>value===true).length;
-      const score = Math.round(correct/questions.length*100);
-      const answerLog = buildTestAnswerLog();
+      const correct =
+        state.answers.filter(value=>value===true).length;
 
-      if(testMode === "pre"){
+      const score =
+        Math.round(correct/questions.length*100);
+
+      const answerLog = buildTestAnswerLog();
+      const answerText = formatTestAnswersForSheet(answerLog);
+
+      if(testMode==="pre"){
         state.pre = score;
         state.preCorrect = correct;
-        state.preAnswers = clone(answerLog);
+        state.preAnswers = answerLog;
+        state.preAnswersText = answerText;
 
-        // Simpan snapshot Pre-Test lengkap sebelum masuk Mini Lesson.
-        const preRecord = buildRecord();
-        saveRecordLocalOnly(preRecord);
-        queueSync(preRecord);
+        const record = buildRecord();
+        saveRecordLocalOnly(record);
+        queueSync(record);
 
-        currentScreen="#mini";
+        syncRecordNow(record).catch(error=>{
+          console.error("Pre-Test sync failed:",error);
+        });
+
+        currentScreen = "#mini";
         show("#mini",false);
         saveActiveSession();
         return;
@@ -1969,20 +2010,26 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
 
       state.post = score;
       state.postCorrect = correct;
-      state.postAnswers = clone(answerLog);
+      state.postAnswers = answerLog;
+      state.postAnswersText = answerText;
 
-      // Simpan snapshot Post-Test lengkap sebelum masuk Refleksi.
-      const postRecord = buildRecord();
-      saveRecordLocalOnly(postRecord);
-      queueSync(postRecord);
+      const record = buildRecord();
+      saveRecordLocalOnly(record);
+      queueSync(record);
 
-      qs("#fPre").textContent=`${state.pre??"-"}/100`;
-      qs("#fPost").textContent=`${state.post??"-"}/100`;
-      qs("#fPreDetail").textContent=`${state.preCorrect??0} dari 15 soal benar`;
-      qs("#fPostDetail").textContent=`${state.postCorrect??0} dari 15 soal benar`;
-      qs("#fXP").textContent=state.xp;
+      syncRecordNow(record).catch(error=>{
+        console.error("Post-Test sync failed:",error);
+      });
 
-      currentScreen="#reflection";
+      qs("#fPre").textContent = `${state.pre??"-"}/100`;
+      qs("#fPost").textContent = `${state.post??"-"}/100`;
+      qs("#fPreDetail").textContent =
+        `${state.preCorrect??0} dari 15 soal benar`;
+      qs("#fPostDetail").textContent =
+        `${state.postCorrect??0} dari 15 soal benar`;
+      qs("#fXP").textContent = state.xp;
+
+      currentScreen = "#reflection";
       show("#reflection",false);
       restoreReflectionDraft();
       saveActiveSession();
@@ -2541,6 +2588,10 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
       testMode = "pre";
       qIndex = 0;
       selectedQuestions = [];
+      state.preAnswers = [];
+      state.postAnswers = [];
+      state.preAnswersText = "";
+      state.postAnswersText = "";
       currentScreen = "#login";
       testEndAt = 0;
       missionType = "";
@@ -2615,6 +2666,23 @@ Object.keys(window.CLASS_ROSTERS).forEach(k=>{
           Array.isArray(saved.state.postAnswers)
             ? saved.state.postAnswers
             : [];
+
+        state.preAnswersText =
+          String(saved.state.preAnswersText || "");
+
+        state.postAnswersText =
+          String(saved.state.postAnswersText || "");
+
+        /* Backward compatibility for sessions created before this fix. */
+        if(!state.preAnswersText && Array.isArray(state.preAnswers)){
+          state.preAnswersText =
+            formatTestAnswersForSheet(state.preAnswers);
+        }
+
+        if(!state.postAnswersText && Array.isArray(state.postAnswers)){
+          state.postAnswersText =
+            formatTestAnswersForSheet(state.postAnswers);
+        }
 
         state.reflection = {
           ...clone(DEFAULT_STATE.reflection),
